@@ -139,6 +139,10 @@ a {
 	color: #40B0D1;
 }
 
+a:hover {
+	color: #40B0D1;
+}
+
 @media (max-width:768px) {
 	.install-btn {
 		margin-left: 50px;
