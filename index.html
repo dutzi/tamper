@@ -57,7 +57,7 @@ function onInstallClick(e) {
 					<div class="col-md-10 col-sm-12">
 						<p>Chrome Proxy is a mitmproxy based devtools extension that lets you edit remote files locally and serve them directly to Chrome.</p>
 						<h3>Wait, what's a proxy server?</h3>
-						<a href="http://en.wikipedia.org/wiki/Proxy_server"><p class="qoute">&ldquo;In computer networks, a <strong>proxy server</strong> is a server (a computer system or an application) that acts as an intermediary for requests from clients seeking resources from other servers.&rdquo;</p></a>
+						<a class="wiki-link" href="http://en.wikipedia.org/wiki/Proxy_server"><p class="qoute">&ldquo;In computer networks, a <strong>proxy server</strong> is a server (a computer system or an application) that acts as an intermediary for requests from clients seeking resources from other servers.&rdquo;</p></a>
 						<p>Chrome Proxy basically seats between Chrome and the web. Whenever Chrome makes a request, Chrome Proxy is notified about it and can do one of two things, it can either let the request "roll", allowing Chrome to load that file from the web, or it can serve Chrome a local file, "fooling" it into thinking it came from the web.</p>
 						<h3>How do I use Chrome Proxy?</h3>
 						<p>Once installed, Chrome Proxy will add a new panel to your devtools, the "Proxy" panel. Similar to the Network panel, the Proxy panel shows you a list of all request made by this tab. Click on one of these network requests and the response Chrome got will open in your default editor. Make the changes you need and save the file. Once you hit refresh, Chrome Proxy will serve Chrome the file you just saved.</p>

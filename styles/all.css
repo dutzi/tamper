@@ -129,9 +129,14 @@ pre .prompt::before {
 	content: "$ ";
 }
 
-a, a:hover {
+.wiki-link, .wiki-link:hover {
 	color: inherit;
 	text-decoration: none;
+}
+
+a {
+	text-decoration: underline;
+	color: #40B0D1;
 }
 
 @media (max-width:768px) {
