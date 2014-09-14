@@ -1,0 +1,143 @@
+body {
+	font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	color: #bbb;
+}
+
+.hero-container {
+	overflow: hidden;
+	background: url(../images/hero-bg.gif);
+	color: white;
+}
+
+.logo {
+	margin-top: 115px;
+}
+
+.logo img {
+}
+
+.description {
+	margin-top: 50px;
+	margin-left: 56px;
+}
+
+/*.logo .logo-small {
+
+}
+
+.logo .name {
+	font-size: 42px;
+}
+
+.logo .slogan {
+	position: absolute;
+	top: 47px;
+	left: 2px;
+	font-size: 12px;
+	color: #888;
+}
+
+.logo .alpha {
+	position: absolute;
+	left: 270px;
+	top: 37px;
+	font-size: 10px;
+}*/
+
+.logo img {
+	max-width: 100%;
+}
+
+.description img {
+	max-width: 100%;
+}
+
+.hero {
+	margin-top: 50px;
+	max-width: 100%;
+}
+
+.install-btn {
+	cursor: pointer;
+	background: #2A2A2A;
+	color: white;
+	padding: 13px;
+	border: 1px solid #4E4E4E;
+	text-align: center;
+	margin-top: 40px;
+	width: 300px;
+	font-size: 20px;
+	margin-left: 56px;
+}
+
+.hero-fade {
+	height: 45px;
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.16) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.16))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.16) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.16) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.16) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.16) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#29000000',GradientType=0 ); /* IE6-9 */
+	margin-top: -17px;
+	border-bottom: 1px solid #636363;
+	position: relative;
+	z-index: 10;
+}
+
+.content-container {
+	padding: 50px 0px;
+	font-size: 15px;
+	line-height: 26px;
+	background: url(../images/content-bg.png);
+}
+
+
+h3 {
+	font-size: initial;
+	font-weight: 600;
+	color: white;
+}
+
+strong {
+	font-weight: 600;
+}
+
+p.qoute {
+	font-style: italic;
+	background-image: url(../images/wiki-icon@2x.png);
+	background-size: 38px 28px;
+	padding: 0px 0px 4px 54px;
+	background-position: 7px;
+	background-repeat:  no-repeat;
+}
+
+pre {
+	background: rgba(0,0,0,0.2);
+	border: none;
+	border-radius: 0px;
+	border-bottom: 1px solid rgba(255,255,255,0.2);
+	color: #40B0D1;
+}
+
+pre .prompt {
+	color: #ddd;
+}
+
+pre .prompt::before {
+	content: "$ ";
+}
+
+a, a:hover {
+	color: inherit;
+	text-decoration: none;
+}
+
+@media (max-width:768px) {
+	.install-btn {
+		margin-left: 50px;
+		padding: 7px;
+		width: 250px;
+	}
+}

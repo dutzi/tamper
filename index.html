@@ -1,1 +1,77 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,600italic,300,600' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="styles/all.css">
+		<link rel="shortcut icon" href="images/favicon.png" sizes="16x16"/>
+		<link rel="shortcut icon" href="images/favicon@2x.png" sizes="32x32"/>
+
+		<title>Chrome Proxy</title>
+
+		<script>
+var heroContainer;
+var heroContainerInner;
+window.addEventListener('scroll', function (e) {
+	if (window.pageYOffset < 0) {return;}
+	if (!heroContainerInner) {
+		heroContainer = document.querySelector('.hero-container');
+		heroContainerInner = document.querySelector('.hero-container .container');
+	}
+	heroContainer.style.backgroundPositionY = window.pageYOffset * 0.9 + 'px';
+	heroContainerInner.style.transform = 'translateY(' + window.pageYOffset * 0.6 + 'px)';
+});
+function onInstallClick(e) {
+	window.scrollTo(0,document.body.scrollHeight);
+}
+		</script>
+	</head>
+	
+	<body>
+		<div class="hero-container">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="logo">
+							<img src="images/logo.png" srcset="images/logo.png 1x, images/logo@2x.png 2x">
+						</div>
+<!-- 							<div class="logo-small"></div>
+							<div class="name">Chrome Proxy</div>
+							<div class="slogan">mitmproxy based devtools extension</div>
+							<div class="alpha">alpha</div> -->
+						<div class="description">
+							<img src="images/description.png" srcset="images/description.png 1x, images/description@2x.png 2x">
+						</div>
+						<div class="install-btn" onclick="onInstallClick()">Install</div>
+					</div>
+					<div class="col-sm-8">
+						<img class="hero" src="images/screenshot.png" srcset="images/screenshot.png 1x, images/screenshot@2x.png 2x">
+					</div>
+				</div>
+			</div>
+			<div class="hero-fade"></div>
+		</div>
+		<div class="content-container">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-sm-12">
+						<p>Chrome Proxy is a mitmproxy based devtools extension that lets you edit remote files locally and serve them to Chrome before its requet reaches the web.</p>
+						<h3>Wait, what's a proxy server?</h3>
+						<a href="http://en.wikipedia.org/wiki/Proxy_server"><p class="qoute">&ldquo;In computer networks, a <strong>proxy server</strong> is a server (a computer system or an application) that acts as an intermediary for requests from clients seeking resources from other servers.&rdquo;</p></a>
+						<p>Chrome Proxy basically seats between Chrome and the web. Whenever Chrome makes a request, Chrome Proxy is notified about it and can do one of two things, it can either let the request "roll", allowing Chrome to load that file from the web, or it can serve Chrome a local file, "fooling" it into thinking it came from the web.</p>
+						<h3>How do I use Chrome Proxy?</h3>
+						<p>Once installed, Chrome Proxy will add a new panel to your devtools, the "Proxy" panel. Similar to the Network panel, the Proxy panel shows you a list of all request made by this tab. Click on one of these network requets and the response Chrome got will open in your default editor. Make the changes you need and save the file. Once you hit refresh, Chrome Proxy will serve Chrome the file you just edited.</p>
+						<h3>Installing</h3>
+						<p>Chrome Proxy is based on the awesome mitmproxy (man-in-the-middle proxy), or more precisely, libmproxy, its companion library that allows implementing powerful interception proxies. Mitmproxy's latest release is 0.10, but some of the features Chrome Proxy uses will only be released in 0.11 (which should be released in the coming days). Due to this, Chrome Proxy's installation might be a bit complex.</p>
+						<p>1. Install mitmproxy-0.11-latest from the master</p>
+						<pre><span class="prompt"></span>git clone https://github.com/mitmproxy/mitmproxy.git<br/><span class="prompt"></span>cd mitmproxy<br/><span class="prompt"></span>pip install --src . -r requirements.txt</pre>
+						<p>2. Install Chrome Proxy's proxy</p>
+						<pre><span class="prompt"></span>pip install chrome-proxy</pre>
+						<p>3. Install Chrome Proxy's devtools extension by going here and clicking install</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
