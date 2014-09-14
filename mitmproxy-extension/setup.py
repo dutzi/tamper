@@ -17,7 +17,7 @@ class PostInstallScript(install):
 			'type': 'stdio',
 			'allowed_origins': [
 				'chrome-extension://bkblajiolelpgnnnclnjkcpmlbnanpkf/',
-				'chrome-extension://kahmkopaahagafjemjkpoejeohdgejfi/'
+				'chrome-extension://blljdmmacfmkjekijajfdmmacpemmlaa/'
 			]
 		}
 
@@ -40,7 +40,7 @@ class PostInstallScript(install):
 
 setup(
     name = 'chrome-proxy',
-    version = '0.1dev',
+    version = '0.1',
     packages = ['chromeproxy'],
     install_requires = ['gevent-websocket>=0.9.3'],
     scripts = ['chromeproxy/chromeproxy'],
