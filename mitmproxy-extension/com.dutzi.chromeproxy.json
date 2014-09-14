@@ -1,0 +1,10 @@
+{
+  "name": "com.dutzi.chromeproxy",
+  "description": "My Application",
+  "path": "/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension/testmessage",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://bkblajiolelpgnnnclnjkcpmlbnanpkf/",
+    "chrome-extension://kahmkopaahagafjemjkpoejeohdgejfi/"
+  ]
+}

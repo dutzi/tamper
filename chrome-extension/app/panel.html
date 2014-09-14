@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+	<head>
+		<!-- build:css styles/vendor.css -->
+		<!-- bower:css -->
+		<!-- endbower -->
+		<!-- endbuild -->
+		<!-- build:css styles/main.css -->
+		<link href="styles/main.css" rel="stylesheet">
+		<!-- endbuild -->
+	</head>
+	<body onready="onBodyReady()" class="proxy-enabled">
+		<div class="split-view hbox view">
+			<div class="split-view-resizer"></div>
+			<div id="sidebar" class="vbox" class="sidebar-list">
+				<div class="sidebar-list-item sidebar-list-item-big selected">Network</div>
+				<div class="sidebar-list-header">RULES</div>
+				<div id="rulesList">
+				</div>
+			</div>
+			<div class="right-pane vbox">
+				<div class="error-message">Could not connect to proxy (<a target="_blank" href="http://dutzi.github.com/chrome-proxy/#proxy-connection-error">help</a>)</div>
+				<div class="toolbar">
+					<span class="label">Filter:</span>
+					<input id="txtFilter" type="text"/>
+					<span class="toggle-proxy"><span class="dot">&#8226;</span></span>
+				</div>
+				<div id="requestsContainer" class="vbox"></div>
+			</div>
+
+			<div id="requestItem" class="request-item">
+				<span class="request-item-modified-badge">Modified</span>
+				<a href="#"></a>
+				<span class="request-item-url"></span>
+				<span class="request-item-actions">
+					<span class="request-item-action-button request-item-loading-spinner">Loading...</span>
+					<span class="request-item-action-button request-item-discard-changes">Delete</span>
+				</span>
+			</div>
+			
+			<div id="rulesListItem" class="rules-list-item sidebar-list-item">
+				<div class="sidebar-list-item-checkbox">
+					<input type="checkbox">
+				</div>
+				<div class="sidebar-list-item-title"></div>
+				<div class="sidebar-list-item-subtitle"></div>
+			</div>
+		</div>
+
+		<!-- build:js scripts/vendor.js -->
+		<!-- bower:js -->
+		<!-- endbower -->
+		<!-- endbuild -->
+
+		<!-- build:js scripts/panel.js -->
+		<script src="scripts/panel.js"></script>
+		<!-- endbuild -->
+	</body>
+</html>

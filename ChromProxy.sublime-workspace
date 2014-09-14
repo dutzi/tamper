@@ -1,0 +1,1066 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"False",
+				"FlowMaster"
+			],
+			[
+				"hasscree",
+				"has-screen-reader"
+			],
+			[
+				"getElemen",
+				"getElementsByTagName"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "mitmproxy-extension/websocket.py",
+			"settings":
+			{
+				"buffer_size": 427,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "chrome-extension/app/scripts/panel.js",
+			"settings":
+			{
+				"buffer_size": 2364,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "chrome-extension/app/panel.html",
+			"settings":
+			{
+				"buffer_size": 833,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "mitmproxy-extension/stripped-proxy.py",
+			"settings":
+			{
+				"buffer_size": 6080,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "mitmproxy-extension/requestmap.json",
+			"settings":
+			{
+				"buffer_size": 233,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "chrome-extension/app/styles/main.css",
+			"settings":
+			{
+				"buffer_size": 517,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "chrome-extension/app/scripts/background.js",
+			"settings":
+			{
+				"buffer_size": 121,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/EMail.sublime-build",
+	"command_palette":
+	{
+		"height": 237.0,
+		"selected_items":
+		[
+			[
+				"finder",
+				"Finder: Open here"
+			],
+			[
+				"termi",
+				"Open in terminal"
+			],
+			[
+				"finde",
+				"Finder: Open here"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"pacremove",
+				"Package Control: Remove Package"
+			],
+			[
+				"email",
+				"E-Mail: Write E-Mail"
+			],
+			[
+				"mail",
+				"E-Mail: Send As Mail"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"css",
+				"Set Syntax: CSS"
+			],
+			[
+				"sort",
+				"Sort Lines"
+			],
+			[
+				"javasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"java",
+				"Set Syntax: Java"
+			],
+			[
+				"synjavasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"jaca",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"javsc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"packins",
+				"Package Control: Install Package"
+			],
+			[
+				"markdown",
+				"Set Syntax: Markdown"
+			],
+			[
+				"pacin",
+				"Package Control: Install Package"
+			],
+			[
+				"packin",
+				"Package Control: Install Package"
+			],
+			[
+				"pacins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 475.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/dutzi/Documents/ChromeProxy",
+		"/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension"
+	],
+	"file_history":
+	[
+		"/Users/dutzi/Documents/ChromeProxy/ChromProxy.sublime-project",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/Gruntfile.js",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/.jshintrc",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/app/manifest.json",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/app/styles/main.css",
+		"/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension/stripped-proxy.py",
+		"/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension/websocket.js",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/bower.json",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/test/bower_components/chai/sauce.browsers.js",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/node_modules/grunt/node_modules/glob/test/pause-resume.js",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/app/scripts/popup.js",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/node_modules/grunt-contrib-compress/node_modules/archiver/node_modules/lazystream/LICENSE-MIT",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/node_modules/grunt-contrib-uglify/node_modules/uglify-js/lib/mozilla-ast.js",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/node_modules/grunt-contrib-connect/node_modules/connect/lib/middleware/basicAuth.js",
+		"/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension/com.dutzi.chromeproxy.json",
+		"/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension/testmessage",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/app/scripts/panel.js",
+		"/Users/dutzi/Documents/ChromeProxy/install.sh",
+		"/Users/dutzi/Documents/ChromeProxy/testmessage",
+		"/Users/dutzi/Documents/ChromeProxy/app/scripts/background.js",
+		"/Users/dutzi/Documents/ChromeProxy/app/scripts/popup.js",
+		"/Users/dutzi/Documents/ChromeProxy/app/styles/main.css",
+		"/Users/dutzi/Documents/ChromeProxy/app/panel.html",
+		"/Users/dutzi/Documents/ChromeProxy/app/manifest.json",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/app/scripts/background.js",
+		"/Users/dutzi/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.dutzi.chromeproxy.json",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/app/panel.html",
+		"/Users/dutzi/Documents/ChromeProxy/chrome-extension/package.json",
+		"/Users/dutzi/Documents/ChromeProxy/app/scripts/panel.js",
+		"/Users/dutzi/Documents/ChromeProxy/node_modules/grunt-svgmin/node_modules/svgo/plugins/moveElemsAttrsToGroup.js",
+		"/Users/dutzi/Documents/ChromeProxy/node_modules/grunt-mocha/node_modules/mocha/lib/reporters/templates/menu.jade",
+		"/Users/dutzi/Documents/ChromeProxy/node_modules/grunt-svgmin/node_modules/svgo/plugins/removeNonInheritableGroupAttrs.js",
+		"/Users/dutzi/Documents/ChromeProxy/testmessage.py",
+		"/Users/dutzi/Documents/ChromeProxy/.jshintrc",
+		"/Users/dutzi/Documents/ChromeProxy/Gruntfile.js",
+		"/Users/dutzi/Library/Google/Chrome/NativeMessagingHosts/com.dutzi.chromeproxy.json",
+		"/Users/dutzi/Documents/ChromeProxy/package.json",
+		"/Users/dutzi/Documents/ChromeProxy/app/popup.html",
+		"/Users/dutzi/Documents/ChromeProxy/node_modules/grunt-bower-install/node_modules/bower-config/node_modules/mout/lang/isPlainObject.js",
+		"/Users/dutzi/Documents/ChromeProxy/node_modules/grunt-contrib-compress/node_modules/archiver/node_modules/file-utils/node_modules/iconv-lite/encodings/gbk.js",
+		"/Users/dutzi/Documents/ChromeProxy/node_modules/grunt-contrib-uglify/node_modules/uglify-js/lib/mozilla-ast.js",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/style.css",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/cache/5.35.392.js",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/cache/5.35.390.js",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/cache/5.32.js",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/cache/5.36.405 copy.js",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/cache/5.11.js",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/config.json",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/proxy_local",
+		"/Users/dutzi/Documents/SundaySky/PlayerProxy/branches/mitmproxy-0.11/trunk/proxy_fiddler",
+		"/Users/dutzi/Desktop/convert.py",
+		"/Users/dutzi/Library/Application Support/Sublime Text 3/Packages/User/EMail.sublime-build",
+		"/Users/dutzi/Desktop/test.md",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/sundaysky/EventManager.as",
+		"/Users/dutzi/Library/Application Support/Sublime Text 3/Packages/Mail-master/Default.sublime-commands",
+		"/Users/dutzi/Desktop/att-mobility-survey-mobile.css",
+		"/Users/dutzi/Desktop/cable-one-survey.css",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/tools/css-parse/node_modules/css/node_modules/source-map/build/suffix-utils.jsm",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/settings.gradle",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/src/main/javascript/all_settings.js",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/sundaysky/ActionItem.as",
+		"/Users/dutzi/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/dutzi/Documents/SundaySky/Player/Player.sublime-project",
+		"/Users/dutzi/Documents/SundaySky/Player/branches/5.36/parse.js",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JWPlayerCaptionsPlugin/com/longtailvideo/jwplayer/model/PlayerConfig.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/build.gradle",
+		"/Users/dutzi/Documents/SundaySky/Player/branches/5.36/JWPlayerCaptionsPlugin/com/longtailvideo/jwplayer/model/PlayerConfig.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/src/main/javascript/player.js",
+		"/Users/dutzi/Documents/Arduino/lcd/lcd.ino",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JWPlayerCaptionsPlugin/mx/core/IFlexAsset.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/sundaysky/PlayerInfo.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JWPlayerCaptionsPlugin/mx/core/ILayoutDirectionElement.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyMediaProvider/lib/jwplayer-5-classes.xml",
+		"/Users/dutzi/Desktop/humana.js",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/src/main/javascript/base.js",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/sundaysky/SundaySkyGifTracker.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/adobe/serialization/json/JSONTokenType.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/adobe/serialization/json/JSONToken.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/adobe/serialization/json/JSONParseError.as",
+		"/Users/dutzi/Downloads/23312692683056_30682371412751364.flv",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/SundayskyPlugin/src/main/actionscript/com/sundaysky/ErrorHandler.as",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/node_modules/browserstack-webdriver/lib/test/data/locators_tests/boolean_attribute_selected.html",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/node_modules/browserstack-webdriver/lib/test/data/booleanAttributes.html",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/src/main/javascript/player.new.js",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/.gradle/1.10/taskArtifacts/fileSnapshots.bin",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/.gradle/1.10/taskArtifacts/taskArtifacts.bin",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/node_modules/browserstack-webdriver/node_modules/keep-alive-agent/.jshintrc",
+		"/Users/dutzi/Desktop/blah.txt",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/build/js-filtered/player.new.js",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/build/js-filtered/player.js",
+		"/opt/local/www/htdocs/interview-test/node_modules/grunt-svgmin/node_modules/svgo/node_modules/sax/test/attribute-no-space.js",
+		"/opt/local/www/htdocs/player/flvs/att.mp4",
+		"/opt/local/www/htdocs/vbill2/node_modules/grunt-contrib-watch/node_modules/gaze/test/add_test.js",
+		"/opt/local/www/htdocs/griffin/all.js",
+		"/opt/local/www/htdocs/att/index.html",
+		"/opt/local/www/htdocs/index.html",
+		"/opt/local/www/htdocs/interview-test/.tmp/styles/main.css",
+		"/opt/local/www/htdocs/interview-test/node_modules/grunt-contrib-uglify/node_modules/uglify-js/lib/mozilla-ast.js",
+		"/opt/local/www/htdocs/mapfre.html",
+		"/opt/local/www/htdocs/vbill2/app/data.xml",
+		"/opt/local/www/htdocs/vbill2/app/views/main.html",
+		"/opt/local/www/htdocs/vbill2/app/scripts/controllers/main.js",
+		"/opt/local/www/htdocs/vbill2/app/styles/all.scss",
+		"/opt/local/www/htdocs/vbill2/app/index.html",
+		"/Users/dutzi/Desktop/script.command",
+		"/etc/hosts",
+		"/opt/local/www/htdocs/vbill/app/data.xml",
+		"/opt/local/www/htdocs/vbill2/node_modules/karma/node_modules/log4js/test/dateFileAppender-test.js",
+		"/opt/local/www/htdocs/vbill/bower_components/modernizr/feature-detects/dataview-api.js",
+		"/opt/local/www/htdocs/tubes/dijkstra.js",
+		"/opt/local/www/htdocs/vbill/app/index.html",
+		"/opt/local/www/htdocs/vbill/app/scripts/main.js",
+		"/opt/local/www/htdocs/vbill/app/styles/all.scss",
+		"/opt/local/www/htdocs/vbill/app/styles/main.scss",
+		"/opt/local/www/htdocs/vbill/index.html",
+		"/opt/local/www/htdocs/vbill/node_modules/grunt-svgmin/node_modules/svgo/plugins/removeViewBox.js",
+		"/opt/local/www/htdocs/att/js/viewbill.js",
+		"/opt/local/www/htdocs/att-landing-page/shipping/index.html",
+		"/opt/local/www/htdocs/att-landing-page/shipping/css/all.css",
+		"/opt/local/www/htdocs/player/cached/videos/d33c3bd4-f168-11e3-a44f-7831c1cbf90a",
+		"/Users/dutzi/Documents/SundaySky/Player/trunk/JS SDK/src/main/javascript/history_of_file.sh",
+		"/Users/dutzi/.bash_profile",
+		"/opt/local/www/htdocs/griffin/index.html",
+		"/opt/local/www/htdocs/griffin/all.css",
+		"/opt/local/www/htdocs/player/bill/textures/Hex Fiend.app/Contents/Resources/GenericPrompt.nib",
+		"/opt/local/www/htdocs/att-landing-page/shipping/index2.html",
+		"/opt/local/www/htdocs/sundayskySurvey.js",
+		"/opt/local/www/htdocs/att-landing-page/shipping/js/respond.js"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 106.0,
+		"where_history":
+		[
+			"*.*",
+			"*.as",
+			"*.*",
+			"*.as",
+			"*.*",
+			"*.as",
+			"*.*",
+			"*.as",
+			"*.*",
+			"*.as",
+			"*.*",
+			"*.as",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"isLoaded",
+			"urlsToProxy",
+			"_requestMapFile",
+			"requestMap",
+			"_requestmapPath",
+			"cachedFilename",
+			"cachedFilesPath",
+			"relPath",
+			"cachedFilename",
+			"localFilePath",
+			"urlsToProxy",
+			"requestMapPath",
+			"print",
+			"webSocket",
+			"print",
+			"type",
+			"proxy",
+			"opened",
+			"onoonpen",
+			"todo",
+			"replace",
+			"==",
+			"\"",
+			"method",
+			"urlsDivsWaitingForApproval",
+			"json.dumps",
+			"ws",
+			"webSocket",
+			"ws",
+			"init_websocket",
+			"run_websocket",
+			"webSocket",
+			"run_websocket",
+			"blah",
+			"run_websocket",
+			"ws",
+			"websocket",
+			"blah",
+			"urlsToProxy",
+			"ws",
+			"print",
+			"\"",
+			"ws",
+			"onToggleRuleClick",
+			"isLoaded",
+			"request-item",
+			"uest-item",
+			"requestItem",
+			"a",
+			"requestText",
+			"in",
+			"print",
+			"True",
+			"contentty",
+			"contentType",
+			"ODictCaseless",
+			"type",
+			"profileInjector",
+			"jsDebugHelpersFile",
+			"call",
+			"subprocess",
+			"uuid",
+			"os",
+			"fullFileName",
+			"message",
+			"print",
+			"url",
+			"HTTPHandler",
+			"message",
+			"messages",
+			"\"",
+			"response",
+			"reponse",
+			"jshin",
+			"jshint",
+			"unud",
+			"notifyAllPanels",
+			"notifyDevtools",
+			"port",
+			"alert",
+			"chromeproxy",
+			"chrom",
+			"ports",
+			"\"",
+			"TODO",
+			"allo",
+			"\"",
+			"EchoApplication",
+			"run_websocket",
+			"ODictCaseless",
+			"proxy",
+			"filed",
+			"white",
+			"self",
+			"threading",
+			"mainloop",
+			"NativeMessagingWindow",
+			"processMessages",
+			"onSend",
+			"Tkinter",
+			"\"",
+			"_",
+			":",
+			"requestUI",
+			"width",
+			"display",
+			"requestHTML",
+			"''",
+			"http://www.googl.com",
+			"experimental",
+			"\"",
+			"jshin",
+			"watch",
+			"jshint",
+			"debug",
+			"panel",
+			"panal",
+			"\"",
+			"popup",
+			"HTTPResponse",
+			"\"",
+			"track'",
+			"replacewith",
+			"withinterac",
+			"interac",
+			"showOnlineVideo",
+			"sundaySky.playbackConf",
+			"showOfflineVideo"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "mitmproxy-extension/websocket.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 427,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								284,
+								284
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "chrome-extension/app/scripts/panel.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2364,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								342,
+								342
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "chrome-extension/app/panel.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 833,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								517,
+								494
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "mitmproxy-extension/stripped-proxy.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6080,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								386,
+								386
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 13.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "mitmproxy-extension/requestmap.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 233,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								209,
+								217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "chrome-extension/app/styles/main.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 517,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								441,
+								441
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "chrome-extension/app/scripts/background.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 121,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								121,
+								121
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.lcd":
+	{
+		"height": 98.0
+	},
+	"project": "ChromProxy.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"main.cs",
+				"chrome-extension/app/styles/main.css"
+			],
+			[
+				"main.css",
+				"chrome-extension/app/styles/main.css"
+			],
+			[
+				"panle.ht",
+				"chrome-extension/app/panel.html"
+			],
+			[
+				"strip",
+				"mitmproxy-extension/stripped-proxy.py"
+			],
+			[
+				"grunt",
+				"chrome-extension/Gruntfile.js"
+			],
+			[
+				"jsh",
+				"chrome-extension/.jshintrc"
+			],
+			[
+				"js",
+				"chrome-extension/.jshintrc"
+			],
+			[
+				"stproxy",
+				"mitmproxy-extension/stripped-proxy.py"
+			],
+			[
+				"mani",
+				"chrome-extension/app/manifest.json"
+			],
+			[
+				"back",
+				"chrome-extension/app/scripts/background.js"
+			],
+			[
+				"webkojs",
+				"mitmproxy-extension/websocket.js"
+			],
+			[
+				"panl.js",
+				"chrome-extension/app/scripts/panel.js"
+			],
+			[
+				"manif",
+				"app/manifest.json"
+			],
+			[
+				"testm",
+				"testmessage"
+			],
+			[
+				"main.",
+				"app/styles/main.css"
+			],
+			[
+				"panelhtml",
+				"app/panel.html"
+			],
+			[
+				"popupjs",
+				"app/scripts/popup.js"
+			],
+			[
+				"minpr",
+				"min_proxy.py"
+			],
+			[
+				"392",
+				"cache/5.35.392.js"
+			],
+			[
+				"plap",
+				"player_proxy.py"
+			],
+			[
+				"base",
+				"trunk/JS SDK/src/main/javascript/base.js"
+			],
+			[
+				"player.cs",
+				"trunk/Skins/player.css"
+			],
+			[
+				"surve",
+				"trunk/JS SDK/src/main/javascript/survey.js"
+			],
+			[
+				"playercss",
+				"trunk/Skins/player.css"
+			],
+			[
+				"player.js",
+				"trunk/JS SDK/src/main/javascript/player.js"
+			],
+			[
+				"base.",
+				"trunk/JS SDK/src/main/javascript/base.js"
+			],
+			[
+				"playerj",
+				"trunk/JS SDK/src/main/javascript/player.js"
+			],
+			[
+				"attshicss",
+				"att-landing-page/shipping/css/all.css"
+			],
+			[
+				"attshindex",
+				"att-landing-page/shipping/index.html"
+			],
+			[
+				"data.xml",
+				"vbill2/app/data.xml"
+			],
+			[
+				"all.sc",
+				"vbill/app/styles/all.scss"
+			],
+			[
+				"vbilindex",
+				"vbill/index.html"
+			],
+			[
+				"shiall",
+				"att-landing-page/shipping/css/all.css"
+			],
+			[
+				"gricss",
+				"griffin/all.css"
+			],
+			[
+				"shiindex",
+				"att-landing-page/shipping/index.html"
+			],
+			[
+				"attshiindex",
+				"att-landing-page/shipping/index.html"
+			],
+			[
+				"griinde",
+				"griffin/index.html"
+			],
+			[
+				"grininde",
+				"griffin/index.html"
+			],
+			[
+				"all.js",
+				"griffin/all.js"
+			],
+			[
+				"griin",
+				"griffin/index.html"
+			],
+			[
+				"loadtimeinde",
+				"loadtimes/index.html"
+			],
+			[
+				"griall",
+				"griffin/all.js"
+			],
+			[
+				"survey",
+				"JS SDK/src/main/javascript/survey.js"
+			],
+			[
+				"playerjs",
+				"JS SDK/src/main/javascript/player.js"
+			],
+			[
+				"index.",
+				"index.html"
+			],
+			[
+				"turkcell-qa/videobilllegacy.js",
+				"turkcell-qa/videobilllegacy.js"
+			],
+			[
+				"skyit/embedded.js",
+				"skyit/embedded.js"
+			],
+			[
+				"ahsonboarding/embedded.js",
+				"ahsonboarding/embedded.js"
+			],
+			[
+				"vzf/embedded.js",
+				"vzf/embedded.js"
+			],
+			[
+				"vs-prudentialcarolinas/sundayskysettingsembedded.js",
+				"vs-prudentialcarolinas/sundaySkySettingsEmbedded.js"
+			],
+			[
+				"sears/sundayskysettings.js",
+				"sears/sundaySkySettings.js"
+			],
+			[
+				"officedepot/sundayskysettings.js",
+				"officedepot/sundaySkySettings.js"
+			],
+			[
+				"kabel/embedded.js",
+				"kabel/embedded.js"
+			],
+			[
+				"gccgl/sundayskysettings.js",
+				"gccgl/sundaySkySettings.js"
+			],
+			[
+				"demo/sundayskysettings.js",
+				"demo/sundaySkySettings.js"
+			],
+			[
+				"comcast/embedded.js",
+				"comcast/embedded.js"
+			],
+			[
+				"atlantis/embedded.js",
+				"atlantis/embedded.js"
+			],
+			[
+				"amerimark/amerimarksettingsembedded.js",
+				"amerimark/amerimarkSettingsEmbedded.js"
+			],
+			[
+				"ag/sundayskysettings.js",
+				"ag/sundaySkySettings.js"
+			],
+			[
+				"read",
+				"read_ssky.js"
+			],
+			[
+				"webindex",
+				"webm/index.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"plapro",
+				"~/Documents/SundaySky/PlayerProxy/PlayerProxy.sublime-project"
+			],
+			[
+				"surv",
+				"~/Documents/SundaySky/Survey/DVG-Survey-4.4/Survey/Survey.sublime-project"
+			],
+			[
+				"plap",
+				"~/Documents/SundaySky/PlayerProxy/PlayerProxy.sublime-project"
+			],
+			[
+				"plp",
+				"~/Documents/SundaySky/PlayerProxy/PlayerProxy.sublime-project"
+			],
+			[
+				"prox",
+				"~/Documents/SundaySky/PlayerProxy/PlayerProxy.sublime-project"
+			],
+			[
+				"side",
+				"/opt/local/www/htdocs/vbill2/SideBySide.sublime-project"
+			],
+			[
+				"",
+				"~/Documents/SundaySky/Player/Player.sublime-project"
+			],
+			[
+				"plaprox",
+				"~/Documents/SundaySky/PlayerProxy/PlayerProxy.sublime-project"
+			],
+			[
+				"plprox",
+				"~/Documents/SundaySky/PlayerProxy/PlayerProxy.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 400.0,
+		"selected_items":
+		[
+		],
+		"width": 400.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 300.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
