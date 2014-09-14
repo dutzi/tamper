@@ -27,6 +27,12 @@ def send_message(message):
     sys.stdout.write(message)
     sys.stdout.flush()
 
+def open_editor(filename):
+    if os.name == "nt":
+        os.startfile(filename)
+    else:
+        call(["open", fullFilePath])
+
 class ChromeComm(WebSocketApplication):
     def on_open(self):
         send_message('Connection opened')
@@ -45,7 +51,7 @@ class ChromeComm(WebSocketApplication):
                     if (url['url'] == message['url']):
                         if (url['isLoaded'] == True):
                             fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + url['cachedFilename']
-                            call(['open', fullFilePath])
+                            open_editor(fullFilePath)
                         ruleAlreadyAdded = True
 
                         self.ws.send(json.dumps({'method': 'rule-added', 'url': message['url']}))
@@ -74,7 +80,7 @@ class ChromeComm(WebSocketApplication):
                     localFile.write(message['responseContent'].encode('utf8'))
                     localFile.close()
 
-                    call(['open', fullFilePath])
+                    open_editor(fullFilePath)
                     rule = {
                         'isEnabled': True,
                         'isLoaded': True,
