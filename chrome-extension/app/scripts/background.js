@@ -40,8 +40,6 @@ var config = {
 			data: 'function FindProxyForURL(url, host) {\n' +
 			'    if (host == "localhost")\n' +
 			'        return "DIRECT";\n' +
-			'    if (host == "resstg.sundaysky.com" || host == "cdn1-res.sundaysky.com" || host == "d21o24qxwf7uku.cloudfront.net" || host == "dds6m601du5ji.cloudfront.net" || host == "mitmproxy")\n' +
-			'        return "PROXY localhost:8081";\n' +
 			'    return "PROXY localhost:8889";\n' +
 			'}'
 		}
