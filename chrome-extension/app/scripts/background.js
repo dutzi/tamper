@@ -1,6 +1,7 @@
 /*global alert*/
 'use strict';
 
+var nativeMessagingPort;
 var EXTENSION_ID = chrome.runtime.id;
 var isProxyEnabled;
 
@@ -98,6 +99,11 @@ chrome.runtime.onConnect.addListener(function (port) {
 			ports.splice(ports.indexOf(port), 1);
 			onProxyStateChange();
 		});
+
+		port.onMessage.addListener(function (message) {
+			console.log('posting mesasge to proxy', message);
+			nativeMessagingPort.postMessage(message);
+		});
 	}
 
 	chrome.runtime.sendMessage(EXTENSION_ID, {'method': 'toggle-proxy', 'isEnabled': isProxyEnabled});
@@ -119,10 +125,25 @@ chrome.browserAction.onClicked.addListener(function () {
 });
 
 function connectToProxy() {
-	var nativeMessagingPort = chrome.runtime.connectNative('com.dutzi.chromeproxy');
+	console.log('connecting to proxy');
+	nativeMessagingPort = chrome.runtime.connectNative('com.dutzi.chromeproxy');
+
+	setTimeout(function () {
+		if (nativeMessagingPort) {
+			nativeMessagingPort.postMessage({'method': 'hello'});
+		}
+	}, 100);
 
 	nativeMessagingPort.onMessage.addListener(function(msg) {
-		console.log('Got message: ' + msg.msg);
+		console.log('Got message: ', msg.msg);
+		switch (msg.msg.method) {
+			case 'log':
+				// console.log(msg.msg.message);
+				break;
+			default:
+				sendMessageToAllPorts(msg.msg);
+				break;
+		}
 		isConnectedToProxy = true;
 		onProxyStateChange();
 	});
@@ -130,6 +151,7 @@ function connectToProxy() {
 	nativeMessagingPort.onDisconnect.addListener(function() {
 		console.log('Disconnected');
 		isConnectedToProxy = false;
+		nativeMessagingPort = null;
 		onProxyStateChange();
 		setTimeout(connectToProxy, 1000);
 	});

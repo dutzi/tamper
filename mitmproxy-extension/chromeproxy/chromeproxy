@@ -7,6 +7,7 @@ import json
 import re
 import urllib2
 import uuid
+import Queue
 from netlib.odict import ODictCaseless
 from subprocess import call
 from libmproxy import proxy, flow
@@ -15,43 +16,62 @@ from libmproxy.proxy.config import ProxyConfig
 from libmproxy.proxy.server import ProxyServer
 from libmproxy.encoding import decode_gzip
 
-from geventwebsocket import WebSocketServer, WebSocketApplication, Resource
-
 sharedVars = {}
 urlsToProxy = []
-webSockets = []
 
 def send_message(message):
-    message = '{"msg":"' + message + '"}'
+    message = '{"msg": %s}' % message
     sys.stdout.write(struct.pack('I', len(message)))
     sys.stdout.write(message)
     sys.stdout.flush()
 
-class ChromeComm(WebSocketApplication):
-    def on_open(self):
-        send_message('Connection opened')
-        webSockets.append(self.ws)
-        self.ws.send(json.dumps({'method': 'rule-list', 'rules': urlsToProxy}))
+def open_editor(filename):
+    if os.name == 'nt':
+        os.startfile(filename)
+    else:
+        call(['open', fullFilePath])
 
-    def on_message(self, message):
+# Thread that reads messages from the webapp.
+def read_thread_func(queue):
+    message_number = 0
+    while 1:
+        # Read the message length (first 4 bytes).
+        text_length_bytes = sys.stdin.read(4)
+
+        if len(text_length_bytes) == 0:
+            if queue:
+                queue.put(None)
+            sys.exit(0)
+
+        # Unpack message length as 4 byte integer.
+        text_length = struct.unpack('i', text_length_bytes)[0]
+
+        # Read the text (JSON object) of the message.
+        text = sys.stdin.read(text_length).decode('utf-8')
+
+        message = json.loads('%s' % text)
+
         if message == None:
-            send_message('Disconnected')
+            send_message(json.dumps({'method': 'log', 'message': 'Disconnected'}))
         else:
-            message = json.loads(message)
-            if (message['method'] == 'add-rule'):
+            if (message['method'] == 'hello'):
+                send_message(json.dumps({'method': 'hello'}))
+
+            elif (message['method'] == 'add-rule'):
+                send_message(json.dumps({'method': 'log', 'message': 'adding rule'}))
                 ruleAlreadyAdded = False
 
                 for url in urlsToProxy:
                     if (url['url'] == message['url']):
                         if (url['isLoaded'] == True):
                             fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + url['cachedFilename']
-                            call(['open', fullFilePath])
+                            open_editor(fullFilePath)
                         ruleAlreadyAdded = True
 
-                        self.ws.send(json.dumps({'method': 'rule-added', 'url': message['url']}))
+                        send_message(json.dumps({'method': 'rule-added', 'url': message['url']}))
 
                 if not ruleAlreadyAdded:
-                    send_message('Adding rule for: ' + message['url'])
+                    send_message(json.dumps({'method': 'log', 'message': 'Adding rule for: ' + message['url']}))
 
                     # TODO guess file ext by Content-Type
                     regExpRes = re.search('.*\/(.*)', message['url'])
@@ -74,7 +94,7 @@ class ChromeComm(WebSocketApplication):
                     localFile.write(message['responseContent'].encode('utf8'))
                     localFile.close()
 
-                    call(['open', fullFilePath])
+                    open_editor(fullFilePath)
                     rule = {
                         'isEnabled': True,
                         'isLoaded': True,
@@ -85,29 +105,16 @@ class ChromeComm(WebSocketApplication):
 
                     urlsToProxy.append(rule)
 
-                    self.ws.send(json.dumps({'method': 'rule-added', 'rule': rule}))
+                    send_message(json.dumps({'method': 'rule-added', 'rule': rule}))
                     save_request_map()
-
-
-                    # send_message(message['responseContent'])
-                    # urlsToProxy.append({
-                    #     'isLoaded': False,
-                    #     'url': message['url'],
-                    #     'ws': self.ws
-                    # });
-                    # opener = urllib2.build_opener()
-                    # send_message(map((lambda header: (header['name'], header['value'])), message['headers']))
-                    # opener.addheaders.append(map((lambda header: (header['name'], header['value'])), message['headers']))
-                    # f = opener.open(message['url'])
-                    # urllib2.urlopen(message['url'])
 
             elif (message['method'] == 'remove-rule'):
                 for url in urlsToProxy:
                     if (url['url'] == message['url']):
                         urlsToProxy.remove(url)
-                        send_message('Removing rule for: ' + message['url'])
+                        send_message(json.dumps({'method': 'log', 'message': 'Removing rule for: ' + message['url']}))
                         
-                        self.ws.send(json.dumps({'method': 'rule-removed', 'rule': url}))
+                        send_message(json.dumps({'method': 'rule-removed', 'rule': url}))
                         save_request_map();
                         break
 
@@ -115,22 +122,11 @@ class ChromeComm(WebSocketApplication):
                 for url in urlsToProxy:
                     if (url['url'] == message['url']):
                         url['isEnabled'] = message['isEnabled']
-                        send_message('Updating rule for: ' + message['url'])
+                        send_message(json.dumps({'method': 'log', 'message': 'Updating rule for: ' + message['url']}))
 
-                        self.ws.send(json.dumps({'method': 'rule-updated', 'rule': url}))
+                        send_message(json.dumps({'method': 'rule-updated', 'rule': url}))
                         save_request_map();
                         break
-
-    def on_close(self, reason):
-        send_message('bye')
-        # TODO remove ws from webSockets list
-
-def run_websocket():
-    send_message('Running Websocket')
-    WebSocketServer(
-        ('', 8001),
-        Resource({'/': ChromeComm})
-    ).serve_forever()
 
 class InjectingMaster(flow.FlowMaster):
     def __init__(self, server, state):
@@ -160,10 +156,10 @@ class InjectingMaster(flow.FlowMaster):
     def handle_request(self, msg):
         f = flow.FlowMaster.handle_request(self, msg)
 
-        send_message(f.request.scheme + '://' + f.request.host + f.request.path)
+        send_message(json.dumps({'method': 'log', 'message': f.request.scheme + '://' + f.request.host + f.request.path}))
         for url in urlsToProxy:
             if (url['url'] == f.request.scheme + '://' + f.request.host + f.request.path and url['isEnabled'] == True):
-                send_message('Serving cached file (' + url['cachedFilename'] + ')')
+                send_message(json.dumps({'method': 'log', 'message': 'Serving cached file (' + url['cachedFilename'] + ')'}))
                 localFile = open(self._cachedFilesPath + url['cachedFilename'], 'r');
                 content = localFile.read()
                 localFile.close();                
@@ -215,36 +211,6 @@ class InjectingMaster(flow.FlowMaster):
     def handle_response(self, msg):
         f = flow.FlowMaster.handle_response(self, msg)
 
-        # send_message(f.request.scheme + '://' + f.request.host + f.request.path)
-        # for url in urlsToProxy:
-        #     if (url['url'] == f.request.scheme + '://' + f.request.host + f.request.path and url['isLoaded'] == False):
-        #         url['isLoaded'] = True
-        #         while True:
-        #             filename = str(uuid.uuid1()) + '.chromeproxy'
-        #             fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + filename
-        #             if not os.path.isfile(fullFilePath):
-        #                 break
-
-        #         localFile = open(fullFilePath, 'w')
-        #         if (f.response.headers['Content-Encoding'] and f.response.headers['Content-Encoding'][0] == 'gzip'):
-        #             localFile.write(decode_gzip(msg.content))
-        #         else:
-        #             localFile.write(msg.content)
-        #         localFile.close()
-
-        #         url['contentType'] = f.response.headers['Content-Type'][0]
-        #         url['cachedFilename'] = filename
-
-        #         call(['subl', '-n', fullFilePath])
-        #         if url['ws']:
-        #             send_message('sending message')
-        #             url['ws'].send(json.dumps({'method': 'rule-added', 'url': url['url']}))
-
-        #             del url['ws']
-
-        #         save_request_map()
-
-
         if f:
             msg.reply()
 
@@ -275,9 +241,11 @@ def main(argv):
         f.write('{"rules": []}')
         f.close()
 
-    t1 = threading.Thread(target = run_websocket)
-    t1.daemon = True
-    t1.start()
+
+    queue = Queue.Queue()
+    thread = threading.Thread(target=read_thread_func, args=(queue,))
+    thread.daemon = True
+    thread.start()
 
     state = flow.State()
     server = proxy.server.ProxyServer(proxyConfig)

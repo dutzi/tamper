@@ -4,7 +4,7 @@ var rulesContainer = document.getElementById('rulesList');
 var urlsDivsWaitingForApproval = {};
 var requests = [];
 var proxyRules = [];
-var ws;
+var bgPort;
 var isProxyEnabled = true;
 var body = document.querySelector('body');
 
@@ -60,11 +60,11 @@ Utils.log('ChromeProxy');
 /****************************/
 
 function onProxyStateChanged() {
-	if (ws.readyState === 1) {
-		Utils.removeClassName(body, 'proxy-connection-error');
-	} else {
-		Utils.addClassName(body, 'proxy-connection-error');
-	}
+	// if (ws.readyState === 1) {
+	// 	Utils.removeClassName(body, 'proxy-connection-error');
+	// } else {
+	// 	Utils.addClassName(body, 'proxy-connection-error');
+	// }
 	if (isProxyEnabled) {
 		Utils.addClassName(body, 'proxy-enabled');
 	} else {
@@ -145,11 +145,11 @@ if (localStorage.getItem('sidebarWidth')) {
 
 function onToggleRuleEnable(e) {
 	var rule = proxyRules[e.currentTarget.parentNode.parentNode.id.substr(5)];
-	ws.send(JSON.stringify({
+	bgPort.postMessage({
 		method: 'udpate-rule',
 		url: rule.url,
 		isEnabled: e.currentTarget.checked
-	}));
+	});
 }
 
 function updateRulesList() {
@@ -203,21 +203,22 @@ function onQuickEditClick(e) {
 	}
 
 	if (ruleExists) {
-		ws.send(JSON.stringify({
+		bgPort.postMessage({
 			method: 'add-rule',
 			url: url
-		}));
+		});
 	} else {
 		Utils.addClassName(target, 'request-item-loading');
 		request.getContent(function (content, encoding) {
-			if (ws.readyState === 1) {
-				ws.send(JSON.stringify({
-					method: 'add-rule',
-					url: url,
-					responseHeaders: request.response.headers,
-					responseContent: content
-				}));
-			}
+			Utils.removeClassName(target, 'request-item-loading');
+			Utils.addClassName(target, 'request-item-loaded');
+			// delete urlsDivsWaitingForApproval[message.rule.url];
+			bgPort.postMessage({
+				method: 'add-rule',
+				url: url,
+				responseHeaders: request.response.headers,
+				responseContent: content
+			});
 		});
 	}
 }
@@ -228,23 +229,13 @@ function onDiscardChangesClick(e) {
 	var url = target.querySelector('.request-item-url').innerText;
 	urlsDivsWaitingForApproval[url] = target;
 	Utils.addClassName(target, 'request-item-removed');
-	if (ws.readyState === 1) {
-		ws.send(JSON.stringify({
-			method: 'remove-rule',
-			url: url
-		}));
-	}
+	bgPort.postMessage({
+		method: 'remove-rule',
+		url: url
+	});
 }
 
 function onRequestFinished(e) {
-	// if (e.request.url.indexOf('facebook.com') > -1) {
-	// 	console.log(e);
-	// 	e.getContent(function (content, encoding) {
-	// 		console.log(content);
-	// 	});
-	// }
-
-
 	var listItem = document.getElementById('requestItem').cloneNode(true);
 	var url = e.request.url;
 	var path = Utils.getFilename(url);
@@ -282,61 +273,6 @@ function onNavigated(e) {
 chrome.devtools.network.onRequestFinished.addListener(onRequestFinished);
 chrome.devtools.network.onNavigated.addListener(onNavigated);
 
-
-/****************************/
-/********* MITMPROXY ********/
-/****************************/
-
-function connectToWebSocket() {
-	ws = new WebSocket('ws://localhost:8001');
-	var wasConnected = false;
-	ws.onopen = function() {
-		wasConnected = true;
-		Utils.log('Connected to mitmproxy');
-		onProxyStateChanged();
-		ws.send(JSON.stringify({method: 'noop'}));
-	};
-	ws.onclose = function() {
-		if (wasConnected) {
-			Utils.log('Connection to mitmproxy lost!');
-		}
-		onProxyStateChanged();
-		setTimeout(connectToWebSocket, 1000);
-	};
-	ws.onmessage = function(e) {
-		Utils.log('Got message from proxy ' + e.data);
-		var message = JSON.parse(e.data);
-		switch (message.method) {
-			case 'rule-added':
-				console.log(urlsDivsWaitingForApproval[message.rule.url]);
-				Utils.removeClassName(urlsDivsWaitingForApproval[message.rule.url], 'request-item-loading');
-				Utils.addClassName(urlsDivsWaitingForApproval[message.rule.url], 'request-item-loaded');
-				delete urlsDivsWaitingForApproval[message.rule.url];
-
-				proxyRules.push(message.rule);
-				updateRulesList();
-				break;
-			case 'rule-removed':
-				for (var i = 0; i < proxyRules.length; i++) {
-					if (proxyRules[i].url === message.rule.url) {
-						proxyRules.splice(i, 1);
-						break;
-					}
-				}
-				updateRulesList();
-				break;
-			case 'rule-list':
-				proxyRules = message.rules;
-				updateRulesList();
-				break;
-		}
-	};
-	ws.onerror = function(e) {
-		// log('Error connecting');
-	};
-}
-connectToWebSocket();
-
 /****************************/
 /********** RESIZE **********/
 /****************************/
@@ -352,16 +288,33 @@ onResize();
 /***** BACKGROUND PAGE ******/
 /****************************/
 
-var backgroundPageConnection = chrome.runtime.connect({
+bgPort = chrome.runtime.connect({
 	name: 'devtools-page'
 });
 
-backgroundPageConnection.onMessage.addListener(function (message) {
+bgPort.onMessage.addListener(function (message) {
 	Utils.log(JSON.stringify(message));
 	switch (message.method) {
 		case 'toggle-proxy':
 			isProxyEnabled = message.isEnabled;
 			onProxyStateChanged();
+			break;
+		case 'rule-added':
+			proxyRules.push(message.rule);
+			updateRulesList();
+			break;
+		case 'rule-removed':
+			for (var i = 0; i < proxyRules.length; i++) {
+				if (proxyRules[i].url === message.rule.url) {
+					proxyRules.splice(i, 1);
+					break;
+				}
+			}
+			updateRulesList();
+			break;
+		case 'rule-list':
+			proxyRules = message.rules;
+			updateRulesList();
 			break;
 	}
 });

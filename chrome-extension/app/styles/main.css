@@ -18,7 +18,7 @@ body {
 
 #sidebar {
 	-webkit-user-select: none;
-	overflow: scroll;
+	overflow: auto;
 	background: #eee;
 	border-right: 1px solid #bbb;
 	box-sizing: border-box;
@@ -135,6 +135,7 @@ body {
 }
 
 .sidebar-list-item {
+	flex: none;
 	color: black;
 	text-shadow: 0px 1px white;
 }
@@ -179,6 +180,7 @@ body {
 }
 
 .sidebar-list-header {
+	flex: none;
 	color: rgb(92, 110, 129);
 	text-shadow: rgba(255, 255, 255, 0.75) 0 1px 0;
 	padding: 4px 8px;
