@@ -26,11 +26,10 @@ def send_message(message):
     sys.stdout.flush()
 
 def open_editor(filename):
-<<<<<<< HEAD
     if os.name == 'nt':
         os.startfile(filename)
     else:
-        call(['open', fullFilePath])
+        call(['open', filename])
 
 # Thread that reads messages from the webapp.
 def read_thread_func(queue):
@@ -51,22 +50,13 @@ def read_thread_func(queue):
         text = sys.stdin.read(text_length).decode('utf-8')
 
         message = json.loads('%s' % text)
-=======
-    if os.name == "nt":
-        os.startfile(filename)
-    else:
-        call(["open", fullFilePath])
-
-class ChromeComm(WebSocketApplication):
-    def on_open(self):
-        send_message('Connection opened')
-        webSockets.append(self.ws)
-        self.ws.send(json.dumps({'method': 'rule-list', 'rules': urlsToProxy}))
->>>>>>> fc8be8882481d882268777d21a220a7141f495d8
 
         if message == None:
             send_message(json.dumps({'method': 'log', 'message': 'Disconnected'}))
         else:
+            if (message['method'] == 'rule-list'):
+                send_message(json.dumps({'method': 'rule-list', 'rules': urlsToProxy}))
+
             if (message['method'] == 'hello'):
                 send_message(json.dumps({'method': 'hello'}))
 
@@ -78,10 +68,10 @@ class ChromeComm(WebSocketApplication):
                     if (url['url'] == message['url']):
                         if (url['isLoaded'] == True):
                             fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + url['cachedFilename']
-                            open_editor(fullFilePath)
+                            call(['subl', fullFilePath])
                         ruleAlreadyAdded = True
 
-                        send_message(json.dumps({'method': 'rule-added', 'url': message['url']}))
+                        send_message(json.dumps({'method': 'rule-updated', 'url': message['url']}))
 
                 if not ruleAlreadyAdded:
                     send_message(json.dumps({'method': 'log', 'message': 'Adding rule for: ' + message['url']}))
@@ -107,7 +97,7 @@ class ChromeComm(WebSocketApplication):
                     localFile.write(message['responseContent'].encode('utf8'))
                     localFile.close()
 
-                    open_editor(fullFilePath)
+                    call(['subl', fullFilePath])
                     rule = {
                         'isEnabled': True,
                         'isLoaded': True,
@@ -259,6 +249,7 @@ def main(argv):
     thread = threading.Thread(target=read_thread_func, args=(queue,))
     thread.daemon = True
     thread.start()
+    # call(['subl', '/'])
 
     state = flow.State()
     server = proxy.server.ProxyServer(proxyConfig)
