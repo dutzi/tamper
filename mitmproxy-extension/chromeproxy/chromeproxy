@@ -26,6 +26,7 @@ def send_message(message):
     sys.stdout.flush()
 
 def open_editor(filename):
+<<<<<<< HEAD
     if os.name == 'nt':
         os.startfile(filename)
     else:
@@ -50,6 +51,18 @@ def read_thread_func(queue):
         text = sys.stdin.read(text_length).decode('utf-8')
 
         message = json.loads('%s' % text)
+=======
+    if os.name == "nt":
+        os.startfile(filename)
+    else:
+        call(["open", fullFilePath])
+
+class ChromeComm(WebSocketApplication):
+    def on_open(self):
+        send_message('Connection opened')
+        webSockets.append(self.ws)
+        self.ws.send(json.dumps({'method': 'rule-list', 'rules': urlsToProxy}))
+>>>>>>> fc8be8882481d882268777d21a220a7141f495d8
 
         if message == None:
             send_message(json.dumps({'method': 'log', 'message': 'Disconnected'}))
