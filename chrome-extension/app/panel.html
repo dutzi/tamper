@@ -10,14 +10,46 @@
 		<!-- endbuild -->
 	</head>
 	<body onready="onBodyReady()" class="proxy-enabled">
+
+		<!-- Settings -->
+		<div id="settings">
+			<div class="close-button"></div>
+			<div class="header">Chrome Proxy Settings</div>
+			<div class="properties">
+				<div class="property property-inline">
+					<div class="label">
+						<div class="label-text">Editor Command Line</div>
+						<div class="tooltip">The command line used to open the editor, $1 will be replaced with the file's name (for example `subl -n $1`)</div>
+					</div>
+					<div class="value"><input id="txtEditorCommand" type="text"></div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="property property-inline">
+					<div class="label">
+						<div class="label-text">PAC File</div>
+						<div class="tooltip">This PAC file will be used by Chrome. PAC files are useful when you want some requests to go to other proxies. Read more about PAC file <a href="http://en.wikipedia.org/wiki/Proxy_auto-config" target="_blank">here</a>.</div>
+					</div>
+					<div class="value"><textarea id="txtPACFile"></textarea></div>
+					<div class="clearfix"></div>
+				</div>
+				<a id="btnRestoreDefaults" class="button" href="#">Restore Defaults</a>
+			</div>
+		</div>
+
 		<div class="split-view hbox view">
 			<div class="split-view-resizer"></div>
-			<div id="sidebar" class="vbox" class="sidebar-list">
-				<div class="sidebar-list-item sidebar-list-item-big selected">Network</div>
-				<div class="sidebar-list-header">RULES</div>
-				<div id="rulesList">
+
+			<!-- Sidebar -->
+			<div id="sidebar" class="vbox">
+				<div class="sidebar-list">
+					<div class="sidebar-list-item sidebar-list-item-big selected">Network</div>
+					<div class="sidebar-list-header">RULES</div>
+					<div id="rulesList"></div>
 				</div>
+				<div class="bottom-bar"><div class="settings-button"></div></div>
 			</div>
+
+			<!-- Network -->
 			<div class="right-pane vbox">
 				<div class="error-message">Could not connect to proxy (<a target="_blank" href="http://dutzi.github.com/chrome-proxy/#proxy-connection-error">help</a>)</div>
 				<div class="toolbar">
@@ -28,6 +60,7 @@
 				<div id="requestsContainer" class="vbox"></div>
 			</div>
 
+			<!-- templates -->
 			<div id="requestItem" class="request-item">
 				<span class="request-item-modified-badge">Modified</span>
 				<a href="#"></a>

@@ -7,6 +7,10 @@ body {
 	font-size: 11px;
 }
 
+.clearfix {
+	clear: both;
+}
+
 .resizing {
 	-webkit-user-select: none;
 }
@@ -18,12 +22,16 @@ body {
 
 #sidebar {
 	-webkit-user-select: none;
-	overflow: auto;
 	background: #eee;
 	border-right: 1px solid #bbb;
 	box-sizing: border-box;
 	width: 231px;
 	flex: none;
+}
+
+.sidebar-list {
+	flex: auto;
+	overflow: auto;
 }
 
 .request-item a {
@@ -330,4 +338,140 @@ body {
 	cursor: ew-resize;
 	width: 5px;
 	z-index: 1;
+}
+
+.settings-button {
+	-webkit-mask-position: -160px -23px;
+	-webkit-mask-image: url(../images/statusbarButtonGlyphs.png);
+	-webkit-mask-size: 320px 144px;
+	opacity: 0.8;
+	float: right;
+	width: 30px;
+	height: 26px;
+	background: rgb(99, 99, 99);
+	cursor: pointer;
+}
+
+.settings-button:hover {
+	opacity: 1;
+}
+
+#settings {
+	display: none;
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	bottom: 10px;
+	right: 10px;
+	background: white;
+	z-index: 10;
+	box-shadow: 1px 1px 5px 2px rgba(128, 128, 128, 0.7);
+	padding: 21px;
+	overflow: auto;
+}
+
+#settings .header {
+	font-size: 18px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+}
+
+#settings .properties {
+	position: absolute;
+	bottom: 0px;
+	right: 21px;
+	top: 75px;
+	left: 21px;
+	overflow: auto;
+}
+
+#settings .property {
+	margin-bottom: 20px;
+	clear: left;
+}
+
+#settings .property .label {
+	width: 200px;
+	line-height: 26px;
+	font-size: 13px;
+}
+
+#settings .property-inline .label {
+	float: left;
+}
+
+#settings .property .value input, #settings .property .value textarea {
+	width: 300px;
+	border: 1px solid #aaa;
+	font-size: 13px;
+	padding: 3px;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+#settings .property .value textarea {
+	height: 150px;
+	font-family: menlo;
+	font-size: 11px;
+}
+
+#settings .property .value input:focus, #settings .property .value textarea:focus {
+	outline: 1px solid #aaa;
+}
+
+#settings .property .tooltip {
+	line-height: initial;
+	margin-top: 3px;
+	color: #888;
+	font-size: 10px;
+	width: 190px;
+}
+
+#settings a {
+	color: #666;
+}
+
+#settings .button {
+	font-size: 13px;
+}
+
+#settings .close-button {
+	background-image: url(../images/statusbarButtonGlyphs.png);
+	background-size: 320px 144px;
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	background-position: -175px -96px;
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	cursor: pointer;
+}
+
+#settings #btnRestoreDefaults {
+	padding-bottom: 20px;
+}
+
+.bottom-bar {
+	flex: none;
+	bottom: 0px;
+	width: 100%;
+	border-top: 1px solid rgba(0, 0, 0, 0.13);
+	background: rgb(218, 218, 218);
+	box-sizing: border-box;
+}
+
+#settings .close-button:hover {
+	background-position: -143px -96px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+	.settings-button {
+		-webkit-mask-image: url(../images/statusbarButtonGlyphs_2x.png);
+	}
+
+	#settings .close-button {
+		background-image: url(../images/statusbarButtonGlyphs_2x.png);
+	}
 }

@@ -6,8 +6,8 @@ var requests = [];
 var proxyRules = [];
 var bgPort;
 var isProxyEnabled = true;
-var body = document.querySelector('body');
-
+var $body = document.querySelector('body');
+var $filter = document.querySelector('#txtFilter');
 /****************************/
 /********** UTILS ***********/
 /****************************/
@@ -61,14 +61,14 @@ Utils.log('ChromeProxy');
 
 function onProxyStateChanged() {
 	// if (ws.readyState === 1) {
-	// 	Utils.removeClassName(body, 'proxy-connection-error');
+	// 	Utils.removeClassName($body, 'proxy-connection-error');
 	// } else {
-	// 	Utils.addClassName(body, 'proxy-connection-error');
+	// 	Utils.addClassName($body, 'proxy-connection-error');
 	// }
 	if (isProxyEnabled) {
-		Utils.addClassName(body, 'proxy-enabled');
+		Utils.addClassName($body, 'proxy-enabled');
 	} else {
-		Utils.removeClassName(body, 'proxy-enabled');
+		Utils.removeClassName($body, 'proxy-enabled');
 	}
 }
 
@@ -120,17 +120,17 @@ function onResizeMouseMove(e) {
 }
 
 function onResizeMouseUp(e) {
-	Utils.removeClassName(body, 'resizing');
-	body.removeEventListener('mousemove', onResizeMouseMove);
-	body.removeEventListener('mouseup', onResizeMouseUp);
+	Utils.removeClassName($body, 'resizing');
+	$body.removeEventListener('mousemove', onResizeMouseMove);
+	$body.removeEventListener('mouseup', onResizeMouseUp);
 	localStorage.setItem('sidebarWidth', sidebar.style.width);
 }
 
 function onResizeMouseDown(e) {
 	initX = e.offsetX;
-	Utils.addClassName(body, 'resizing');
-	body.addEventListener('mousemove', onResizeMouseMove);
-	body.addEventListener('mouseup', onResizeMouseUp);
+	Utils.addClassName($body, 'resizing');
+	$body.addEventListener('mousemove', onResizeMouseMove);
+	$body.addEventListener('mouseup', onResizeMouseUp);
 }
 
 splitViewResize.addEventListener('mousedown', onResizeMouseDown);
@@ -274,6 +274,52 @@ chrome.devtools.network.onRequestFinished.addListener(onRequestFinished);
 chrome.devtools.network.onNavigated.addListener(onNavigated);
 
 /****************************/
+/********* SETTINGS *********/
+/****************************/
+
+var $settings = document.querySelector('#settings');
+
+function populateSettingsScreen() {
+	document.querySelector('#txtEditorCommand').value = localStorage.getItem('editorCommandLine');
+	document.querySelector('#txtPACFile').value = localStorage.getItem('pacScript');
+}
+
+function showSettings() {
+	$settings.style.display = 'initial';
+	populateSettingsScreen();
+	function onBodyKeyDown(e) {
+		if (e.keyCode == 27) {
+			e.preventDefault();
+			e.stopPropagation();
+			saveAndCloseSettings();
+			$body.removeEventListener('keydown', onBodyKeyDown);
+		}
+	}
+	$body.addEventListener('keydown', onBodyKeyDown);
+}
+
+function saveAndCloseSettings() {
+	$settings.style.display = 'none';
+	localStorage.setItem('editorCommandLine', document.querySelector('#txtEditorCommand').value);
+	localStorage.setItem('pacScript', document.querySelector('#txtPACFile').value);
+	bgPort.postMessage({
+		method: 'update-settings'
+	});
+}
+
+document.querySelector('.settings-button').addEventListener('click', function (e) {
+	showSettings();
+});
+
+document.querySelector('#btnRestoreDefaults').addEventListener('click', function (e) {
+	localStorage.setItem('editorCommandLine', localStorage.getItem('default.editorCommandLine'));
+	localStorage.setItem('pacScript', localStorage.getItem('default.pacScript'));
+	populateSettingsScreen();
+});
+
+document.querySelector('#settings .close-button').addEventListener('click', saveAndCloseSettings);
+
+/****************************/
 /********** RESIZE **********/
 /****************************/
 
@@ -290,6 +336,10 @@ onResize();
 
 bgPort = chrome.runtime.connect({
 	name: 'devtools-page'
+});
+
+bgPort.postMessage({
+	method: 'rule-list'
 });
 
 bgPort.onMessage.addListener(function (message) {
@@ -313,8 +363,32 @@ bgPort.onMessage.addListener(function (message) {
 			updateRulesList();
 			break;
 		case 'rule-list':
+			console.log('got rule list', message.rules)
 			proxyRules = message.rules;
 			updateRulesList();
 			break;
 	}
 });
+
+/****************************/
+/***** KEYBOARD CONTROL *****/
+/****************************/
+
+function onBodyKeyDown(e) {
+	if (e.shiftKey && e.keyCode === 191) {
+		if (document.activeElement.tagName !== 'input' && document.activeElement.tagName !== 'textarea') {
+			showSettings();
+		}
+	} else if ((e.metaKey || e.ctrlKey) && e.keyCode === 70) {
+		$filter.focus()
+		e.stopPropagation();
+		e.preventDefault();
+	} else if (e.keyCode === 27 && document.activeElement === $filter) {
+		$filter.value = '';
+		onFilterChange();
+		e.preventDefault();
+		e.stopPropagation();
+	}
+}
+$body.addEventListener('keydown', onBodyKeyDown);
+
