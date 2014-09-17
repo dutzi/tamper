@@ -1,10 +1,18 @@
 /*global Q*/
+
+var PROXY_NOT_CONNECTED = 'not connected';
+var PROXY_COULD_NOT_START = 'could not start';
+var PROXY_STARTED = 'proxy started';
+var PROXY_CONNECTED = 'proxy connected';
+var PROXY_DISCONNECTED = 'proxy disconnected';
+
 var requestsContainer = document.getElementById('requestsContainer');
 var rulesContainer = document.getElementById('rulesList');
 var requests = [];
 var proxyRules = [];
 var bgPort;
 var isProxyEnabled = true;
+var proxyState;
 var $body = document.querySelector('body');
 var $filter = document.querySelector('#txtFilter');
 
@@ -53,7 +61,7 @@ var Utils = {
 };
 
 /****************************/
-/******* PROXY ENGINE *******/
+/******** PROXY API *********/
 /****************************/
 
 var proxy = {
@@ -98,6 +106,12 @@ var proxy = {
 			method: 'open-file',
 			filename: filename
 		});
+	},
+	restartProxy: function () {
+		return proxy.postMessage({
+			method: 'start-proxy',
+			port: localStorage.getItem('proxyPort')
+		});
 	}
 };
 
@@ -106,6 +120,12 @@ var proxy = {
 /****************************/
 
 function onProxyStateChanged() {
+	if (proxyState !== PROXY_STARTED) {
+		Utils.addClassName($body, 'proxy-connection-error');
+	}  else {
+		Utils.removeClassName($body, 'proxy-connection-error');
+	}
+
 	if (isProxyEnabled) {
 		Utils.addClassName($body, 'proxy-enabled');
 	} else {
@@ -188,6 +208,8 @@ if (localStorage.getItem('sidebarWidth')) {
 function onToggleRuleEnable(e) {
 	var rule = proxyRules[e.currentTarget.parentNode.parentNode.id.substr(5)];
 	rule.isEnabled = e.currentTarget.checked;
+
+	localStorage.setItem('rules', JSON.stringify(proxyRules));
 	proxy.updateRules(proxyRules);
 }
 
@@ -254,7 +276,7 @@ function onQuickEditClick(e) {
 			if (filename.indexOf('?') > -1) {
 				filename = filename.substr(0, filename.indexOf('?'));
 			}
-			
+
 			proxy.cacheResponse(filename, content).then(function (response) {
 				proxy.openFile(response.cachedFilename);
 				proxyRules.push({
@@ -284,6 +306,7 @@ function onDiscardChangesClick(e) {
 		}
 	}
 
+	localStorage.setItem('rules', JSON.stringify(proxyRules));
 	proxy.updateRules(proxyRules);
 	updateRulesListView();
 }
@@ -335,11 +358,13 @@ var $settings = document.querySelector('#settings');
 function populateSettingsScreen() {
 	document.querySelector('#txtEditorCommand').value = localStorage.getItem('editorCommandLine');
 	document.querySelector('#txtPACFile').value = localStorage.getItem('pacScript');
+	document.querySelector('#txtProxyPort').value = localStorage.getItem('proxyPort');
 }
 
 function saveSettings() {
 	localStorage.setItem('editorCommandLine', document.querySelector('#txtEditorCommand').value);
 	localStorage.setItem('pacScript', document.querySelector('#txtPACFile').value);
+	localStorage.setItem('proxyPort', document.querySelector('#txtProxyPort').value);
 	bgPort.postMessage({
 		method: 'update-settings'
 	});
@@ -352,6 +377,8 @@ function saveAndCloseSettings() {
 
 function showSettings() {
 	$settings.style.display = 'initial';
+	document.querySelector('.proxy-restarted-notification').style.display = 'none';
+	
 	populateSettingsScreen();
 	function onBodyKeyDown(e) {
 		if (e.keyCode === 27) {
@@ -374,8 +401,16 @@ document.querySelector('#btnRestoreDefaults').addEventListener('click', function
 	populateSettingsScreen();
 });
 
+document.querySelector('#btnRestartProxy').addEventListener('click', function (e) {
+	document.querySelector('.proxy-restarted-notification').style.display = 'none';
+	proxy.restartProxy().then(function () {
+		document.querySelector('.proxy-restarted-notification').style.display = 'initial';
+	});
+});
+
 document.querySelector('#txtEditorCommand').addEventListener('keyup', saveSettings);
 document.querySelector('#txtPACFile').addEventListener('keyup', saveSettings);
+document.querySelector('#txtProxyPort').addEventListener('keyup', saveSettings);
 document.querySelector('#settings .close-button').addEventListener('click', saveAndCloseSettings);
 
 /****************************/
@@ -398,21 +433,22 @@ bgPort = chrome.runtime.connect({
 });
 
 function onBgMessage (message) {
+	console.log(message);
 	Utils.log(JSON.stringify(message));
 	switch (message.method) {
-		case 'toggle-proxy':
-			isProxyEnabled = message.isEnabled;
+		case 'proxy-state-update':
+			isProxyEnabled = message.isProxyEnabled;
+			proxyState = message.proxyState;
 			onProxyStateChanged();
 			break;
 		case 'update-rules':
-			proxyRules = localStorage.getItem('proxyRules');
+			proxyRules = JSON.parse(localStorage.getItem('rules'));
 			updateRulesListView();
 			break;
 	}
 }
 
 bgPort.onMessage.addListener(onBgMessage);
-bgPort.onMessage.removeListener(onBgMessage);
 
 /****************************/
 /***** KEYBOARD CONTROL *****/
@@ -447,5 +483,6 @@ if (!proxyRules) {
 } else {
 	proxyRules = JSON.parse(proxyRules);
 }
+// proxy.updateRules();
 
 updateRulesListView();

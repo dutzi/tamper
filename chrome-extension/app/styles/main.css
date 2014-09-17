@@ -379,7 +379,7 @@ body {
 
 #settings .properties {
 	position: absolute;
-	bottom: 0px;
+	bottom: 21px;
 	right: 21px;
 	top: 75px;
 	left: 21px;
@@ -436,6 +436,16 @@ body {
 	font-size: 13px;
 }
 
+#btnRestartProxy {
+	margin-left: 10px;
+}
+
+.proxy-restarted-notification {
+	display: none;
+	margin-left: 10px;
+	color: rgb(15, 177, 15);
+}
+
 #settings .close-button {
 	background-image: url(../images/statusbarButtonGlyphs.png);
 	background-size: 320px 144px;
@@ -447,10 +457,6 @@ body {
 	top: 8px;
 	right: 8px;
 	cursor: pointer;
-}
-
-#settings #btnRestoreDefaults {
-	padding-bottom: 20px;
 }
 
 .bottom-bar {

@@ -4,6 +4,7 @@ import struct
 import os
 import threading
 import json
+import time
 import re
 import urllib2
 import uuid
@@ -15,8 +16,11 @@ from libmproxy.protocol.http import HTTPResponse
 from libmproxy.proxy.config import ProxyConfig
 from libmproxy.proxy.server import ProxyServer
 from libmproxy.encoding import decode_gzip
+from libmproxy.proxy.primitives import ProxyServerError
 
-# sharedVars = {}
+sharedVars = {
+    'shouldClose': False
+}
 urlsToProxy = []
 
 def send_message(message):
@@ -31,6 +35,37 @@ def open_editor(filename):
     else:
         call(['subl', filename])
 
+def unload_daemons():
+    # return;
+    sharedVars['server'].shutdown()
+    sharedVars['shouldClose'] = True
+    MessageBox = ctypes.windll.user32.MessageBoxA
+    MessageBox(None, 'Hello', 'Window title', 0)
+
+def start_server(port):
+    state = flow.State()
+
+    proxyConfig = proxy.config.ProxyConfig(
+        port = int(port)
+    )
+
+    try:
+        server = proxy.server.ProxyServer(proxyConfig)
+        m = InjectingMaster(server, state)
+        sharedVars['server'] = m
+        send_message(json.dumps({'method': 'proxy-started'}))
+        m.run()
+
+    except ProxyServerError:
+        send_message(json.dumps({
+            'method': 'proxy-error',
+            'errorCode': 100,
+            'errorDesc': 'Could not start proxy, port ' + str(port) + ' is in use'
+        }))
+        # sharedVars['shouldClose'] = True
+        sys.exit(0)
+    
+
 # Thread that reads messages from the webapp.
 def read_thread_func(queue):
     message_number = 0
@@ -41,6 +76,7 @@ def read_thread_func(queue):
         if len(text_length_bytes) == 0:
             if queue:
                 queue.put(None)
+            unload_daemons()
             sys.exit(0)
 
         # Unpack message length as 4 byte integer.
@@ -52,7 +88,8 @@ def read_thread_func(queue):
         message = json.loads('%s' % text)
 
         if message == None:
-            send_message(json.dumps({'method': 'log', 'message': 'Disconnected'}))
+            unload_daemons()
+            sys.exit(0)
         else:
 
 
@@ -70,6 +107,19 @@ def read_thread_func(queue):
 
             elif (message['method'] == 'open-file'):
                 open_editor(os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename'])
+                send_message(json.dumps(message))
+
+            elif (message['method'] == 'start-proxy'):
+                send_message(json.dumps({'method': 'log', 'message': 'Starting proxy... (' + str(message['port']) + ')'}))
+
+                if 'server' in sharedVars:
+                    sharedVars['server'].shutdown()
+                    sharedVars.pop('server')
+
+                thread = threading.Thread(target=start_server, args=(message['port'],))
+                thread.daemon = True
+                thread.start()
+
                 send_message(json.dumps(message))
 
             elif (message['method'] == 'cache-response'):
@@ -98,8 +148,8 @@ class InjectingMaster(flow.FlowMaster):
         _requestMapFile = open(config['requestMapPath'], 'r+')
         # requestMap = json.load(_requestMapFile)['rules']
         self._cachedFilesPath = relPath + 'replacements/'
-        while len(urlsToProxy):
-            urlsToProxy.pop()
+        # while len(urlsToProxy):
+        #     urlsToProxy.pop()
 
         # sharedVars['rules'] = [];
 
@@ -118,7 +168,7 @@ class InjectingMaster(flow.FlowMaster):
         f = flow.FlowMaster.handle_request(self, msg)
 
         fullURL = f.request.scheme + '://' + f.request.host
-        if ((f.request.scheme == 'http' and f.request.port == 80) or (f.request.scheme == 'https' and f.request.port == 443) == False):
+        if ((f.request.scheme == 'http' and f.request.port == 80) == False and (f.request.scheme == 'https' and f.request.port == 443) == False):
             fullURL = fullURL + ':' + str(f.request.port)
         fullURL = fullURL + f.request.path
 
@@ -181,10 +231,6 @@ def save_request_map():
     requestMapFile.close()
 
 def main(argv):
-    proxyConfig = proxy.config.ProxyConfig(
-        port = 8889
-    )
-
     relPath = os.path.dirname(os.path.realpath(__file__)) + '/'
     config['requestMapPath'] = relPath + 'requestmap.json'
 
@@ -202,11 +248,12 @@ def main(argv):
     thread.daemon = True
     thread.start()
 
-    state = flow.State()
-    server = proxy.server.ProxyServer(proxyConfig)
+    if len(argv) > 1 and argv[1] == '-p':
+        start_server(int(argv[2]))
 
-    m = InjectingMaster(server, state)
-    m.run()
+    while not sharedVars['shouldClose']:
+        pass
+    
 
 if __name__ == '__main__':
     main(sys.argv)

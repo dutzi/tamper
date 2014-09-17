@@ -1,7 +1,14 @@
 /*global alert*/
 'use strict';
 
+var PROXY_NOT_CONNECTED = 'not connected';
+var PROXY_COULD_NOT_START = 'could not start';
+var PROXY_STARTED = 'proxy started';
+var PROXY_CONNECTED = 'proxy connected';
+var PROXY_DISCONNECTED = 'proxy disconnected';
+
 var nativeMessagingPort;
+var couldNotStartProxy;
 
 /*************************/
 /********** INIT *********/
@@ -13,9 +20,10 @@ var defaultSettings = {
 	pacScript:	'function FindProxyForURL(url, host) {\n' +
 				'    if (host == "localhost")\n' +
 				'        return "DIRECT";\n' +
-				'    return "PROXY localhost:8889";\n' +
+				'    return "PROXY localhost:%%PORT%%";\n' +
 				'}',
-	sidebarWidth: '250px'
+	sidebarWidth: '250px',
+	proxyPort: 8080
 };
 
 if (window.navigator.appVersion.match(/OS X/)) {
@@ -44,7 +52,7 @@ if (!localStorage.getItem('rules')) {
 // 	}
 // });
 
-var isConnectedToProxy = true;
+var proxyState = PROXY_NOT_CONNECTED;
 
 /*************************/
 /********* PROXY *********/
@@ -77,19 +85,20 @@ var ports = [];
 
 function sendMessageToAllPorts(message) {
 	for (var i = 0; i < ports.length; i++) {
+		console.log('Sending message ', message, 'to port', ports[i]);
 		ports[i].postMessage(message);
 	}
 }
 
 function updateProxyConfig() {
-	if (!settings.isProxyEnabled || !isConnectedToProxy) {
+	if (!settings.isProxyEnabled || proxyState !== PROXY_STARTED) {
 		chrome.proxy.settings.set({value: config.system, scope: 'regular'}, function() {});
 	} else {
 		chrome.proxy.settings.set({
 			value: {
 				mode: 'pac_script',
 				pacScript: {
-					data: settings.pacScript
+					data: settings.pacScript.replace('%%PORT%%', settings.proxyPort)
 				}
 			},
 			scope: 'regular'
@@ -99,22 +108,29 @@ function updateProxyConfig() {
 }
 
 function updateProxyIcon() {
-	if (!isConnectedToProxy) {
+	if (proxyState !== PROXY_STARTED) {
 		chrome.browserAction.setIcon({'path': {'19': 'images/icon_error.png', '38': 'images/icon_error@2x.png'}});
-		chrome.browserAction.setTitle({title: 'Error connecting to proxy'});
-	} else if (settings.isProxyEnabled) {
-		chrome.browserAction.setIcon({'path': {'19': 'images/icon_on.png', '38': 'images/icon_on@2x.png'}});
-		chrome.browserAction.setTitle({title: 'Chrome Proxy is enabled'});
+		chrome.browserAction.setTitle({title: 'Error starting proxy'});
 	} else {
-		chrome.browserAction.setIcon({'path': {'19': 'images/icon_off.png', '38': 'images/icon_off@2x.png'}});
-		chrome.browserAction.setTitle({title: 'Chrome Proxy is disabled'});
+		if (settings.isProxyEnabled) {
+			chrome.browserAction.setIcon({'path': {'19': 'images/icon_on.png', '38': 'images/icon_on@2x.png'}});
+			chrome.browserAction.setTitle({title: 'Chrome Proxy is enabled'});
+		} else {
+			chrome.browserAction.setIcon({'path': {'19': 'images/icon_off.png', '38': 'images/icon_off@2x.png'}});
+			chrome.browserAction.setTitle({title: 'Chrome Proxy is disabled'});
+		}
 	}
 }
 
+//TODO use observe instead
 function onProxyStateChange() {
 	updateProxyConfig();
 	updateProxyIcon();
-	sendMessageToAllPorts({method: 'toggle-proxy', 'isEnabled': settings.isProxyEnabled});
+	sendMessageToAllPorts({
+		method: 'proxy-state-update',
+		isProxyEnabled: settings.isProxyEnabled,
+		proxyState: proxyState
+	});
 }
 
 chrome.runtime.onConnect.addListener(function (port) {
@@ -137,6 +153,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 				case 'update-settings':
 					settings.editorCommandLine = localStorage.getItem('editorCommandLine');
 					settings.pacScript = localStorage.getItem('pacScript');
+					settings.proxyPort = localStorage.getItem('proxyPort');
 					updateProxyConfig();
 					updateProxyIcon();
 					break;
@@ -147,8 +164,12 @@ chrome.runtime.onConnect.addListener(function (port) {
 			}
 		});
 	}
-
-	chrome.runtime.sendMessage(chrome.runtime.id, {method: 'toggle-proxy', isEnabled: settings.isProxyEnabled});
+	console.log('sending proxy state update',settings.isProxyEnabled,proxyState);
+	port.postMessage({
+		method: 'proxy-state-update',
+		isProxyEnabled: settings.isProxyEnabled,
+		proxyState: proxyState
+	});
 });
 
 chrome.runtime.onMessage.addListener(function (message) {
@@ -173,6 +194,7 @@ function connectToProxy() {
 	setTimeout(function () {
 		if (nativeMessagingPort) {
 			nativeMessagingPort.postMessage({method: 'hello'});
+			nativeMessagingPort.postMessage({method: 'start-proxy', port: settings.proxyPort});
 			nativeMessagingPort.postMessage({
 				method: 'update-rules',
 				rules: JSON.parse(localStorage.getItem('rules'))
@@ -185,21 +207,34 @@ function connectToProxy() {
 			console.log('Got message: ', msg.msg);
 		}
 
+		if (proxyState !== PROXY_CONNECTED && proxyState !== PROXY_STARTED) {
+			proxyState = PROXY_CONNECTED;
+		}
+
 		switch (msg.msg.method) {
 			case 'log':
-				console.log('Proxy Log: ' + msg.msg.message);
+				console.log('Proxy Log:', msg.msg.message);
+				break;
+			case 'proxy-error':
+				console.error('Proxy Error (' + msg.msg.errorCode + '): ' + msg.msg.errorDesc);
+				if (msg.msg.errorCode === 100) {
+					proxyState = PROXY_COULD_NOT_START;
+				}
+				break;
+			case 'proxy-started':
+				proxyState = PROXY_STARTED;
 				break;
 			default:
 				sendMessageToAllPorts(msg.msg);
 				break;
 		}
-		isConnectedToProxy = true;
+		
 		onProxyStateChange();
 	});
 	
 	nativeMessagingPort.onDisconnect.addListener(function() {
 		console.log('Disconnected');
-		isConnectedToProxy = false;
+		proxyState = PROXY_DISCONNECTED;
 		nativeMessagingPort = null;
 		onProxyStateChange();
 		setTimeout(connectToProxy, 1000);
