@@ -2,24 +2,22 @@
 'use strict';
 
 var nativeMessagingPort;
-var EXTENSION_ID = chrome.runtime.id;
-var isProxyEnabled;
-var ruleList;
 
 /*************************/
-/******** SETTINGS *******/
+/********** INIT *********/
 /*************************/
 
 var settings = {};
 var defaultSettings = {
 	isProxyEnabled: true,
-	pacScript: 	'function FindProxyForURL(url, host) {\n' +
+	pacScript:	'function FindProxyForURL(url, host) {\n' +
 				'    if (host == "localhost")\n' +
 				'        return "DIRECT";\n' +
 				'    return "PROXY localhost:8889";\n' +
 				'}',
 	sidebarWidth: '250px'
-}
+};
+
 if (window.navigator.appVersion.match(/OS X/)) {
 	defaultSettings.editorCommandLine = 'subl $1';
 } else if (window.navigator.appVersion.match(/win/i)) {
@@ -34,6 +32,10 @@ for (var key in defaultSettings) {
 		localStorage.setItem(key, settings[key]);
 	}
 	localStorage.setItem('default.' + key, defaultSettings[key]);
+}
+
+if (!localStorage.getItem('rules')) {
+	localStorage.setItem('rules', '[]');
 }
 
 // chrome.tabs.onUpdated.addListener(function (tabId) {
@@ -65,12 +67,6 @@ var config = {
 			},
 			bypassList: ['localhost:8001', 'localhost:35729']
 		}
-	},
-	chromeproxyPac: {
-		mode: 'pac_script',
-		pacScript: {
-			data: settings.pacScript
-		}
 	}
 };
 
@@ -89,7 +85,15 @@ function updateProxyConfig() {
 	if (!settings.isProxyEnabled || !isConnectedToProxy) {
 		chrome.proxy.settings.set({value: config.system, scope: 'regular'}, function() {});
 	} else {
-		chrome.proxy.settings.set({value: config.chromeproxyPac, scope: 'regular'}, function() {});
+		chrome.proxy.settings.set({
+			value: {
+				mode: 'pac_script',
+				pacScript: {
+					data: settings.pacScript
+				}
+			},
+			scope: 'regular'
+		}, function() {});
 	}
 	localStorage.setItem('isProxyEnabled', settings.isProxyEnabled);
 }
@@ -131,20 +135,20 @@ chrome.runtime.onConnect.addListener(function (port) {
 		port.onMessage.addListener(function (message) {
 			switch (message.method) {
 				case 'update-settings':
-					settings['editorCommandLine'] = localStorage.getItem('default.editorCommandLine');
-					settings['pacScript'] = localStorage.getItem('default.pacScript');
+					settings.editorCommandLine = localStorage.getItem('editorCommandLine');
+					settings.pacScript = localStorage.getItem('pacScript');
 					updateProxyConfig();
 					updateProxyIcon();
 					break;
 				default:
-					console.log('posting mesasge to proxy', message);
+					console.log('Posting message to proxy', message);
 					nativeMessagingPort.postMessage(message);
 					break;
 			}
 		});
 	}
 
-	chrome.runtime.sendMessage(EXTENSION_ID, {'method': 'toggle-proxy', 'isEnabled': settings.isProxyEnabled});
+	chrome.runtime.sendMessage(chrome.runtime.id, {method: 'toggle-proxy', isEnabled: settings.isProxyEnabled});
 });
 
 chrome.runtime.onMessage.addListener(function (message) {
@@ -168,20 +172,22 @@ function connectToProxy() {
 
 	setTimeout(function () {
 		if (nativeMessagingPort) {
-			nativeMessagingPort.postMessage({'method': 'hello'});
-			nativeMessagingPort.postMessage({'method': 'rule-list'});
+			nativeMessagingPort.postMessage({method: 'hello'});
+			nativeMessagingPort.postMessage({
+				method: 'update-rules',
+				rules: JSON.parse(localStorage.getItem('rules'))
+			});
 		}
 	}, 1000);
 
 	nativeMessagingPort.onMessage.addListener(function(msg) {
-		console.log('Got message: ', msg.msg);
+		if (msg.msg.method !== 'log') {
+			console.log('Got message: ', msg.msg);
+		}
+
 		switch (msg.msg.method) {
 			case 'log':
-				// console.log(msg.msg.message);
-				break;
-			case 'rule-list':
-				ruleList = msg.msg.rules;
-				sendMessageToAllPorts(msg.msg);
+				console.log('Proxy Log: ' + msg.msg.message);
 				break;
 			default:
 				sendMessageToAllPorts(msg.msg);

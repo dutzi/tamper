@@ -1,17 +1,16 @@
-var EXTENSION_ID = chrome.runtime.id;
+/*global Q*/
 var requestsContainer = document.getElementById('requestsContainer');
 var rulesContainer = document.getElementById('rulesList');
-var urlsDivsWaitingForApproval = {};
 var requests = [];
 var proxyRules = [];
 var bgPort;
 var isProxyEnabled = true;
 var $body = document.querySelector('body');
 var $filter = document.querySelector('#txtFilter');
+
 /****************************/
 /********** UTILS ***********/
 /****************************/
-
 
 var Utils = {
 	addClassName: function (element, className) {
@@ -53,18 +52,60 @@ var Utils = {
 	}
 };
 
-Utils.log('ChromeProxy');
+/****************************/
+/******* PROXY ENGINE *******/
+/****************************/
+
+var proxy = {
+	postMessage: function (message) {
+		var deferred = Q.defer();
+		var requestId = Math.floor(Math.random() * 100000000000);
+
+		var onBgPortMessage = function (response) {
+			if (response._requestId === requestId) {
+				bgPort.onMessage.removeListener(onBgPortMessage);
+				delete response._requestId;
+
+				if (response.errorCode) {
+					deferred.reject(response);
+				} else {
+					deferred.resolve(response);
+				}
+			}
+		};
+		bgPort.onMessage.addListener(onBgPortMessage);
+
+		message._requestId = requestId;
+		bgPort.postMessage(message);
+
+		return deferred.promise;
+	},
+	cacheResponse: function (filename, content) {
+		return proxy.postMessage({
+			method: 'cache-response',
+			filename: filename,
+			responseContent: content
+		});
+	},
+	updateRules: function (rules) {
+		return proxy.postMessage({
+			method: 'update-rules',
+			rules: rules
+		});
+	},
+	openFile: function (filename) {
+		return proxy.postMessage({
+			method: 'open-file',
+			filename: filename
+		});
+	}
+};
 
 /****************************/
 /********* TOOLBAR **********/
 /****************************/
 
 function onProxyStateChanged() {
-	// if (ws.readyState === 1) {
-	// 	Utils.removeClassName($body, 'proxy-connection-error');
-	// } else {
-	// 	Utils.addClassName($body, 'proxy-connection-error');
-	// }
 	if (isProxyEnabled) {
 		Utils.addClassName($body, 'proxy-enabled');
 	} else {
@@ -75,7 +116,7 @@ function onProxyStateChanged() {
 function onToggleProxy(e) {
 	isProxyEnabled = !isProxyEnabled;
 	onProxyStateChanged();
-	chrome.runtime.sendMessage(EXTENSION_ID, {'method': 'toggle-proxy', 'isEnabled': isProxyEnabled});
+	chrome.runtime.sendMessage(chrome.runtime.id, {'method': 'toggle-proxy', 'isEnabled': isProxyEnabled});
 }
 
 function onFilterChange(e) {
@@ -108,6 +149,7 @@ document.querySelector('#txtFilter').addEventListener('keyup', onFilterChange);
 /****************************/
 /******** SPLIT VIEW ********/
 /****************************/
+
 var initX;
 var splitViewResize = document.querySelector('.split-view-resizer');
 var sidebar = document.querySelector('#sidebar');
@@ -145,14 +187,11 @@ if (localStorage.getItem('sidebarWidth')) {
 
 function onToggleRuleEnable(e) {
 	var rule = proxyRules[e.currentTarget.parentNode.parentNode.id.substr(5)];
-	bgPort.postMessage({
-		method: 'udpate-rule',
-		url: rule.url,
-		isEnabled: e.currentTarget.checked
-	});
+	rule.isEnabled = e.currentTarget.checked;
+	proxy.updateRules(proxyRules);
 }
 
-function updateRulesList() {
+function updateRulesListView() {
 	rulesContainer.innerHTML = '';
 
 	for (var i = 0; i < proxyRules.length; i++) {
@@ -192,32 +231,41 @@ function onQuickEditClick(e) {
 		return;
 	}
 
-	urlsDivsWaitingForApproval[url] = target;
-
 	var ruleExists = false;
+	var rule;
 	for (var i = 0; i < proxyRules.length; i++) {
 		if (proxyRules[i].url === url) {
 			ruleExists = true;
+			rule = proxyRules[i];
 			break;
 		}
 	}
 
 	if (ruleExists) {
-		bgPort.postMessage({
-			method: 'add-rule',
-			url: url
-		});
+		proxy.openFile(rule.cachedFilename);
 	} else {
 		Utils.addClassName(target, 'request-item-loading');
 		request.getContent(function (content, encoding) {
 			Utils.removeClassName(target, 'request-item-loading');
 			Utils.addClassName(target, 'request-item-loaded');
-			// delete urlsDivsWaitingForApproval[message.rule.url];
-			bgPort.postMessage({
-				method: 'add-rule',
-				url: url,
-				responseHeaders: request.response.headers,
-				responseContent: content
+
+			// TODO guess file ext by Content-Type
+			var filename = Utils.getFilename(url);
+			if (filename.indexOf('?') > -1) {
+				filename = filename.substr(0, filename.indexOf('?'));
+			}
+			
+			proxy.cacheResponse(filename, content).then(function (response) {
+				proxy.openFile(response.cachedFilename);
+				proxyRules.push({
+					url: url,
+					responseHeaders: request.response.headers,
+					cachedFilename: response.cachedFilename,
+					isEnabled: true
+				});
+				localStorage.setItem('rules', JSON.stringify(proxyRules));
+				proxy.updateRules(proxyRules);
+				updateRulesListView();
 			});
 		});
 	}
@@ -226,13 +274,18 @@ function onQuickEditClick(e) {
 function onDiscardChangesClick(e) {
 	var target = e.currentTarget.parentNode.parentNode;
 
-	var url = target.querySelector('.request-item-url').innerText;
-	urlsDivsWaitingForApproval[url] = target;
 	Utils.addClassName(target, 'request-item-removed');
-	bgPort.postMessage({
-		method: 'remove-rule',
-		url: url
-	});
+	var url = target.querySelector('.request-item-url').innerText;
+
+	for (var i = 0; i < proxyRules.length; i++) {
+		if (proxyRules[i].url === url) {
+			proxyRules.splice(i, 1);
+			break;
+		}
+	}
+
+	proxy.updateRules(proxyRules);
+	updateRulesListView();
 }
 
 function onRequestFinished(e) {
@@ -253,7 +306,7 @@ function onRequestFinished(e) {
 	listItem.querySelector('a').addEventListener('click', onQuickEditClick);
 	listItem.querySelector('.request-item-discard-changes').addEventListener('click', onDiscardChangesClick);
 	listItem.querySelector('.request-item-url').innerText = e.request.url;
-	console.log(e.response.headers);
+
 	for (var i = 0; i < e.response.headers.length; i++) {
 		if (e.response.headers[i].name.toLowerCase() === 'via' && e.response.headers[i].value.indexOf('chrome-proxy') > -1) {
 			Utils.addClassName(listItem, 'request-item-modified');
@@ -284,11 +337,24 @@ function populateSettingsScreen() {
 	document.querySelector('#txtPACFile').value = localStorage.getItem('pacScript');
 }
 
+function saveSettings() {
+	localStorage.setItem('editorCommandLine', document.querySelector('#txtEditorCommand').value);
+	localStorage.setItem('pacScript', document.querySelector('#txtPACFile').value);
+	bgPort.postMessage({
+		method: 'update-settings'
+	});
+}
+
+function saveAndCloseSettings() {
+	saveSettings();
+	$settings.style.display = 'none';
+}
+
 function showSettings() {
 	$settings.style.display = 'initial';
 	populateSettingsScreen();
 	function onBodyKeyDown(e) {
-		if (e.keyCode == 27) {
+		if (e.keyCode === 27) {
 			e.preventDefault();
 			e.stopPropagation();
 			saveAndCloseSettings();
@@ -296,15 +362,6 @@ function showSettings() {
 		}
 	}
 	$body.addEventListener('keydown', onBodyKeyDown);
-}
-
-function saveAndCloseSettings() {
-	$settings.style.display = 'none';
-	localStorage.setItem('editorCommandLine', document.querySelector('#txtEditorCommand').value);
-	localStorage.setItem('pacScript', document.querySelector('#txtPACFile').value);
-	bgPort.postMessage({
-		method: 'update-settings'
-	});
 }
 
 document.querySelector('.settings-button').addEventListener('click', function (e) {
@@ -317,6 +374,8 @@ document.querySelector('#btnRestoreDefaults').addEventListener('click', function
 	populateSettingsScreen();
 });
 
+document.querySelector('#txtEditorCommand').addEventListener('keyup', saveSettings);
+document.querySelector('#txtPACFile').addEventListener('keyup', saveSettings);
 document.querySelector('#settings .close-button').addEventListener('click', saveAndCloseSettings);
 
 /****************************/
@@ -338,37 +397,22 @@ bgPort = chrome.runtime.connect({
 	name: 'devtools-page'
 });
 
-bgPort.postMessage({
-	method: 'rule-list'
-});
-
-bgPort.onMessage.addListener(function (message) {
+function onBgMessage (message) {
 	Utils.log(JSON.stringify(message));
 	switch (message.method) {
 		case 'toggle-proxy':
 			isProxyEnabled = message.isEnabled;
 			onProxyStateChanged();
 			break;
-		case 'rule-added':
-			proxyRules.push(message.rule);
-			updateRulesList();
-			break;
-		case 'rule-removed':
-			for (var i = 0; i < proxyRules.length; i++) {
-				if (proxyRules[i].url === message.rule.url) {
-					proxyRules.splice(i, 1);
-					break;
-				}
-			}
-			updateRulesList();
-			break;
-		case 'rule-list':
-			console.log('got rule list', message.rules)
-			proxyRules = message.rules;
-			updateRulesList();
+		case 'update-rules':
+			proxyRules = localStorage.getItem('proxyRules');
+			updateRulesListView();
 			break;
 	}
-});
+}
+
+bgPort.onMessage.addListener(onBgMessage);
+bgPort.onMessage.removeListener(onBgMessage);
 
 /****************************/
 /***** KEYBOARD CONTROL *****/
@@ -380,7 +424,7 @@ function onBodyKeyDown(e) {
 			showSettings();
 		}
 	} else if ((e.metaKey || e.ctrlKey) && e.keyCode === 70) {
-		$filter.focus()
+		$filter.focus();
 		e.stopPropagation();
 		e.preventDefault();
 	} else if (e.keyCode === 27 && document.activeElement === $filter) {
@@ -392,3 +436,16 @@ function onBodyKeyDown(e) {
 }
 $body.addEventListener('keydown', onBodyKeyDown);
 
+
+/****************************/
+/*********** INIT ***********/
+/****************************/
+
+proxyRules = localStorage.getItem('rules');
+if (!proxyRules) {
+	proxyRules = [];
+} else {
+	proxyRules = JSON.parse(proxyRules);
+}
+
+updateRulesListView();

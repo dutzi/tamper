@@ -16,7 +16,7 @@ from libmproxy.proxy.config import ProxyConfig
 from libmproxy.proxy.server import ProxyServer
 from libmproxy.encoding import decode_gzip
 
-sharedVars = {}
+# sharedVars = {}
 urlsToProxy = []
 
 def send_message(message):
@@ -29,7 +29,7 @@ def open_editor(filename):
     if os.name == 'nt':
         os.startfile(filename)
     else:
-        call(['open', filename])
+        call(['subl', filename])
 
 # Thread that reads messages from the webapp.
 def read_thread_func(queue):
@@ -54,82 +54,40 @@ def read_thread_func(queue):
         if message == None:
             send_message(json.dumps({'method': 'log', 'message': 'Disconnected'}))
         else:
-            if (message['method'] == 'rule-list'):
-                send_message(json.dumps({'method': 'rule-list', 'rules': urlsToProxy}))
+
 
             if (message['method'] == 'hello'):
                 send_message(json.dumps({'method': 'hello'}))
 
-            elif (message['method'] == 'add-rule'):
-                send_message(json.dumps({'method': 'log', 'message': 'adding rule'}))
-                ruleAlreadyAdded = False
+            elif (message['method'] == 'update-rules'):
+                while len(urlsToProxy):
+                    urlsToProxy.pop()
 
-                for url in urlsToProxy:
-                    if (url['url'] == message['url']):
-                        if (url['isLoaded'] == True):
-                            fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + url['cachedFilename']
-                            call(['subl', fullFilePath])
-                        ruleAlreadyAdded = True
-
-                        send_message(json.dumps({'method': 'rule-updated', 'url': message['url']}))
-
-                if not ruleAlreadyAdded:
-                    send_message(json.dumps({'method': 'log', 'message': 'Adding rule for: ' + message['url']}))
-
-                    # TODO guess file ext by Content-Type
-                    regExpRes = re.search('.*\/(.*)', message['url'])
-                    if (not regExpRes or regExpRes.group(1) == ''):
-                        urlFilename = '.chromeproxy'
-                    else:
-                        urlFilename = '.' + regExpRes.group(1)
-                        if (urlFilename.find('?') > -1):
-                            urlFilename = urlFilename[:urlFilename.find('?')]
-                        if urlFilename == '.':
-                            urlFilename = '.chromeproxy'
-
-                    while True:
-                        filename = str(uuid.uuid1()) + urlFilename
-                        fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + filename
-                        if not os.path.isfile(fullFilePath):
-                            break
-
-                    localFile = open(fullFilePath, 'w')
-                    localFile.write(message['responseContent'].encode('utf8'))
-                    localFile.close()
-
-                    call(['subl', fullFilePath])
-                    rule = {
-                        'isEnabled': True,
-                        'isLoaded': True,
-                        'url': message['url'],
-                        'responseHeaders': message['responseHeaders'],
-                        'cachedFilename': filename
-                    }
-
+                for rule in message['rules']:
                     urlsToProxy.append(rule)
 
-                    send_message(json.dumps({'method': 'rule-added', 'rule': rule}))
-                    save_request_map()
+                send_message(json.dumps(message))
 
-            elif (message['method'] == 'remove-rule'):
-                for url in urlsToProxy:
-                    if (url['url'] == message['url']):
-                        urlsToProxy.remove(url)
-                        send_message(json.dumps({'method': 'log', 'message': 'Removing rule for: ' + message['url']}))
-                        
-                        send_message(json.dumps({'method': 'rule-removed', 'rule': url}))
-                        save_request_map();
+            elif (message['method'] == 'open-file'):
+                open_editor(os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename'])
+                send_message(json.dumps(message))
+
+            elif (message['method'] == 'cache-response'):
+                urlFilename = message['filename']
+                while True:
+                    filename = str(uuid.uuid1()) + '.' + urlFilename
+                    fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + filename
+                    if not os.path.isfile(fullFilePath):
                         break
 
-            elif (message['method'] == 'udpate-rule'):
-                for url in urlsToProxy:
-                    if (url['url'] == message['url']):
-                        url['isEnabled'] = message['isEnabled']
-                        send_message(json.dumps({'method': 'log', 'message': 'Updating rule for: ' + message['url']}))
+                localFile = open(fullFilePath, 'w')
+                localFile.write(message['responseContent'].encode('utf8'))
+                localFile.close()
 
-                        send_message(json.dumps({'method': 'rule-updated', 'rule': url}))
-                        save_request_map();
-                        break
+                # send_message(json.dumps({'method': 'rule-added', 'rule': rule}))
+                message['cachedFilename'] = filename
+                send_message(json.dumps(message))
+
 
 class InjectingMaster(flow.FlowMaster):
     def __init__(self, server, state):
@@ -138,16 +96,16 @@ class InjectingMaster(flow.FlowMaster):
         relPath = os.path.dirname(os.path.realpath(__file__)) + '/'
 
         _requestMapFile = open(config['requestMapPath'], 'r+')
-        requestMap = json.load(_requestMapFile)['rules']
+        # requestMap = json.load(_requestMapFile)['rules']
         self._cachedFilesPath = relPath + 'replacements/'
         while len(urlsToProxy):
             urlsToProxy.pop()
 
-        sharedVars['rules'] = [];
+        # sharedVars['rules'] = [];
 
-        for url in requestMap:
-            urlsToProxy.append(url)
-            sharedVars['rules'].append(url)
+        # for url in requestMap:
+        #     urlsToProxy.append(url)
+        #     sharedVars['rules'].append(url)
 
 
     def run(self):
@@ -159,15 +117,19 @@ class InjectingMaster(flow.FlowMaster):
     def handle_request(self, msg):
         f = flow.FlowMaster.handle_request(self, msg)
 
-        send_message(json.dumps({'method': 'log', 'message': f.request.scheme + '://' + f.request.host + f.request.path}))
+        fullURL = f.request.scheme + '://' + f.request.host
+        if ((f.request.scheme == 'http' and f.request.port == 80) or (f.request.scheme == 'https' and f.request.port == 443) == False):
+            fullURL = fullURL + ':' + str(f.request.port)
+        fullURL = fullURL + f.request.path
+
+        send_message(json.dumps({'method': 'log', 'message': fullURL}))
         for url in urlsToProxy:
-            if (url['url'] == f.request.scheme + '://' + f.request.host + f.request.path and url['isEnabled'] == True):
+            if (url['url'] == fullURL and url['isEnabled'] == True):
                 send_message(json.dumps({'method': 'log', 'message': 'Serving cached file (' + url['cachedFilename'] + ')'}))
                 localFile = open(self._cachedFilesPath + url['cachedFilename'], 'r');
                 content = localFile.read()
                 localFile.close();                
 
-                # resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless([['Content-Type', url['contentType']], ['via', 'chrome-proxy']]), content)
                 responseHeaders = []
                 hasViaHeader = False
                 for header in url['responseHeaders']:
@@ -182,8 +144,6 @@ class InjectingMaster(flow.FlowMaster):
                 if (not hasViaHeader):
                     responseHeaders.append(['via', 'chrome-proxy'])
 
-                # responseHeaders = filter((lambda header: header['name'] != 'Content-Encoding'), url['responseHeaders'])
-                # responseHeaders = map((lambda header: (header['name'], header['value'])), responseHeaders)
                 resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless(responseHeaders), content)
                 msg.reply(resp)
                 break
@@ -198,15 +158,7 @@ class InjectingMaster(flow.FlowMaster):
         return f
 
     def handle_responseheaders(self, f):
-        # f = resp.flow
-
-        isURLRequested = False
-        for url in urlsToProxy:
-            if (url['url'] == f.request.scheme + '://' + f.request.host + f.request.path and url['isLoaded'] == False):
-                isURLRequested = True
-
-        if not isURLRequested:
-            f.response.stream = True
+        f.response.stream = True
 
         f.reply()
         return f
@@ -249,7 +201,6 @@ def main(argv):
     thread = threading.Thread(target=read_thread_func, args=(queue,))
     thread.daemon = True
     thread.start()
-    # call(['subl', '/'])
 
     state = flow.State()
     server = proxy.server.ProxyServer(proxyConfig)
