@@ -398,7 +398,9 @@ document.querySelector('.settings-button').addEventListener('click', function (e
 document.querySelector('#btnRestoreDefaults').addEventListener('click', function (e) {
 	localStorage.setItem('editorCommandLine', localStorage.getItem('default.editorCommandLine'));
 	localStorage.setItem('pacScript', localStorage.getItem('default.pacScript'));
+	localStorage.setItem('proxyPort', localStorage.getItem('default.proxyPort'));
 	populateSettingsScreen();
+	saveSettings();
 });
 
 document.querySelector('#btnRestartProxy').addEventListener('click', function (e) {

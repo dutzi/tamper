@@ -410,6 +410,10 @@ body {
 	box-sizing: border-box;
 }
 
+#settings .property .value #txtProxyPort {
+	width: 60px;
+}
+
 #settings .property .value textarea {
 	height: 150px;
 	font-family: menlo;
