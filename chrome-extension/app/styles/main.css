@@ -17,7 +17,8 @@ body {
 
 #requestsContainer {
 	flex: auto;
-	overflow: scroll;
+	overflow-x: none;
+	overflow-y: auto;
 }
 
 #sidebar {
@@ -445,6 +446,11 @@ body {
 	font-size: 11px;
 }
 
+.os-windows #settings .property .value textarea {
+	font-family: Consolas, 'Lucida Console', monospace;
+	font-size: 12px;
+}
+
 #settings .property .value input:focus, #settings .property .value textarea:focus {
 	outline: 1px solid #aaa;
 }
@@ -455,6 +461,10 @@ body {
 	color: #888;
 	font-size: 10px;
 	width: 190px;
+}
+
+.os-windows #settings .property .tooltip {
+	font-size: 11px;
 }
 
 #settings a {

@@ -488,3 +488,9 @@ if (!proxyRules) {
 // proxy.updateRules();
 
 updateRulesListView();
+
+if (window.navigator.appVersion.match(/OS X/)) {
+	Utils.addClassName($body, 'os-osx');
+} else if (window.navigator.appVersion.match(/win/i)) {
+	Utils.addClassName($body, 'os-windows');
+}
