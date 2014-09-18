@@ -386,6 +386,31 @@ body {
 	overflow: auto;
 }
 
+#settings .properties::-webkit-scrollbar {
+    width: 11px;
+}
+
+#settings .properties::-webkit-scrollbar-corner,
+#settings .properties::-webkit-resizer {
+    display: none;
+}
+
+#settings .properties::-webkit-scrollbar-thumb:vertical {
+    background: linear-gradient(to right, rgb(128, 128, 128), rgb(96, 96, 96) 40%, rgb(128, 128, 128));
+    border-radius: 5px;
+    min-height: 20px;
+}
+
+#settings .properties::-webkit-scrollbar-thumb:vertical:hover,
+#settings .properties::-webkit-scrollbar-thumb:vertical:active {
+    background: linear-gradient(to right, rgb(176, 176, 176), rgb(144, 144, 144) 40%, rgb(176, 176, 176));
+}
+
+#settings .properties::-webkit-scrollbar-track:vertical {
+    background: linear-gradient(to right, rgb(10, 10, 10), rgb(32, 32, 32) 25%, rgb(32, 32, 32));
+    border-radius: 5px;
+}
+
 #settings .property {
 	margin-bottom: 20px;
 	clear: left;
