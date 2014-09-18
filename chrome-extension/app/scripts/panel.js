@@ -122,8 +122,15 @@ var proxy = {
 function onProxyStateChanged() {
 	if (proxyState !== PROXY_STARTED) {
 		Utils.addClassName($body, 'proxy-connection-error');
+		Utils.removeClassName($body, 'proxy-port-error');
+		switch (proxyState) {
+			case PROXY_COULD_NOT_START:
+				Utils.addClassName($body, 'proxy-port-error');
+				break;
+		}
 	}  else {
 		Utils.removeClassName($body, 'proxy-connection-error');
+		Utils.removeClassName($body, 'proxy-port-error');
 	}
 
 	if (isProxyEnabled) {

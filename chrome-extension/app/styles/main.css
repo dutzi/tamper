@@ -475,6 +475,17 @@ body {
 	font-size: 13px;
 }
 
+#settings .proxy-port-error-message {
+	display: none;
+	margin: 5px 0px 0px 200px;
+	font-size: 12px;
+	color: red;
+}
+
+.proxy-port-error #settings .proxy-port-error-message {
+	display: block;
+}
+
 #btnRestartProxy {
 	margin-left: 10px;
 }
