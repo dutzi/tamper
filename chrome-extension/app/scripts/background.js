@@ -23,14 +23,15 @@ var defaultSettings = {
 				'    return "PROXY localhost:%%PORT%%";\n' +
 				'}',
 	sidebarWidth: '250px',
+	editorCommandLine: '',
 	proxyPort: 8080
 };
 
-if (window.navigator.appVersion.match(/OS X/)) {
-	defaultSettings.editorCommandLine = 'subl $1';
-} else if (window.navigator.appVersion.match(/win/i)) {
-	defaultSettings.editorCommandLine = null;
-}
+// if (window.navigator.appVersion.match(/OS X/)) {
+// 	defaultSettings.editorCommandLine = 'subl $1';
+// } else if (window.navigator.appVersion.match(/win/i)) {
+// 	defaultSettings.editorCommandLine = null;
+// }
 
 for (var key in defaultSettings) {
 	if (localStorage.getItem(key)) {
@@ -207,6 +208,8 @@ function connectToProxy() {
 			console.log('Got message: ', msg.msg);
 		}
 
+		var oldProxyState = proxyState;
+
 		if (proxyState !== PROXY_CONNECTED && proxyState !== PROXY_STARTED) {
 			proxyState = PROXY_CONNECTED;
 		}
@@ -229,7 +232,9 @@ function connectToProxy() {
 				break;
 		}
 		
-		onProxyStateChange();
+		if (oldProxyState !== proxyState) {
+			onProxyStateChange();
+		}
 	});
 	
 	nativeMessagingPort.onDisconnect.addListener(function() {

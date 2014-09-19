@@ -29,12 +29,6 @@ def send_message(message):
     sys.stdout.write(message)
     sys.stdout.flush()
 
-def open_editor(filename):
-    if os.name == 'nt':
-        os.startfile(filename)
-    else:
-        call(['subl', filename])
-
 def unload_daemons():
     # return;
     sharedVars['server'].shutdown()
@@ -106,8 +100,24 @@ def read_thread_func(queue):
                 send_message(json.dumps(message))
 
             elif (message['method'] == 'open-file'):
-                open_editor(os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename'])
-                send_message(json.dumps(message))
+                filename = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename']
+
+                try:
+                    if message['command'] != '':
+                        call(message['command'].replace('$1', filename).split(' '))
+                    else:
+                        if os.name == 'nt':
+                            os.startfile(filename)
+                        else:
+                            call(['open', filename])
+
+                    send_message(json.dumps(message))
+                except:
+                    message['error'] = {
+                        'errorCode': 1,
+                        'errorDesc': 'Could not open file'
+                    }
+                    send_message(json.dumps(message))
 
             elif (message['method'] == 'start-proxy'):
                 send_message(json.dumps({'method': 'log', 'message': 'Starting proxy... (' + str(message['port']) + ')'}))

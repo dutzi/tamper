@@ -104,6 +104,7 @@ var proxy = {
 	openFile: function (filename) {
 		return proxy.postMessage({
 			method: 'open-file',
+			command: localStorage.getItem('editorCommandLine'),
 			filename: filename
 		});
 	},
