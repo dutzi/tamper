@@ -47,7 +47,7 @@ body {
 	list-style-type: none;
 	text-align: left;
 	white-space: nowrap;
-	max-width: 70%;
+	width: 100%;
 	text-decoration: none;
 	padding: 4px 0px;
 	margin: -4px 0px;
@@ -67,6 +67,7 @@ body {
 }
 
 .request-item-actions {
+	flex: none;
 	padding-right: 4px;
 	margin-top: -1px;
 	opacity: 0.4;
@@ -85,11 +86,12 @@ body {
 }
 
 .request-item-loading-spinner {
+	flex: none;
 	display: none;
 }
 
 .request-item-discard-changes {
-	visibility: hidden;
+	display: none;
 	font-weight: normal;
 }
 
@@ -98,7 +100,7 @@ body {
 }
 
 .request-item-modified .request-item-discard-changes {
-	visibility: visible;
+	display: inline;
 }
 
 .request-item-modified.request-item-removed .request-item-discard-changes {
@@ -114,6 +116,8 @@ body {
 }
 
 .request-item {
+	display: flex;
+	flex-direction: row;
 	flex: none;
 	padding: 4px 0px 3px 4px;
 }
@@ -123,6 +127,7 @@ body {
 }
 
 .request-item-modified-badge {
+	flex: none;
 	cursor: default;
 	float: left;
 	border-radius: 3px;
@@ -236,6 +241,8 @@ body {
 }
 
 .toolbar {
+	display: flex;
+	flex-direction: row;
 	background: -webkit-linear-gradient(top,  #eaeaea 0%,#d9d9d9 100%);
 	border-bottom: 1px solid #bbb;
 	height: 23px;
@@ -246,6 +253,7 @@ body {
 }
 
 .toolbar .label {
+	flex: none;
 	cursor: default;
 	text-shadow: 0px 1px white;
 	color: #888;
@@ -265,7 +273,14 @@ body {
 	outline-offset: 0px;
 }
 
+.spacer {
+	width: 100%;
+	flex-shrink: 100;
+}
+
 .toolbar .toggle-proxy {
+	flex: none;
+	text-align: right;
 	cursor: pointer;
 	float: right;
 	line-height: 17px;
