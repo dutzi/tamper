@@ -14,7 +14,7 @@ var MimeTypes = {
 		'application/rdf+xml': 'rdf',
 		'application/rss+xml': 'rss',
 		'application/soap+xml': 'soap',
-		'application/font-woff': 'font',
+		'application/font-woff': 'woff',
 		'application/xhtml+xml': 'xhtml',
 		'application/xml': 'xml',
 		'application/xml-dtd': 'xml',
@@ -22,8 +22,8 @@ var MimeTypes = {
 		'application/zip': 'zip',
 		'application/gzip': 'gzip',
 		'application/example': 'example',
-		'application/x-nacl': 'x',
-		'application/x-pnacl': 'x',
+		'application/x-nacl': 'nacl',
+		'application/x-pnacl': 'pnacl',
 		'audio/basic': 'basic',
 		'audio/L24': 'L24',
 		'audio/mp4': 'mp4',
@@ -80,9 +80,9 @@ var MimeTypes = {
 		'video/ogg': 'ogg',
 		'video/quicktime': 'quicktime',
 		'video/webm': 'webm',
-		'video/x-matroska': 'x',
-		'video/x-ms-wmv': 'x',
-		'video/x-flv': 'x'
+		'video/x-matroska': 'matroska',
+		'video/x-ms-wmv': 'wmv',
+		'video/x-flv': 'flv'
 	},
 	getFileExtension: function (mimeType) {
 		return MimeTypes._mimeTypesMap[mimeType];
