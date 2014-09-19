@@ -221,6 +221,14 @@ function onToggleRuleEnable(e) {
 	proxy.updateRules(proxyRules);
 }
 
+function onDeleteRuleClick(e) {
+	var rule = proxyRules[e.currentTarget.parentNode.id.substr(5)];
+	proxyRules.splice(proxyRules.indexOf(rule), 1);
+	localStorage.setItem('rules', JSON.stringify(proxyRules));
+	proxy.updateRules(proxyRules);
+	updateRulesListView();
+}
+
 function updateRulesListView() {
 	rulesContainer.innerHTML = '';
 
@@ -232,6 +240,7 @@ function updateRulesListView() {
 		listItem.title = currentRule.url;
 		listItem.querySelector('.sidebar-list-item-checkbox input').checked = currentRule.isEnabled;
 		listItem.querySelector('.sidebar-list-item-checkbox input').addEventListener('change', onToggleRuleEnable);
+		listItem.querySelector('.sidebar-list-item-delete').addEventListener('click', onDeleteRuleClick);
 		listItem.querySelector('.sidebar-list-item-title').innerText = Utils.getFilename(currentRule.url);
 		listItem.querySelector('.sidebar-list-item-subtitle').innerText = Utils.getPath(currentRule.url);
 
@@ -279,10 +288,29 @@ function onQuickEditClick(e) {
 			Utils.removeClassName(target, 'request-item-loading');
 			Utils.addClassName(target, 'request-item-loaded');
 
-			// TODO guess file ext by Content-Type
 			var filename = Utils.getFilename(url);
 			if (filename.indexOf('?') > -1) {
 				filename = filename.substr(0, filename.indexOf('?'));
+			}
+
+			var fileExtension;
+			for (var i = 0; i < request.response.headers.length; i++) {
+				var currentHeader = request.response.headers[i];
+				if (currentHeader.name.toLowerCase() === 'content-type') {
+					var mimeType = currentHeader.value;
+					if (mimeType.indexOf(';') > -1) {
+						mimeType = mimeType.substr(0, mimeType.indexOf(';'));
+					}
+					fileExtension = MimeTypes.getFileExtension(mimeType);
+					break;
+				}
+			}
+			if (fileExtension) {
+				if (filename.indexOf(fileExtension) !== filename.length - fileExtension.length) {
+					filename += '.' + fileExtension;
+				}
+			} else {
+				filename += '.chromeproxy';
 			}
 
 			proxy.cacheResponse(filename, content).then(function (response) {

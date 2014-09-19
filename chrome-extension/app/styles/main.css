@@ -32,7 +32,8 @@ body {
 
 .sidebar-list {
 	flex: auto;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .request-item a {
@@ -154,6 +155,10 @@ body {
 	text-shadow: 0px 1px white;
 }
 
+.sidebar-list-item:hover .sidebar-list-item-delete {
+	display: inline-block;
+}
+
 .sidebar-list-item-big {
 	font-weight: bold;
 	padding: 10px;
@@ -169,6 +174,10 @@ body {
 	text-shadow: 0px 1px black;
 }
 
+.sidebar-list-item-data {
+	width: 100%;
+}
+
 .sidebar-list-item-title {
 	text-overflow: ellipsis;
 	display: block;
@@ -182,6 +191,26 @@ body {
 	text-overflow: ellipsis;
 	display: block;
 	overflow: hidden;
+}
+
+.sidebar-list-item .sidebar-list-item-delete {
+	flex: none;
+	display: none;
+	background-image: url(../images/statusbarButtonGlyphs.png);
+	background-size: 320px 144px;
+	width: 13px;
+	height: 13px;
+	background-position: -143px -96px;
+	margin-top: 7px;
+	cursor: pointer;
+}
+
+.sidebar-list-item-delete:hover {
+	
+}
+
+.sidebar-list-item-checkbox {
+	flex: none;
 }
 
 .sidebar-list-item-checkbox input {
@@ -202,6 +231,7 @@ body {
 }
 
 .split-view {
+	overflow: hidden;
 	flex: auto;
 	position: absolute;
 	top: 0px;
@@ -230,10 +260,15 @@ body {
 }
 
 .rules-list-item {
+	display: flex;
 	height: 27px;
 	white-space: nowrap;
-	margin: 5px;
+	padding: 5px;
 	clear: left;
+}
+
+.rules-list-item:hover {
+	background: rgb(223, 223, 223);
 }
 
 .right-pane {
@@ -545,4 +580,9 @@ body {
 	#settings .close-button {
 		background-image: url(../images/statusbarButtonGlyphs_2x.png);
 	}
+
+	.sidebar-list-item-delete {
+		background-image: url(../images/statusbarButtonGlyphs_2x.png);
+	}
+
 }
