@@ -19,7 +19,6 @@ body {
 
 .description {
 	margin-top: 50px;
-	margin-left: 56px;
 }
 
 /*.logo .logo-small {
@@ -54,8 +53,7 @@ body {
 }
 
 .hero {
-	margin-top: 50px;
-	max-width: 100%;
+	margin: 50px 0px -20px 0px;
 }
 
 .install-btn {
@@ -143,10 +141,34 @@ a:hover {
 	color: #40B0D1;
 }
 
-@media (max-width:768px) {
+@media (min-width:992px) and (max-width: 1200px) {
+	.hero {
+		margin: 0px 0px -60px 0px;
+		transform: translateY(50px);
+	}
+
+	.logo {
+		margin-top: 75px;
+	}
+}
+
+@media (max-width: 992px) {
+	.logo {
+		margin-top: 30px;
+	}
+
+	.hero {
+		max-width: 100%;
+		margin: 10px 0px -20px;
+	}
+
+	.logo-container {
+		text-align: center;
+		transform: translateX(-10px);
+	}
+
 	.install-btn {
-		margin-left: 50px;
-		padding: 7px;
-		width: 250px;
+		margin: 30px auto 0px;
+		transform: translateX(24px);
 	}
 }
