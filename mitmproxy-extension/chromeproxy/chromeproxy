@@ -11,23 +11,32 @@ import uuid
 import Queue
 from netlib.odict import ODictCaseless
 from subprocess import call
-from libmproxy import proxy, flow
-from libmproxy.protocol.http import HTTPResponse
-from libmproxy.proxy.config import ProxyConfig
-from libmproxy.proxy.server import ProxyServer
-from libmproxy.encoding import decode_gzip
-from libmproxy.proxy.primitives import ProxyServerError
-
-sharedVars = {
-    'shouldClose': False
-}
-urlsToProxy = []
 
 def send_message(message):
     message = '{"msg": %s}' % message
     sys.stdout.write(struct.pack('I', len(message)))
     sys.stdout.write(message)
     sys.stdout.flush()
+
+try:
+    from libmproxy import proxy, flow
+    from libmproxy.protocol.http import HTTPResponse
+    from libmproxy.proxy.config import ProxyConfig
+    from libmproxy.proxy.server import ProxyServer
+    from libmproxy.encoding import decode_gzip
+    from libmproxy.proxy.primitives import ProxyServerError
+except:
+    send_message(json.dumps({
+        'method': 'proxy-error',
+        'errorCode': 101,
+        'errorDesc': 'Could not start proxy, error loading libraries'
+    }))
+    sys.exit(1)
+
+sharedVars = {
+    'shouldClose': False
+}
+urlsToProxy = []
 
 def unload_daemons():
     # return;
@@ -115,7 +124,8 @@ def read_thread_func(queue):
                 except:
                     message['error'] = {
                         'errorCode': 1,
-                        'errorDesc': 'Could not open file'
+                        'errorDesc': 'Could not open file',
+                        'pythonError': '%s' % ','.join(map(str,sys.exc_info()))
                     }
                     send_message(json.dumps(message))
 
@@ -133,21 +143,29 @@ def read_thread_func(queue):
                 send_message(json.dumps(message))
 
             elif (message['method'] == 'cache-response'):
-                urlFilename = message['filename']
-                while True:
-                    filename = str(uuid.uuid1()) + '.' + urlFilename
-                    fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + filename
-                    if not os.path.isfile(fullFilePath):
-                        break
+                try:
+                    urlFilename = message['filename']
+                    while True:
+                        filename = str(uuid.uuid1()) + '.' + urlFilename
+                        fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + filename
+                        if not os.path.isfile(fullFilePath):
+                            break
 
-                localFile = open(fullFilePath, 'w')
-                localFile.write(message['responseContent'].encode('utf8'))
-                localFile.close()
+                    localFile = open(fullFilePath, 'w')
+                    localFile.write(message['responseContent'].encode('utf8'))
+                    localFile.close()
 
-                # send_message(json.dumps({'method': 'rule-added', 'rule': rule}))
-                message['cachedFilename'] = filename
-                send_message(json.dumps(message))
-
+                    # send_message(json.dumps({'method': 'rule-added', 'rule': rule}))
+                    message['cachedFilename'] = filename
+                    send_message(json.dumps(message))
+                except:
+                    message['error'] = {
+                        'errorCode': 1,
+                        'errorDesc': 'Could not cache response',
+                        'pythonError': '%s' % ','.join(map(str,sys.exc_info()))
+                    }
+                    send_message(json.dumps(message))
+                    
 
 class InjectingMaster(flow.FlowMaster):
     def __init__(self, server, state):
@@ -155,7 +173,7 @@ class InjectingMaster(flow.FlowMaster):
 
         relPath = os.path.dirname(os.path.realpath(__file__)) + '/'
 
-        _requestMapFile = open(config['requestMapPath'], 'r+')
+        # _requestMapFile = open(config['requestMapPath'], 'r+')
         # requestMap = json.load(_requestMapFile)['rules']
         self._cachedFilesPath = relPath + 'replacements/'
         # while len(urlsToProxy):
@@ -176,7 +194,7 @@ class InjectingMaster(flow.FlowMaster):
 
     def handle_request(self, msg):
         f = flow.FlowMaster.handle_request(self, msg)
-
+        
         fullURL = f.request.scheme + '://' + f.request.host
         if ((f.request.scheme == 'http' and f.request.port == 80) == False and (f.request.scheme == 'https' and f.request.port == 443) == False):
             fullURL = fullURL + ':' + str(f.request.port)
@@ -233,12 +251,12 @@ class InjectingMaster(flow.FlowMaster):
 
 config = {}
 
-def save_request_map():
-    requestMapFile = open(config['requestMapPath'], 'r+')
-    requestMapFile.seek(0)
-    requestMapFile.truncate()
-    json.dump({'rules': urlsToProxy}, requestMapFile, sort_keys=True, indent=4)
-    requestMapFile.close()
+# def save_request_map():
+#     requestMapFile = open(config['requestMapPath'], 'r+')
+#     requestMapFile.seek(0)
+#     requestMapFile.truncate()
+#     json.dump({'rules': urlsToProxy}, requestMapFile, sort_keys=True, indent=4)
+#     requestMapFile.close()
 
 def main(argv):
     relPath = os.path.dirname(os.path.realpath(__file__)) + '/'
@@ -247,10 +265,10 @@ def main(argv):
     if not os.path.isdir(relPath + 'replacements/'):
         os.mkdir(relPath + 'replacements/')
 
-    if not os.path.exists(config['requestMapPath']):
-        f = open(config['requestMapPath'],'w')
-        f.write('{"rules": []}')
-        f.close()
+    # if not os.path.exists(config['requestMapPath']):
+    #     f = open(config['requestMapPath'],'w')
+    #     f.write('{"rules": []}')
+    #     f.close()
 
 
     queue = Queue.Queue()

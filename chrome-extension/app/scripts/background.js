@@ -2,7 +2,8 @@
 'use strict';
 
 var PROXY_NOT_CONNECTED = 'not connected';
-var PROXY_COULD_NOT_START = 'could not start';
+var PROXY_COULD_NOT_START_PORT_ERROR = 'could not start port error';
+var PROXY_COULD_NOT_START_LIBS_ERROR = 'could not start libs error';
 var PROXY_STARTED = 'proxy started';
 var PROXY_CONNECTED = 'proxy connected';
 var PROXY_DISCONNECTED = 'proxy disconnected';
@@ -220,8 +221,13 @@ function connectToProxy() {
 				break;
 			case 'proxy-error':
 				console.error('Proxy Error (' + msg.msg.errorCode + '): ' + msg.msg.errorDesc);
-				if (msg.msg.errorCode === 100) {
-					proxyState = PROXY_COULD_NOT_START;
+				switch (msg.msg.errorCode) {
+					case 100:
+						proxyState = PROXY_COULD_NOT_START_PORT_ERROR;
+						break;
+					case 101:
+						proxyState = PROXY_COULD_NOT_START_LIBS_ERROR;
+						break;
 				}
 				break;
 			case 'proxy-started':
@@ -239,10 +245,12 @@ function connectToProxy() {
 	
 	nativeMessagingPort.onDisconnect.addListener(function() {
 		console.log('Disconnected');
-		proxyState = PROXY_DISCONNECTED;
-		nativeMessagingPort = null;
-		onProxyStateChange();
-		setTimeout(connectToProxy, 1000);
+		if (proxyState !== PROXY_COULD_NOT_START_LIBS_ERROR) {
+			proxyState = PROXY_DISCONNECTED;
+			nativeMessagingPort = null;
+			onProxyStateChange();
+			setTimeout(connectToProxy, 1000);
+		}
 	});
 }
 

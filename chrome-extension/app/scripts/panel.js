@@ -1,7 +1,8 @@
 /*global Q*/
 
 var PROXY_NOT_CONNECTED = 'not connected';
-var PROXY_COULD_NOT_START = 'could not start';
+var PROXY_COULD_NOT_START_PORT_ERROR = 'could not start port error';
+var PROXY_COULD_NOT_START_LIBS_ERROR = 'could not start libs error';
 var PROXY_STARTED = 'proxy started';
 var PROXY_CONNECTED = 'proxy connected';
 var PROXY_DISCONNECTED = 'proxy disconnected';
@@ -124,14 +125,19 @@ function onProxyStateChanged() {
 	if (proxyState !== PROXY_STARTED) {
 		Utils.addClassName($body, 'proxy-connection-error');
 		Utils.removeClassName($body, 'proxy-port-error');
+		Utils.removeClassName($body, 'proxy-libs-error');
 		switch (proxyState) {
-			case PROXY_COULD_NOT_START:
+			case PROXY_COULD_NOT_START_PORT_ERROR:
 				Utils.addClassName($body, 'proxy-port-error');
+				break;
+			case PROXY_COULD_NOT_START_LIBS_ERROR:
+				Utils.addClassName($body, 'proxy-libs-error');
 				break;
 		}
 	}  else {
 		Utils.removeClassName($body, 'proxy-connection-error');
 		Utils.removeClassName($body, 'proxy-port-error');
+		Utils.removeClassName($body, 'proxy-libs-error');
 	}
 
 	if (isProxyEnabled) {
@@ -152,10 +158,10 @@ function onFilterChange(e) {
 	var numDisplayed = 0;
 	for (var i = 0; i < requests.length; i++) {
 		if (filter === '') {
-			requests[i].div.style.display = 'initial';
+			requests[i].div.style.display = 'inherit';
 			requests[i].div.style.background = null;
 		} else if (requests[i].request.request.url.indexOf(filter) > -1) {
-			requests[i].div.style.display = 'initial';
+			requests[i].div.style.display = 'inherit';
 			if (numDisplayed++ % 2 === 0) {
 				requests[i].div.style.background = '#eee';
 			} else {
@@ -288,7 +294,7 @@ function onQuickEditClick(e) {
 			Utils.removeClassName(target, 'request-item-loading');
 			Utils.addClassName(target, 'request-item-loaded');
 
-			var filename = Utils.getFilename(url);
+			var filename = Utils.getFilename(url).replace(/\//g, '');
 			if (filename.indexOf('?') > -1) {
 				filename = filename.substr(0, filename.indexOf('?'));
 			}
