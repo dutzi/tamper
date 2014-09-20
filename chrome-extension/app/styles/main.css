@@ -581,7 +581,7 @@ body {
 		background-image: url(../images/statusbarButtonGlyphs_2x.png);
 	}
 
-	.sidebar-list-item-delete {
+	.sidebar-list-item .sidebar-list-item-delete {
 		background-image: url(../images/statusbarButtonGlyphs_2x.png);
 	}
 
