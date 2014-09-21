@@ -42,8 +42,6 @@ def unload_daemons():
     # return;
     sharedVars['server'].shutdown()
     sharedVars['shouldClose'] = True
-    MessageBox = ctypes.windll.user32.MessageBoxA
-    MessageBox(None, 'Hello', 'Window title', 0)
 
 def start_server(port):
     state = flow.State()
