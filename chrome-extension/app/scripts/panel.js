@@ -1,4 +1,5 @@
-/*global Q*/
+/*jshint latedef: false*/
+/*global Q, MimeTypes*/
 
 var PROXY_NOT_CONNECTED = 'not connected';
 var PROXY_COULD_NOT_START_PORT_ERROR = 'could not start port error';
