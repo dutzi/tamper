@@ -4,7 +4,7 @@ body {
 	color: #bbb;
 }
 
-.hero-container {
+.header-container-outer {
 	overflow: hidden;
 	background: url(../images/hero-bg.gif);
 	color: white;
@@ -141,14 +141,67 @@ a:hover {
 	color: #40B0D1;
 }
 
+.video-container-outer {
+	width: 640px;
+	max-width: 82%;
+	position: absolute;
+	margin-top: 9.9%;
+	margin-left: 6.3%;
+	z-index: 10;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.video-container-inner {
+	position: relative;
+	padding-bottom: 56.25%;
+}
+
+.video-container-outer iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	height: 1px;
+	width: 1px;
+}
+
+.playing-video .video-container-outer iframe {
+	opacity: 1;
+	width: 100%;
+	height: 100%;
+}
+
+.hero-container {
+	transition: transform 0.4s;
+}
+
+.header-container {
+	transition: transform 0.4s;
+}
+
 @media (min-width:992px) and (max-width: 1200px) {
 	.hero {
 		margin: 0px 0px -60px 0px;
 		transform: translateY(50px);
 	}
 
+	.video-container-outer {
+		margin-top: 13.6%;
+		margin-left: 8.7%;
+		max-width: none;
+	}
+
 	.logo {
 		margin-top: 75px;
+	}
+
+	.playing-video .hero-container {
+		 transform: translateY(-40px);
+	}
+
+	.playing-video .header-container {
+		transform: translateX(-140px);
 	}
 }
 
@@ -160,6 +213,12 @@ a:hover {
 	.hero {
 		max-width: 100%;
 		margin: 10px 0px -20px;
+	}
+
+	.video-container-outer {
+		margin-top: 4.8%;
+		margin-left: 6.1%;
+		max-width: 83.6%;
 	}
 
 	.logo-container {

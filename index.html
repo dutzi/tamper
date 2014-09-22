@@ -21,16 +21,33 @@ window.addEventListener('scroll', function (e) {
 	heroContainer.style.backgroundPositionY = window.pageYOffset * 0.9 + 'px';
 	heroContainerInner.style.transform = 'translateY(' + window.pageYOffset * 0.6 + 'px)';
 });
+
 function onInstallClick(e) {
 	window.scrollTo(0,document.body.scrollHeight);
 }
+
+function onYouTubeIframeAPIReady(e) {
+	console.log('onYouTubePlayerReady ' + e);
+	window.player = new YT.Player('ytplayer');
+
+	if (window.shouldPlayVideo) {
+		player.playVideo()
+	}
+}
+
+function onPlayVideoClick(e) {
+	document.querySelector('body').className = 'playing-video';
+	player.playVideo()
+	window.shouldPlayVideo = true;
+}
+
 		</script>
 	</head>
 	
-	<body>
-		<div class="hero-container">
+	<body class="">
+		<div class="header-container-outer">
 			<div class="container">
-				<div class="row">
+				<div class="row header-container">
 					<div class="col-lg-4 col-md-5 col-sm-12 logo-container">
 						<div class="logo">
 							<img src="images/logo.png" srcset="images/logo.png 1x, images/logo@2x.png 2x">
@@ -44,7 +61,13 @@ function onInstallClick(e) {
 						</div>
 						<div class="install-btn" onclick="onInstallClick()">Install</div>
 					</div>
-					<div class="col-lg-8 col-md-7 col-sm-12">
+					<div class="col-lg-8 col-md-7 col-sm-12 hero-container">
+						<div class="video-container-outer">
+							<div class="video-container-inner">
+								<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/Xpcyv8xWoUM?enablejsapi=1&fs=1&rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+							</div>
+						</div>
+
 						<img class="hero" src="images/screenshot.png" srcset="images/screenshot.png 1x, images/screenshot@2x.png 2x">
 					</div>
 				</div>
@@ -73,5 +96,7 @@ function onInstallClick(e) {
 			</div>
 		</div>
 	</body>
+
+	<script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 
 </html>
