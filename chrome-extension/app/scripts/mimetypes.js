@@ -689,4 +689,4 @@ var MimeTypes = {
 	getFileExtension: function (mimeType) {
 		return MimeTypes._mimeTypesMap[mimeType];
 	}
-}
+};
