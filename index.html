@@ -15,8 +15,8 @@ var heroContainerInner;
 window.addEventListener('scroll', function (e) {
 	if (window.pageYOffset < 0) {return;}
 	if (!heroContainerInner) {
-		heroContainer = document.querySelector('.hero-container');
-		heroContainerInner = document.querySelector('.hero-container .container');
+		heroContainer = document.querySelector('.header-container-outer');
+		heroContainerInner = document.querySelector('.header-container-outer .container');
 	}
 	heroContainer.style.backgroundPositionY = window.pageYOffset * 0.9 + 'px';
 	heroContainerInner.style.transform = 'translateY(' + window.pageYOffset * 0.6 + 'px)';
@@ -27,18 +27,26 @@ function onInstallClick(e) {
 }
 
 function onYouTubeIframeAPIReady(e) {
-	console.log('onYouTubePlayerReady ' + e);
-	window.player = new YT.Player('ytplayer');
-
-	if (window.shouldPlayVideo) {
-		player.playVideo()
-	}
+	window.player = new YT.Player('ytplayer', {
+		'events': {
+			'onReady': function () {
+				if (window.shouldPlayVideo) {
+					setTimeout(function () { window.player.playVideo(); }, 200);
+				}
+			}
+		}
+	});
 }
 
 function onPlayVideoClick(e) {
+	if (window.isPlaying) { return; }
+	window.isPlaying = true;
 	document.querySelector('body').className = 'playing-video';
-	player.playVideo()
-	window.shouldPlayVideo = true;
+	if (window.player && player.playVideo) {
+		player.playVideo()
+	} else {
+		window.shouldPlayVideo = true;
+	}
 }
 
 		</script>
@@ -61,7 +69,7 @@ function onPlayVideoClick(e) {
 						</div>
 						<div class="install-btn" onclick="onInstallClick()">Install</div>
 					</div>
-					<div class="col-lg-8 col-md-7 col-sm-12 hero-container">
+					<div class="col-lg-8 col-md-7 col-sm-12 hero-container" onclick="onPlayVideoClick(event)">
 						<div class="video-container-outer">
 							<div class="video-container-inner">
 								<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/Xpcyv8xWoUM?enablejsapi=1&fs=1&rel=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
