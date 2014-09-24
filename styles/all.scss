@@ -153,6 +153,7 @@ a:hover {
 }
 
 .video-container-inner {
+	cursor: pointer;
 	position: relative;
 	padding-bottom: 56.25%;
 }
@@ -178,6 +179,30 @@ a:hover {
 
 .header-container {
 	transition: transform 0.4s;
+}
+
+.btn-play {
+	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -42px;
+	margin-top: -30px;
+	width: 85px;
+	height: 60px;
+}
+
+.playing-video .btn-play {
+	display: none;
+}
+
+.btn-play .btn-play-background-svg {
+	opacity: 0.9;
+}
+
+.btn-play:hover .btn-play-background-svg {
+	fill: #cc181e;
+	opacity: 1;
 }
 
 @media (min-width:992px) and (max-width: 1200px) {
