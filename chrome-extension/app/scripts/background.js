@@ -116,10 +116,10 @@ function updateProxyIcon() {
 	} else {
 		if (settings.isProxyEnabled) {
 			chrome.browserAction.setIcon({'path': {'19': 'images/icon_on.png', '38': 'images/icon_on@2x.png'}});
-			chrome.browserAction.setTitle({title: 'Chrome Proxy is enabled'});
+			chrome.browserAction.setTitle({title: 'Tamper is enabled'});
 		} else {
 			chrome.browserAction.setIcon({'path': {'19': 'images/icon_off.png', '38': 'images/icon_off@2x.png'}});
-			chrome.browserAction.setTitle({title: 'Chrome Proxy is disabled'});
+			chrome.browserAction.setTitle({title: 'Tamper is disabled'});
 		}
 	}
 }

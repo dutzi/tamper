@@ -1,6 +1,6 @@
 {
     "name": "__MSG_appName__",
-    "version": "0.14",
+    "version": "0.16",
     "manifest_version": 2,
     "description": "__MSG_appDescription__",
     "icons": {
@@ -19,7 +19,7 @@
             "19": "images/icon_off.png",
             "38": "images/icon_off@2x.png"
         },
-        "default_title": "Chrome Proxy is enabled"
+        "default_title": "Tamper is enabled"
     },
     "permissions": [
         "nativeMessaging",

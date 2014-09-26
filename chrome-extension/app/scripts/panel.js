@@ -317,7 +317,7 @@ function onQuickEditClick(e) {
 					filename += '.' + fileExtension;
 				}
 			} else {
-				filename += '.chromeproxy';
+				filename += '.tamper';
 			}
 
 			proxy.cacheResponse(filename, content).then(function (response) {

@@ -58,7 +58,7 @@ class PostInstallScript(install):
 setup(
     name = 'chrome-proxy',
     version = '0.2',
-    description = 'Mitmproxy extension, companion for Chrome Proxy. Locally edit files served from the web',
+    description = 'Mitmproxy extension, companion for Tamper. Locally edit files served from the web',
     packages = ['chromeproxy'],
     install_requires = ['gevent-websocket>=0.9.3'],
     scripts = ['chromeproxy/chromeproxy'],
