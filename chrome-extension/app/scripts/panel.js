@@ -478,7 +478,6 @@ bgPort = chrome.runtime.connect({
 });
 
 function onBgMessage (message) {
-	console.log(message);
 	Utils.log(JSON.stringify(message));
 	switch (message.method) {
 		case 'proxy-state-update':
