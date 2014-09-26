@@ -1,6 +1,6 @@
 'use strict';
 
-chrome.devtools.panels.create('Proxy',
+chrome.devtools.panels.create('Tamper',
 	'MyPanelIcon.png',
 	'panel.html',
 	function(panel) {
