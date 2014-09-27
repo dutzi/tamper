@@ -18,6 +18,9 @@
 		<string>OpenSans-Light</string>
 		<string>OpenSans-Light</string>
 		<string>OpenSans-Light</string>
+		<string>OpenSans-Light</string>
+		<string>OpenSans-Light</string>
+		<string>OpenSans-Light</string>
 		<string>OpenSans-Bold</string>
 		<string>OpenSans-Bold</string>
 		<string>OpenSansLight-Italic</string>
@@ -38,7 +41,7 @@
 		<string>OpenSans-Light</string>
 	</array>
 	<key>length</key>
-	<integer>1451501</integer>
+	<integer>1532252</integer>
 	<key>version</key>
 	<integer>18</integer>
 </dict>
