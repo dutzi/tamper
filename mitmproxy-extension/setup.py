@@ -15,9 +15,7 @@ class PostInstallScript(install):
 			'description': 'Extends the Developer Tools, lets you locally edit files served from the web using Mitmproxy.', 
 			'type': 'stdio',
 			'allowed_origins': [
-				'chrome-extension://bkblajiolelpgnnnclnjkcpmlbnanpkf/',
-				'chrome-extension://odkhmplfhadpipodgdojecefgiicoihb/',
-				'chrome-extension://blljdmmacfmkjekijajfdmmacpemmlaa/'
+				'chrome-extension://mabhojhgigkmnkppkncbkblecnnanfmd/'
 			]
 		}
 
@@ -56,14 +54,14 @@ class PostInstallScript(install):
 			manifestFile.close()
 
 setup(
-    name = 'chrome-proxy',
-    version = '0.2',
+    name = 'tamper',
+    version = '0.3',
     description = 'Mitmproxy extension, companion for Tamper. Locally edit files served from the web',
     packages = ['chromeproxy'],
     install_requires = ['gevent-websocket>=0.9.3'],
     scripts = ['chromeproxy/chromeproxy'],
     license = 'MIT License',
-    url = 'http://dutzi.github.com/chrome-proxy',
+    url = 'http://dutzi.github.com/tamper',
     author = 'dutzi',
     author_email = 'dutzi.b@gmail.com',
 	cmdclass = {'install': PostInstallScript}
