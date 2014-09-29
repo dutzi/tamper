@@ -241,10 +241,10 @@ class InjectingMaster(flow.FlowMaster):
                 file.close()
 
                 resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless(responseHeaders), content)
-
                 msg.reply(resp)
             except:
                 resp = HTTPResponse([1,1], 404, 'Not Found', ODictCaseless([]), '')
+                msg.reply(resp)
 
 
         for url in urlsToProxy:
