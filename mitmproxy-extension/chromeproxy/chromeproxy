@@ -2,6 +2,7 @@
 import sys
 import struct
 import os
+from os.path import expanduser
 import threading
 import json
 import time
@@ -236,7 +237,11 @@ class InjectingMaster(flow.FlowMaster):
             responseHeaders = [('content-type', mimeType)]
 
             try:
-                file = open(os.path.dirname(os.path.realpath(__file__)) + '/cert' + path)
+                if (extension == 'cer' or extension == 'p12'):
+                    file = open(expanduser('~') + '/.mitmproxy' + path)
+                else:
+                    file = open(sys.prefix + '/tamper-cert' + path)
+
                 content = file.read()
                 file.close()
 
@@ -326,7 +331,7 @@ def main(argv):
         start_server(int(argv[2]))
 
     while not sharedVars['shouldClose']:
-        pass
+        time.sleep(1)
     
 
 if __name__ == '__main__':

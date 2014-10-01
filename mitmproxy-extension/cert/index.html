@@ -10,10 +10,9 @@
 
 
     <title>mitmproxy</title>
-    <link href="static/bootstrap.min.css" rel="stylesheet">
-    <link href="static/mitmproxy.css" rel="stylesheet">
-    <link href="static/fontawesome/css/font-awesome.min.css" rel="stylesheet">
-    <script src="static/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="mitmproxy.css" rel="stylesheet">
   </head>
 
   <body>
@@ -42,19 +41,20 @@
 </center>
 <div id="certbank" class="row">
     <div class="col-md-3">
-        <a href="pem.cer"><i class="fa fa-apple fa-5x"></i></a>
+        <a href="mitmproxy-ca-cert.cer"><i class="fa fa-apple fa-5x"></i></a>
         <p>Apple</p>
     </div>
     <div class="col-md-3">
-        <a href="p12.p12"><i class="fa fa-windows fa-5x"></i></a>
+        <a href="mitmproxy-ca-cert.p12"><i class="fa fa-windows fa-5x"></i></a>
         <p>Windows</p>
+        <p>Installing the Windows cert isn't available through the web app yet. Plase follow the instructions <a href="http://mitmproxy.org/doc/certinstall/windows7.html">here</a> <em>without</em> using the web app</p>
     </div>
     <div class="col-md-3">
-        <a href="pem.cer"><i class="fa fa-android fa-5x"></i></a>
+        <a href="mitmproxy-ca-cert.cer"><i class="fa fa-android fa-5x"></i></a>
         <p>Android</p>
     </div>
     <div class="col-md-3">
-        <a href="pem.cer"><i class="fa fa-asterisk fa-5x"></i></a>
+        <a href="mitmproxy-ca-cert.cer"><i class="fa fa-asterisk fa-5x"></i></a>
         <p>Other</p>
     </div>
 </div>
