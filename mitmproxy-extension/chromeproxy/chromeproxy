@@ -234,18 +234,20 @@ class InjectingMaster(flow.FlowMaster):
                 elif extension == 'otf':
                     mimeType = 'application/x-font-otf'
 
-            responseHeaders = [('content-type', mimeType)]
+            responseHeaders = ODictCaseless([('content-type', mimeType)])
 
             try:
-                if (extension == 'cer' or extension == 'p12'):
-                    file = open(expanduser('~') + '/.mitmproxy' + path)
+                if path in ["/mitmproxy-ca-cert.cer", "/mitmproxy-ca-cert.pem", "/mitmproxy-ca-cert.p12"]:
+                    with open(expanduser('~/.mitmproxy' + path), "rb") as certfile:
+                        content = certfile.read()
                 else:
-                    file = open(sys.prefix + '/tamper-cert' + path)
+                    # FIXME: Sanitize path!
+                    with open(sys.prefix + '/tamper-cert' + path, "rb") as uifile:
+                        content = uifile.read()
 
-                content = file.read()
-                file.close()
+                responseHeaders["Content-Length"] = [len(content)]
 
-                resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless(responseHeaders), content)
+                resp = HTTPResponse([1,1], 200, 'OK', responseHeaders, content)
                 msg.reply(resp)
             except:
                 resp = HTTPResponse([1,1], 404, 'Not Found', ODictCaseless([]), '')
