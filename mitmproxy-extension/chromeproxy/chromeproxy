@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 import sys
 import struct
 import os
@@ -215,37 +215,24 @@ class InjectingMaster(flow.FlowMaster):
                 extension = path[path.rfind('.') + 1:]
                 if extension == 'html':
                     mimeType = 'text/html'
-                elif extension == 'cer':
-                    mimeType = 'application/pkix-cert'
-                elif extension == 'p12':
-                    mimeType = 'application/x-pkcs12'
-                elif extension == 'js':
-                    mimeType = 'application/javascript'
                 elif extension == 'css':
                     mimeType = 'text/css'
-                elif extension == 'woff':
-                    mimeType = 'application/x-font-woff'
-                elif extension == 'eot':
-                    mimeType = 'application/vnd.ms-fontobject'
-                elif extension == 'svg':
-                    mimeType = 'image/svg+xml'
-                elif extension == 'ttf':
-                    mimeType = 'application/x-font-ttf'
-                elif extension == 'otf':
-                    mimeType = 'application/x-font-otf'
+                elif extension == 'cer':
+                    mimeType = 'application/pkix-cert'
+                elif extension == 'pem':
+                    mimeType = 'application/x-pem-file'
+                elif extension == 'p12':
+                    mimeType = 'application/x-pkcs12'
 
             responseHeaders = ODictCaseless([('content-type', mimeType)])
 
             try:
-                if path in ["/mitmproxy-ca-cert.cer", "/mitmproxy-ca-cert.pem", "/mitmproxy-ca-cert.p12"]:
-                    with open(expanduser('~/.mitmproxy' + path), "rb") as certfile:
+                if path in ['/mitmproxy-ca-cert.cer', '/mitmproxy-ca-cert.pem', '/mitmproxy-ca-cert.p12']:
+                    with open(expanduser('~/.mitmproxy' + path), 'rb') as certfile:
                         content = certfile.read()
-                else:
-                    # FIXME: Sanitize path!
-                    with open(sys.prefix + '/tamper-cert' + path, "rb") as uifile:
+                elif path in ['/index.html', '/mitmproxy.css']:
+                    with open(sys.prefix + '/tamper-cert' + path, 'rb') as uifile:
                         content = uifile.read()
-
-                responseHeaders["Content-Length"] = [len(content)]
 
                 resp = HTTPResponse([1,1], 200, 'OK', responseHeaders, content)
                 msg.reply(resp)
