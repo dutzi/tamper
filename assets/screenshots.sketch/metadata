@@ -18,10 +18,19 @@
 		<string>OpenSans-Light</string>
 		<string>OpenSans-Light</string>
 		<string>OpenSans-Light</string>
-		<string>OpenSans-Light</string>
+		<string>OpenSans-Bold</string>
+		<string>OpenSans</string>
+		<string>OpenSans-Bold</string>
+		<string>Helvetica</string>
+		<string>Helvetica-Bold</string>
+		<string>Helvetica-Bold</string>
+		<string>Helvetica-Bold</string>
+		<string>Helvetica-Bold</string>
+		<string>Helvetica</string>
+		<string>LucidaGrande</string>
 	</array>
 	<key>length</key>
-	<integer>13284039</integer>
+	<integer>13062830</integer>
 	<key>version</key>
 	<integer>18</integer>
 </dict>
