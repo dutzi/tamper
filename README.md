@@ -18,7 +18,7 @@ git clone https://github.com/mitmproxy/mitmproxy.git
 cd mitmproxy
 pip install --src . -r requirements.txt
 ```
-* Install Tamper python script
+* Install Tamper's python script
 ```
 pip install tamper
 ```
