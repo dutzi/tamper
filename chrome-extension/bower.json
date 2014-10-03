@@ -2,7 +2,8 @@
   "name": "chromeproxy",
   "version": "0.0.0",
   "dependencies": {
-    "q": "1.0.1"
+    "q": "1.0.1",
+    "bootstrap-css-only": "~3.2.0"
   },
   "devDependencies": {}
 }
