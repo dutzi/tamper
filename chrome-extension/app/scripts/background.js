@@ -12,6 +12,20 @@ var nativeMessagingPort;
 var couldNotStartProxy;
 
 /*************************/
+/******* FIRST RUN *******/
+/*************************/
+
+function showFirstRunMessage() {
+	if (localStorage.getItem('installTime')) {
+		return;
+	}
+
+	localStorage.setItem('installTime', new Date().getTime());
+	chrome.tabs.create({url: 'firstRun.html'});
+}
+showFirstRunMessage();
+
+/*************************/
 /********** INIT *********/
 /*************************/
 
