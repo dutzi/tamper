@@ -12,14 +12,14 @@ Once installed, Tamper will add a new panel to your devtools, the "Tamper" panel
 
 Tamper is based on the awesome mitmproxy (man-in-the-middle proxy), or more precisely, libmproxy, its companion library that allows implementing powerful interception proxies. The latest release of Mitmproxy is 0.10, but some of the features Tamper uses will only be released in 0.11 (which should be released in the coming days). Due to this, installing Tamper might be a bit complex.
 
-Install mitmproxy-0.11-latest from the master
+* Install mitmproxy-0.11-latest from the master
 ```
 git clone https://github.com/mitmproxy/mitmproxy.git
 cd mitmproxy
 pip install --src . -r requirements.txt
 ```
-Install Tamper python script
+* Install Tamper python script
 ```
 pip install tamper
 ```
-Install [Tamper's devtools extension](https://chrome.google.com/webstore/detail/tamper/mabhojhgigkmnkppkncbkblecnnanfmd)
+* Install [Tamper's devtools extension](https://chrome.google.com/webstore/detail/tamper/mabhojhgigkmnkppkncbkblecnnanfmd)
