@@ -62,7 +62,7 @@ setup(
     install_requires = ['gevent-websocket>=0.9.3'],
     scripts = ['chromeproxy/chromeproxy'],
     data_files = [
-    	('tamper-cert', ['cert/index.html', 'cert/mitmproxy.css', 'cert/p12.p12', 'cert/pem.cer'])
+    	('tamper-cert', ['cert/index.html', 'cert/mitmproxy.css'])
 	],
     license = 'MIT License',
     url = 'http://dutzi.github.com/tamper',
