@@ -1,0 +1,1 @@
+document.getElementById('mitmLink').href = 'http://mitm.it/?r=' + Math.floor(Math.random() * 100000);
