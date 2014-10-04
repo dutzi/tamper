@@ -40,3 +40,7 @@ pre .prompt::before {
 	max-width: 100%;
 	box-shadow: 0px 2px 2px 1px black;
 }
+
+a {
+	color: #40B0D1;
+}
