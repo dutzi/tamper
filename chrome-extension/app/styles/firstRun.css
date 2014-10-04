@@ -11,10 +11,12 @@ pre {
 	border-radius: 0px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	color: #40B0D1;
+	padding: 10px;
 }
 
 .container {
 	max-width: 600px;
+    margin: auto;
 }
 
 .logo {

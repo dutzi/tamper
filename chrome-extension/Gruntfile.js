@@ -144,6 +144,7 @@ module.exports = function (grunt) {
             },
             html: [
                 '<%= config.app %>/panel.html',
+                '<%= config.app %>/first-run.html',
                 '<%= config.app %>/devtools.html'
             ]
         },
