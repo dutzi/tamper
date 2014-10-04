@@ -21,10 +21,10 @@ class PostInstallScript(install):
 		}
 
 		if sys.platform == 'win32':
-			nativeMessagingManifest['path'] = 'chromeproxy.bat'
+			nativeMessagingManifest['path'] = 'tamper.bat'
 			subprocess.call(['reg', 'add', 'HKEY_CURRENT_USER\SOFTWARE\Google\Chrome\NativeMessagingHosts\com.dutzi.chromeproxy', '/d', 'C:\Users\dutzi\chromeproxy-manifest.json', '/f'])
 			manifestFilename = expanduser('~\\chromeproxy-manifest.json')
-			batchFilename = expanduser('~\\chromeproxy.bat')
+			batchFilename = expanduser('~\\tamper.bat')
 
 			manifestFile = open(manifestFilename, 'w')
 			json.dump(nativeMessagingManifest, manifestFile, sort_keys=True, indent=4)
@@ -32,10 +32,10 @@ class PostInstallScript(install):
 
 			batchFile = open(batchFilename, 'w')
 
-			batchFile.write('@echo off\npython ' + os.path.split(sys.executable)[0] + '\\Scripts\\chromeproxy %*')
+			batchFile.write('@echo off\npython ' + os.path.split(sys.executable)[0] + '\\Scripts\\tamper.py %*')
 			batchFile.close()
 		else:
-			nativeMessagingManifest['path'] = '/usr/local/bin/chromeproxy'
+			nativeMessagingManifest['path'] = '/usr/local/bin/tamper.py'
 
 			try:
 				is_admin = os.getuid() == 0
@@ -56,11 +56,11 @@ class PostInstallScript(install):
 
 setup(
     name = 'tamper',
-    version = '0.8',
+    version = '0.9',
     description = 'Mitmproxy extension, companion for Tamper. Locally edit files served from the web',
-    packages = ['chromeproxy'],
+    packages = ['tamper'],
     install_requires = ['gevent-websocket>=0.9.3'],
-    scripts = ['chromeproxy/chromeproxy'],
+    scripts = ['tamper/tamper.py'],
     data_files = [
     	('tamper-cert', ['cert/index.html', 'cert/mitmproxy.css'])
 	],
