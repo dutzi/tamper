@@ -3,6 +3,7 @@ body {
 	background: url(../images/bg.gif);
 	color: #bbb;
 	text-shadow: 0px 1px black;
+	font-size: 15px;
 }
 
 pre {
@@ -12,11 +13,14 @@ pre {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	color: #40B0D1;
 	padding: 10px;
+	font-size: 0.9em;
 }
 
 .container {
 	max-width: 600px;
     margin: auto;
+    box-sizing: border-box;
+    padding: 0px 15px;
 }
 
 .logo {
