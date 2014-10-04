@@ -21,7 +21,7 @@ function showFirstRunMessage() {
 	}
 
 	localStorage.setItem('installTime', new Date().getTime());
-	chrome.tabs.create({url: 'firstRun.html'});
+	chrome.tabs.create({url: 'first-run.html'});
 }
 showFirstRunMessage();
 

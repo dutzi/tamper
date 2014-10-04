@@ -29,3 +29,8 @@ pre .prompt {
 pre .prompt::before {
 	content: "$ ";
 }
+
+.screenshot {
+	max-width: 100%;
+	box-shadow: 0px 2px 2px 1px black;
+}
