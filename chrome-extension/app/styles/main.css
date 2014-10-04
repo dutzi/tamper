@@ -15,6 +15,14 @@ body {
 	-webkit-user-select: none;
 }
 
+.os-osx .show-os-windows {
+	display: none;
+}
+
+.os-windows .show-os-osx {
+	display: none;
+}
+
 #requestsContainer {
 	flex: auto;
 	overflow-x: none;
