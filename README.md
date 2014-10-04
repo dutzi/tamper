@@ -1,8 +1,6 @@
 # Tamper
 
-A [mitmproxy](http://www.mitmproxy.org) based devtools extension that lets you edit remote files locally and serve them directly to Chrome.
-
-Tamper basically seats between Chrome and the web. Whenever Chrome makes a request, Tamper is notified about it and can do one of two things, it can either let the request "roll", allowing Chrome to load that file from the web, or it can serve Chrome a local file, "fooling" it into thinking it came from the web.
+Tamper is a [mitmproxy](http://www.mitmproxy.org) based devtools extension that lets you edit remote files locally and serve them directly to Chrome.
 
 ## How do I use Tamper?
 
