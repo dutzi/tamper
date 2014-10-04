@@ -153,6 +153,11 @@ def read_thread_func(queue):
                     localFile = open(fullFilePath, 'w')
                     localFile.write(message['responseContent'].encode('utf8'))
                     localFile.close()
+                    
+                    # Sending the response content when the response is too big (?) causes 
+                    # read_thread_func to stop functioning on Windows, need to check that
+                    # for now I'll just leave `responseContent` out
+                    message.pop('responseContent')
 
                     # send_message(json.dumps({'method': 'rule-added', 'rule': rule}))
                     message['cachedFilename'] = filename
