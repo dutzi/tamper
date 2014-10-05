@@ -374,7 +374,7 @@ function onRequestFinished(e) {
 	listItem.querySelector('.request-item-url').innerText = e.request.url;
 
 	for (var i = 0; i < e.response.headers.length; i++) {
-		if (e.response.headers[i].name.toLowerCase() === 'via' && e.response.headers[i].value.indexOf('chrome-proxy') > -1) {
+		if (e.response.headers[i].name.toLowerCase() === 'via' && e.response.headers[i].value.indexOf('tamper') > -1) {
 			Utils.addClassName(listItem, 'request-item-modified');
 			break;
 		}

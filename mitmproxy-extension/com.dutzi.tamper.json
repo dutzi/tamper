@@ -1,7 +1,6 @@
 {
-  "name": "com.dutzi.chromeproxy",
+  "name": "com.dutzi.tamper",
   "description": "My Application",
-  "path": "/Users/dutzi/Documents/ChromeProxy/mitmproxy-extension/testmessage",
   "type": "stdio",
   "allowed_origins": [
     "chrome-extension://bkblajiolelpgnnnclnjkcpmlbnanpkf/",

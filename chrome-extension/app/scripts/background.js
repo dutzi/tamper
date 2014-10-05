@@ -78,7 +78,7 @@ var config = {
 	system: {
 		mode: 'system'
 	},
-	chromeproxy: {
+	tamper: {
 		mode: 'fixed_servers',
 		rules: {
 			proxyForHttp: {
@@ -205,7 +205,7 @@ chrome.browserAction.onClicked.addListener(function () {
 
 function connectToProxy() {
 	console.log('connecting to proxy');
-	nativeMessagingPort = chrome.runtime.connectNative('com.dutzi.chromeproxy');
+	nativeMessagingPort = chrome.runtime.connectNative('com.dutzi.tamper');
 
 	setTimeout(function () {
 		if (nativeMessagingPort) {

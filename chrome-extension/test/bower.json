@@ -1,5 +1,5 @@
 {
-  "name": "chromeproxy",
+  "name": "tamper",
   "private": true,
   "dependencies": {
     "chai": "~1.8.0",

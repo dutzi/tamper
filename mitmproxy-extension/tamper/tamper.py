@@ -153,7 +153,7 @@ def read_thread_func(queue):
                     localFile = open(fullFilePath, 'w')
                     localFile.write(message['responseContent'].encode('utf8'))
                     localFile.close()
-                    
+
                     # Sending the response content when the response is too big (?) causes 
                     # read_thread_func to stop functioning on Windows, need to check that
                     # for now I'll just leave `responseContent` out
@@ -259,13 +259,13 @@ class InjectingMaster(flow.FlowMaster):
                     if (header['name'].lower() != 'content-encoding'):
                         if (header['name'].lower() == 'via'):
                             hasViaHeader = True
-                            if (header['value'].find('chrome-proxy') == -1):
-                                header['value'] += ', chrome-proxy'
+                            if (header['value'].find('tamper') == -1):
+                                header['value'] += ', tamper'
 
                         responseHeaders.append((header['name'], header['value']))
 
                 if (not hasViaHeader):
-                    responseHeaders.append(['via', 'chrome-proxy'])
+                    responseHeaders.append(['via', 'tamper'])
 
                 resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless(responseHeaders), content)
                 msg.reply(resp)

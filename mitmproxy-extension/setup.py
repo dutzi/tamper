@@ -11,7 +11,7 @@ class PostInstallScript(install):
 	def run(self):
 		install.run(self)
 		nativeMessagingManifest = {
-			'name': 'com.dutzi.chromeproxy',
+			'name': 'com.dutzi.tamper',
 			'description': 'Extends the Developer Tools, lets you locally edit files served from the web using Mitmproxy.', 
 			'type': 'stdio',
 			'allowed_origins': [
@@ -22,8 +22,8 @@ class PostInstallScript(install):
 
 		if sys.platform == 'win32':
 			nativeMessagingManifest['path'] = 'tamper.bat'
-			subprocess.call(['reg', 'add', 'HKEY_CURRENT_USER\SOFTWARE\Google\Chrome\NativeMessagingHosts\com.dutzi.chromeproxy', '/d', 'C:\Users\dutzi\chromeproxy-manifest.json', '/f'])
-			manifestFilename = expanduser('~\\chromeproxy-manifest.json')
+			subprocess.call(['reg', 'add', 'HKEY_CURRENT_USER\\SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.dutzi.tamper', '/d', 'C:\\Users\\dutzi\\tamper-manifest.json', '/f'])
+			manifestFilename = expanduser('~\\tamper-manifest.json')
 			batchFilename = expanduser('~\\tamper.bat')
 
 			manifestFile = open(manifestFilename, 'w')
@@ -46,7 +46,7 @@ class PostInstallScript(install):
 			if not os.path.isdir(manifestFilename):
 			    os.mkdir(manifestFilename)
 
-			manifestFilename = manifestFilename + 'com.dutzi.chromeproxy.json'
+			manifestFilename = manifestFilename + 'com.dutzi.tamper.json'
 			print '\nWriting chrome native messaging manifest file (' + manifestFilename + ')'
 			print sys.prefix
 
@@ -56,7 +56,7 @@ class PostInstallScript(install):
 
 setup(
     name = 'tamper',
-    version = '0.9',
+    version = '0.12',
     description = 'Mitmproxy extension, companion for Tamper. Locally edit files served from the web',
     packages = ['tamper'],
     install_requires = ['gevent-websocket>=0.9.3'],
