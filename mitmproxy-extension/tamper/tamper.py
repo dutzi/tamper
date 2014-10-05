@@ -97,6 +97,7 @@ def read_thread_func(queue):
 
             if (message['method'] == 'hello'):
                 send_message(json.dumps({'method': 'hello'}))
+                send_message(json.dumps({'method': 'version', 'version': '0.13'}))
 
             elif (message['method'] == 'update-rules'):
                 while len(urlsToProxy):

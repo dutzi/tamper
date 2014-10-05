@@ -5,6 +5,7 @@ import ctypes, os
 import json
 from os.path import expanduser
 import subprocess
+from tamper import version
 
 class PostInstallScript(install):
 
@@ -56,7 +57,7 @@ class PostInstallScript(install):
 
 setup(
     name = 'tamper',
-    version = '0.12',
+    version = version.VERSION,
     description = 'Mitmproxy extension, companion for Tamper. Locally edit files served from the web',
     packages = ['tamper'],
     install_requires = ['gevent-websocket>=0.9.3'],

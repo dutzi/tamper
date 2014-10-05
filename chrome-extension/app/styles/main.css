@@ -44,7 +44,7 @@ body {
 	overflow-x: hidden;
 }
 
-.request-item a {
+.request-item .request-item-link {
     color: rgb(48, 57, 66);
 	display: inline-block;
 	text-overflow: ellipsis;
@@ -62,9 +62,19 @@ body {
 	margin: -4px 0px;
 }
 
-.request-item:hover a {
+.request-item:hover .request-item-link {
 	text-decoration: underline;
 	font-weight: bold;
+}
+
+.request-item:hover.request-item-error .request-item-link {
+	text-decoration: none;
+	font-weight: normal;
+}
+
+.request-item.request-item-error .request-item-link {
+	color: red;
+	cursor: default;
 }
 
 #requestItem {
@@ -100,6 +110,8 @@ body {
 }
 
 .request-item-discard-changes {
+	text-decoration: none;
+    color: rgb(48, 57, 66);
 	display: none;
 	font-weight: normal;
 }
@@ -574,6 +586,44 @@ body {
 	border-top: 1px solid rgba(0, 0, 0, 0.13);
 	background: rgb(218, 218, 218);
 	box-sizing: border-box;
+}
+
+.update-button {
+	display: none;
+	flex: none;
+	border: 1px solid hsl(192, 100%, 41%);
+	border-radius: 3px;
+	margin: 3px;
+	background: rgb(0, 178, 223);
+	line-height: 8px;
+	padding: 5px 4px 4px;
+	color: rgba(255, 245, 0, 0.9);
+	text-shadow: 0px 0px 3px rgba(0, 214, 255, 0.39);
+	font-weight: bold;
+	box-shadow: 0px 3px 3px -2px rgba(0, 204, 255, 1) inset, 0px 1px rgb(163, 237, 255), 0px -1px rgb(163, 237, 255);
+	cursor: pointer;
+	transition: all 0.3s;
+	text-transform: uppercase;
+	font-family: menlo;
+}
+
+.update-button:hover {
+	background: hsl(192, 100%, 46%);
+	box-shadow: 0px 3px 3px -2px hsl(192, 100%, 53%) inset, 0px 1px hsl(202, 86%, 25%);
+	margin-top: 2px;
+	border-top: 1px solid hsl(192, 68%, 50%);
+}
+
+.update-button:active {
+	box-shadow: 0px 2px 6px -2px black inset, 0px 1px hsl(192, 100%, 75%);
+	background: hsl(192, 100%, 44%);
+	margin-top: 3px;
+	border: 1px solid rgb(119, 119, 119);
+	text-shadow: 0px -1px rgba(0, 0, 0, 0.44);
+}
+
+.update-available .update-button {
+	display: inherit;
 }
 
 #settings .close-button:hover {

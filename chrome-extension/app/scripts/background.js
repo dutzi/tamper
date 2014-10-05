@@ -233,6 +233,10 @@ function connectToProxy() {
 			case 'log':
 				console.log('Proxy Log:', msg.msg.message);
 				break;
+			case 'version':
+				console.log('Mitmproxy Extension Version: ' + msg.msg.version);
+				localStorage.setItem('mitmproxyExtensionVersion', msg.msg.version);
+				break;
 			case 'proxy-error':
 				console.error('Proxy Error (' + msg.msg.errorCode + '): ' + msg.msg.errorDesc);
 				switch (msg.msg.errorCode) {

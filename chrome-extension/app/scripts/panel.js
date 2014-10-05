@@ -229,6 +229,8 @@ function onToggleRuleEnable(e) {
 }
 
 function onDeleteRuleClick(e) {
+	e.preventDefault();
+
 	var rule = proxyRules[e.currentTarget.parentNode.id.substr(5)];
 	proxyRules.splice(proxyRules.indexOf(rule), 1);
 	localStorage.setItem('rules', JSON.stringify(proxyRules));
@@ -293,6 +295,9 @@ function onQuickEditClick(e) {
 		Utils.addClassName(target, 'request-item-loading');
 		request.getContent(function (content, encoding) {
 			Utils.removeClassName(target, 'request-item-loading');
+
+			if (content === null) { return; }
+
 			Utils.addClassName(target, 'request-item-loaded');
 
 			var filename = Utils.getFilename(url).replace(/\//g, '');
@@ -364,14 +369,21 @@ function onRequestFinished(e) {
 	//		http://www.google.com/folder/ -> folder/ (for folders add the last slash)
 	var requestText = path.replace(/-/g, '&#8209;');
 
+	if (e.response._error) {
+		requestText += ' (' + e.response._error + ')';
+		Utils.addClassName(listItem, 'request-item-error');
+	} else {
+		listItem.querySelector('a').addEventListener('click', function (e) { e.preventDefault(); });
+		listItem.querySelector('a').addEventListener('click', onQuickEditClick);
+		listItem.querySelector('.request-item-discard-changes').addEventListener('click', onDiscardChangesClick);
+	}
+
 	listItem.id = 'req-' + (requests.length);
 	listItem.title = url;
 	listItem.querySelector('a').innerHTML = requestText;
-	listItem.querySelector('a').href = e.request.url;
-	listItem.querySelector('a').addEventListener('click', function (e) { e.preventDefault(); });
-	listItem.querySelector('a').addEventListener('click', onQuickEditClick);
-	listItem.querySelector('.request-item-discard-changes').addEventListener('click', onDiscardChangesClick);
+	// listItem.querySelector('a').href = e.request.url;
 	listItem.querySelector('.request-item-url').innerText = e.request.url;
+
 
 	for (var i = 0; i < e.response.headers.length; i++) {
 		if (e.response.headers[i].name.toLowerCase() === 'via' && e.response.headers[i].value.indexOf('tamper') > -1) {
@@ -536,3 +548,8 @@ if (window.navigator.appVersion.match(/OS X/)) {
 } else if (window.navigator.appVersion.match(/win/i)) {
 	Utils.addClassName($body, 'os-windows');
 }
+
+if (localStorage.getItem('mitmproxyExtensionVersion') !== chrome.runtime.getManifest().version) {
+	Utils.addClassName($body, 'update-available');
+}
+
