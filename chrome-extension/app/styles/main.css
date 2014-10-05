@@ -597,8 +597,8 @@ body {
 	background: rgb(0, 178, 223);
 	line-height: 8px;
 	padding: 5px 4px 4px;
-	color: rgba(255, 245, 0, 0.9);
-	text-shadow: 0px 0px 3px rgba(0, 214, 255, 0.39);
+	color: rgba(245, 255, 0, 1);
+	text-shadow: 0px 0px 3px rgba(0, 255, 245, 0.45);
 	font-weight: bold;
 	box-shadow: 0px 3px 3px -2px rgba(0, 204, 255, 1) inset, 0px 1px rgb(163, 237, 255), 0px -1px rgb(163, 237, 255);
 	cursor: pointer;
@@ -612,14 +612,17 @@ body {
 	box-shadow: 0px 3px 3px -2px hsl(192, 100%, 53%) inset, 0px 1px hsl(202, 86%, 25%);
 	margin-top: 2px;
 	border-top: 1px solid hsl(192, 68%, 50%);
+	margin-bottom: 4px;
 }
 
 .update-button:active {
-	box-shadow: 0px 2px 6px -2px black inset, 0px 1px hsl(192, 100%, 75%);
-	background: hsl(192, 100%, 44%);
+	box-shadow: 0px 2px 6px -2px black inset, 0px 1px rgb(238, 238, 238);
+	background: hsl(192, 100%, 41%);
 	margin-top: 3px;
-	border: 1px solid rgb(119, 119, 119);
-	text-shadow: 0px -1px rgba(0, 0, 0, 0.44);
+	border: 1px solid rgb(185, 185, 185);
+	text-shadow: none;
+	color: rgba(204, 213, 0, 0.79);
+	margin-bottom: 3px;
 }
 
 .update-available .update-button {
