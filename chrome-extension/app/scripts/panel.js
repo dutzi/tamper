@@ -549,7 +549,7 @@ if (window.navigator.appVersion.match(/OS X/)) {
 	Utils.addClassName($body, 'os-windows');
 }
 
-if (localStorage.getItem('mitmproxyExtensionVersion') !== chrome.runtime.getManifest().version) {
+var mitmproxyExtensionVersion = localStorage.getItem('mitmproxyExtensionVersion');
+if (mitmproxyExtensionVersion && mitmproxyExtensionVersion !== chrome.runtime.getManifest().version) {
 	Utils.addClassName($body, 'update-available');
 }
-
