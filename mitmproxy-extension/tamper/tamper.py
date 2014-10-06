@@ -11,6 +11,7 @@ import urllib2
 import uuid
 import Queue
 from netlib.odict import ODictCaseless
+import subprocess
 from subprocess import call
 
 def send_message(message):
@@ -97,7 +98,7 @@ def read_thread_func(queue):
 
             if (message['method'] == 'hello'):
                 send_message(json.dumps({'method': 'hello'}))
-                send_message(json.dumps({'method': 'version', 'version': '0.13'}))
+                send_message(json.dumps({'method': 'version', 'version': '0.23'}))
 
             elif (message['method'] == 'update-rules'):
                 while len(urlsToProxy):
@@ -113,7 +114,10 @@ def read_thread_func(queue):
 
                 try:
                     if message['command'] != '':
-                        call(message['command'].replace('$1', filename).split(' '))
+                        if os.name == 'nt':
+                            subprocess.Popen([message['command'], filename])
+                        else:
+                            call([message['command'], filename])
                     else:
                         if os.name == 'nt':
                             os.startfile(filename)

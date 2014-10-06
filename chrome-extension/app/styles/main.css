@@ -605,6 +605,7 @@ body {
 	transition: all 0.3s;
 	text-transform: uppercase;
 	font-family: menlo;
+	text-decoration: none;
 }
 
 .update-button:hover {
