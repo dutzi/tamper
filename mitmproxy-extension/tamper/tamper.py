@@ -271,6 +271,10 @@ class InjectingMaster(flow.FlowMaster):
 
                 if (not hasViaHeader):
                     responseHeaders.append(['via', 'tamper'])
+                    
+                responseHeaders['Cache-Control'] = ['no-cache, no-store, must-revalidate']
+                responseHeaders['Pragma'] = ['no-cache']
+                responseHeaders['Expires'] = ['0']
 
                 resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless(responseHeaders), content)
                 msg.reply(resp)
