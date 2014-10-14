@@ -178,6 +178,16 @@ a:hover {
   fill: #cc181e;
   opacity: 1; }
 
+.footer {
+  border-top: 1px solid #646464;
+  padding-top: 7px;
+  margin-top: 30px; }
+
+.footer a {
+  color: #bbb;
+  font-size: 0.9em;
+  text-decoration: none; }
+
 @media (min-width: 992px) and (max-width: 1200px) {
   .hero {
     margin: 0px 0px -60px 0px;
