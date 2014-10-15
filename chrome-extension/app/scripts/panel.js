@@ -66,8 +66,8 @@ var Utils = {
 /******** PROXY API *********/
 /****************************/
 
-var proxy = {
-	postMessage: function (message) {
+function Proxy() {
+	var postMessage = function (message) {
 		var deferred = Q.defer();
 		var requestId = Math.floor(Math.random() * 100000000000);
 
@@ -89,34 +89,39 @@ var proxy = {
 		bgPort.postMessage(message);
 
 		return deferred.promise;
-	},
-	cacheResponse: function (filename, content) {
-		return proxy.postMessage({
-			method: 'cache-response',
-			filename: filename,
-			responseContent: content
-		});
-	},
-	updateRules: function (rules) {
-		return proxy.postMessage({
-			method: 'update-rules',
-			rules: rules
-		});
-	},
-	openFile: function (filename) {
-		return proxy.postMessage({
-			method: 'open-file',
-			command: localStorage.getItem('editorCommandLine'),
-			filename: filename
-		});
-	},
-	restartProxy: function () {
-		return proxy.postMessage({
-			method: 'start-proxy',
-			port: localStorage.getItem('proxyPort')
-		});
-	}
-};
+	};
+
+	return {
+		cacheResponse: function (filename, content) {
+			return postMessage({
+				method: 'cache-response',
+				filename: filename,
+				responseContent: content
+			});
+		},
+		updateRules: function (rules) {
+			return postMessage({
+				method: 'update-rules',
+				rules: rules
+			});
+		},
+		openFile: function (filename) {
+			return postMessage({
+				method: 'open-file',
+				command: localStorage.getItem('editorCommandLine'),
+				filename: filename
+			});
+		},
+		restartProxy: function () {
+			return postMessage({
+				method: 'start-proxy',
+				port: localStorage.getItem('proxyPort')
+			});
+		}
+	};
+}
+
+var proxy = new Proxy();
 
 /****************************/
 /********* TOOLBAR **********/
@@ -157,11 +162,12 @@ function onToggleProxy(e) {
 function onFilterChange(e) {
 	var filter = document.querySelector('#txtFilter').value;
 	var numDisplayed = 0;
+	filterLCase = filter.toLowerCase();
 	for (var i = 0; i < requests.length; i++) {
 		if (filter === '') {
 			requests[i].div.style.display = 'inherit';
 			requests[i].div.style.background = null;
-		} else if (requests[i].request.request.url.indexOf(filter) > -1) {
+		} else if (requests[i].request.request.url.toLowerCase().indexOf(filterLCase) > -1) {
 			requests[i].div.style.display = 'inherit';
 			if (numDisplayed++ % 2 === 0) {
 				requests[i].div.style.background = '#eee';
@@ -238,6 +244,10 @@ function onDeleteRuleClick(e) {
 	updateRulesListView();
 }
 
+function onRuleListItemClick(e) {
+	
+}
+
 function updateRulesListView() {
 	rulesContainer.innerHTML = '';
 
@@ -247,6 +257,7 @@ function updateRulesListView() {
 
 		listItem.id = 'rule-' + i;
 		listItem.title = currentRule.url;
+		listItem.addEventListener('click', onRuleListItemClick);
 		listItem.querySelector('.sidebar-list-item-checkbox input').checked = currentRule.isEnabled;
 		listItem.querySelector('.sidebar-list-item-checkbox input').addEventListener('change', onToggleRuleEnable);
 		listItem.querySelector('.sidebar-list-item-delete').addEventListener('click', onDeleteRuleClick);
