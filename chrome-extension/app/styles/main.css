@@ -170,6 +170,7 @@ body {
 }
 
 .sidebar-list-item {
+	cursor: pointer;
 	flex: none;
 	color: black;
 	text-shadow: 0px 1px white;
@@ -182,10 +183,6 @@ body {
 .sidebar-list-item-big {
 	font-weight: bold;
 	padding: 10px;
-}
-
-.sidebar-list-item, .sidebar-list-item div, .sidebar-list-item span {
-	cursor: default;
 }
 
 .sidebar-list-item.selected {
@@ -320,6 +317,7 @@ body {
 	width: 200px;
 	box-shadow: 0px 1px 4px -2px #999 inset, 0px 1px rgba(255, 255, 255, 0.23);
 	padding: 1px 3px;
+	margin: 2px 0px;
 }
 
 .toolbar input:focus {
