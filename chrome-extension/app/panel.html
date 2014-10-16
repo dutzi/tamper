@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="tamper">
 	<head>
 		<!-- build:css styles/vendor.css -->
 		<!-- bower:css -->
@@ -9,11 +9,17 @@
 		<link href="styles/main.css" rel="stylesheet">
 		<!-- endbuild -->
 	</head>
-	<body onready="onBodyReady()" class="proxy-enabled">
-
+	<body onready="onBodyReady()" 
+		ng-controller="PanelCtrl"
+		ng-keydown="onBodyKeyDown($event)"
+		ng-class="{
+			'proxy-connection-error': proxyState !== proxyStates.PROXY_STARTED,
+			'proxy-port-error': proxyState === proxyStates.PROXY_COULD_NOT_START_PORT_ERROR,
+			'proxy-libs-error': proxyState === proxyStates.PROXY_COULD_NOT_START_LIBS_ERROR
+		}">
 		<!-- Settings -->
-		<div id="settings">
-			<div class="close-button"></div>
+		<div id="settings" ng-show="showSettings">
+			<div class="close-button" ng-click="showSettings = false"></div>
 			<div class="header">Tamper Settings</div>
 			<div class="properties">
 				<div class="property property-inline">
@@ -38,13 +44,13 @@
 					</div>
 					<div class="value">
 						<input id="txtProxyPort" type="text">
-						<a id="btnRestartProxy" class="button" href="#">Restart Proxy</a>
-						<span class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
+						<a id="btnRestartProxy" class="button" href="#" ng-click="onRestartProxy()">Restart Proxy</a>
+						<span ng-show="hasProxyRestarted" class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
 					</div>
 					<div class="proxy-port-error-message">Proxy server could not start because the port is alreday taken by another service. Choose a different port and restart the server to fix this.</div>
 					<div class="clearfix"></div>
 				</div>
-				<a id="btnRestoreDefaults" class="button" href="#">Restore Defaults</a>
+				<a id="btnRestoreDefaults" class="button" href="#" ng-click="onRestoreDefaults()">Restore Defaults</a>
 			</div>
 		</div>
 
@@ -56,7 +62,21 @@
 				<div class="sidebar-list">
 					<div class="sidebar-list-item sidebar-list-item-big selected">Network</div>
 					<div class="sidebar-list-header">RULES</div>
-					<div id="rulesList"></div>
+					<div id="rulesList">
+
+						<div ng-repeat="rule in proxyRules track by $index" class="rules-list-item sidebar-list-item">
+							<div class="sidebar-list-item-checkbox">
+								<input type="checkbox" ng-model="rule.isEnabled" ng-change="onToggleRuleEnabled(rule)">
+							</div>
+							<div class="sidebar-list-item-data">
+								<div class="sidebar-list-item-title">{{ rule.url | getFilename }}</div>
+								<div class="sidebar-list-item-subtitle">{{ rule.url | getPath }}</div>
+							</div>
+							<div class="spacer"></div>
+							<div class="sidebar-list-item-delete" ng-click="onDeleteRuleClick(rule)"></div>
+						</div>
+
+					</div>
 				</div>
 				<div class="bottom-bar"><div class="settings-button"></div></div>
 			</div>
@@ -66,47 +86,55 @@
 				<div class="error-message">Could not connect to proxy (<a target="_blank" href="http://dutzi.github.io/tamper/#proxy-connection-error">help</a>)</div>
 				<div class="toolbar">
 					<span class="label">Filter:</span>
-					<input id="txtFilter" type="text"/>
+					<input type="text" ng-model="requestFilter.url" focus-on="focusFilter"/>
 					<span class="spacer"></span>
-					<span class="toggle-proxy"><span class="dot">&#8226;</span></span>
+					<span class="toggle-proxy" ng-click="onToggleProxy(event)" ng-class="{'proxy-enabled': isProxyEnabled}">
+						<span class="dot">&#8226;</span>
+						<span ng-show="isProxyEnabled">Enabled</span>
+						<span ng-hide="isProxyEnabled">Disabled</span>
+					</span>
 					<a href="http://dutzi.github.io/tamper/releasenotes.html" target="_blank" class="update-button">Update Available</a>
 				</div>
-				<div id="requestsContainer" class="vbox"></div>
+				<div id="requestsContainer" class="vbox">
+					
+					<div ng-repeat="request in requests | filter:requestFilter" class="request-item">
+						<span ng-show="request.isModified" class="request-item-modified-badge">Modified</span>
+						<a class="request-item-link" 
+							href="#" 
+							ng-click="onQuickEditClick(request, $event)"
+							title="{{request.url}}">{{request.url | getFilename }}</a>
+						<span class="request-item-actions">
+							<span class="request-item-action-button request-item-loading-spinner" 
+								ng-show="request.isLoading">Loading...</span>
+							<a href="#" 
+								class="request-item-action-button request-item-discard-changes" 
+								ng-show="request.isModified" 
+								ng-click="onDiscardChangesClick(request, event)">Delete</a>
+						</span>
+					</div>
+
+				</div>
 			</div>
 
-			<!-- templates -->
-			<div id="requestItem" class="request-item">
-				<span class="request-item-modified-badge">Modified</span>
-				<a class="request-item-link" href="#"></a>
-				<span class="request-item-url"></span>
-				<span class="request-item-actions">
-					<span class="request-item-action-button request-item-loading-spinner">Loading...</span>
-					<a href="#" class="request-item-action-button request-item-discard-changes">Delete</a>
-				</span>
-			</div>
-			
-			<div id="rulesListItem" class="rules-list-item sidebar-list-item">
-				<div class="sidebar-list-item-checkbox">
-					<input type="checkbox">
-				</div>
-				<div class="sidebar-list-item-data">
-					<div class="sidebar-list-item-title"></div>
-					<div class="sidebar-list-item-subtitle"></div>
-				</div>
-				<div class="spacer"></div>
-				<div class="sidebar-list-item-delete"></div>
-			</div>
 		</div>
 
 		<!-- build:js scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="bower_components/q/q.js"></script>
+		<script src="bower_components/angular/angular.js"></script>
 		<!-- endbower -->
 		<!-- endbuild -->
 
 		<!-- build:js scripts/panel.js -->
 		<script src="scripts/mimetypes.js"></script>
-		<script src="scripts/panel.js"></script>
+		<!-- <script src="scripts/panel.js"></script> -->
+		<script src="scripts/app.js"></script>
+		<script src="scripts/filters/filters.js"></script>
+		<script src="scripts/controllers/PanelCtrl.js"></script>
+		<script src="scripts/services/ProxyService.js"></script>
+		<script src="scripts/services/MimeTypesService.js"></script>
+		<script src="scripts/services/FocusService.js"></script>
+		<script src="scripts/directives/focusOn.js"></script>
 		<!-- endbuild -->
 	</body>
 </html>

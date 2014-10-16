@@ -106,22 +106,12 @@ body {
 
 .request-item-loading-spinner {
 	flex: none;
-	display: none;
 }
 
 .request-item-discard-changes {
 	text-decoration: none;
     color: rgb(48, 57, 66);
-	display: none;
 	font-weight: normal;
-}
-
-.request-item-loading .request-item-loading-spinner {
-	display: inline;
-}
-
-.request-item-modified .request-item-discard-changes {
-	display: inline;
 }
 
 .request-item-modified.request-item-removed .request-item-discard-changes {
@@ -148,13 +138,13 @@ body {
 }
 
 .request-item-modified-badge {
+	display: inline;
 	flex: none;
 	cursor: default;
 	float: left;
 	border-radius: 3px;
 	background: rgb(255, 224, 0);
 	margin-right: 5px;
-	display: none;
 	border: 1px solid rgb(255, 204, 0);
 	box-sizing: border-box;
 	box-shadow: 0px 1px 0px 0px #B3A500;
@@ -165,12 +155,7 @@ body {
 	text-shadow: 0px 1px rgba(255, 255, 255, 0.46);
 }
 
-.request-item.request-item-modified .request-item-modified-badge {
-	display: inline;
-}
-
 .sidebar-list-item {
-	cursor: pointer;
 	flex: none;
 	color: black;
 	text-shadow: 0px 1px white;
@@ -183,6 +168,10 @@ body {
 .sidebar-list-item-big {
 	font-weight: bold;
 	padding: 10px;
+}
+
+.sidebar-list-item, .sidebar-list-item div, .sidebar-list-item span {
+	cursor: default;
 }
 
 .sidebar-list-item.selected {
@@ -352,20 +341,12 @@ body {
 	font-weight: bold;
 }
 
-.proxy-enabled .toggle-proxy .dot {
+.toggle-proxy.proxy-enabled .dot {
 	color: red;
-}
-
-.proxy-enabled .toggle-proxy::after {
-	content: " Enabled";
 }
 
 .toggle-proxy .dot {
 	color: #777;
-}
-
-.toggle-proxy::after {
-	content: " Disabled";
 }
 
 .error-message {
@@ -426,7 +407,6 @@ body {
 }
 
 #settings {
-	display: none;
 	position: absolute;
 	top: 10px;
 	left: 10px;
