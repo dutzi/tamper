@@ -1,6 +1,6 @@
 /*global module*/
-module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesService', 'focus', 
-	function ($scope, $filter, ProxyService, MimeTypesService, focus) {
+module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 'MimeTypesService', 'focus', 
+	function ($scope, $filter, $window, ProxyService, MimeTypesService, focus) {
 
 	$scope.proxyStates = {
 		PROXY_NOT_CONNECTED: 'not connected',
@@ -57,6 +57,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 	/****************************/
 
 	$scope.onQuickEditClick = function(request, e) {
+		if (request.error) { return; }
 		// var target = e.currentTarget.parentNode;
 		// if (!Utils.hasClassName(target, 'request-item')) { 
 		// 	target = target.parentNode;
@@ -158,20 +159,9 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 		};
 
 		if (e.response._error) {
-			// requestText += ' (' + e.response._error + ')';
-			// Utils.addClassName(listItem, 'request-item-error');
+			request.error = e.response._error;
 		} else {
-			// listItem.querySelector('a').addEventListener('click', function (e) { e.preventDefault(); });
-			// listItem.querySelector('a').addEventListener('click', onQuickEditClick);
-			// listItem.querySelector('.request-item-discard-changes').addEventListener('click', onDiscardChangesClick);
 		}
-
-		// listItem.id = 'req-' + (requests.length);
-		// listItem.title = url;
-		// listItem.querySelector('a').innerHTML = requestText;
-		// listItem.querySelector('a').href = e.request.url;
-		// listItem.querySelector('.request-item-url').innerText = e.request.url;
-
 
 		for (var i = 0; i < e.response.headers.length; i++) {
 			if (e.response.headers[i].name.toLowerCase() === 'via' && e.response.headers[i].value.indexOf('tamper') > -1) {
@@ -183,8 +173,6 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 		$scope.requests.push(request);
 		console.log(request);
 		$scope.$digest();
-		// requests.push({request: e, div: listItem});
-		// requestsContainer.appendChild(listItem);
 	}
 
 	function onNavigated(e) {
@@ -193,6 +181,38 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 
 	chrome.devtools.network.onRequestFinished.addListener(onRequestFinished);
 	chrome.devtools.network.onNavigated.addListener(onNavigated);
+
+	/****************************/
+	/******** SPLIT VIEW ********/
+	/****************************/
+
+	var initX;
+
+	$scope.onResizeMouseMove = function (e) {
+		$scope.sidebarWidth = Math.min(Math.max(e.pageX - initX, 20), $window.innerWidth - 20);
+		$scope.$digest();
+	};
+
+	$scope.onResizeMouseUp = function (e) {
+		$scope.isResizing = false;
+		$window.removeEventListener('mousemove', $scope.onResizeMouseMove);
+		$window.removeEventListener('mouseup', $scope.onResizeMouseUp);
+		localStorage.setItem('sidebarWidth', $scope.sidebarWidth);
+		$scope.$digest();
+	};
+
+	$scope.onResizeMouseDown = function (e) {
+		initX = e.offsetX;
+		$scope.isResizing = true;
+		$window.addEventListener('mousemove', $scope.onResizeMouseMove);
+		$window.addEventListener('mouseup', $scope.onResizeMouseUp);
+	};
+
+	if (localStorage.getItem('sidebarWidth')) {
+		$scope.sidebarWidth = localStorage.getItem('sidebarWidth');
+	} else {
+		$scope.sidebarWidth = 170;
+	}
 
 	/****************************/
 	/********* SETTINGS *********/
@@ -214,7 +234,15 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 		};
 	};
 	
-	$scope.onShowSettings = function () {
+	$scope.saveSettings = function () {
+		localStorage.setItem('editorCommandLine', $scope.settings.editorCommandLine);
+		localStorage.setItem('pacScript', $scope.settings.pacScript);
+		localStorage.setItem('proxyPort', $scope.settings.proxyPort);
+	};
+
+	$scope.showSettings = function () {
+		$scope.isShowingSettings = true;
+
 		$scope.loadSettings();
 		$scope.$watch('settings', function() {
 			$scope.saveSettings();
@@ -224,19 +252,10 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 		}, true);
 	};
 
-	$scope.saveSettings = function () {
-		localStorage.setItem('editorCommandLine', $scope.settings.editorCommandLine);
-		localStorage.setItem('pacScript', $scope.settings.pacScript);
-		localStorage.setItem('proxyPort', $scope.settings.proxyPort);
+	$scope.closeSettings = function () {
+		$scope.isShowingSettings = false;
+		$scope.saveSettings();
 	};
-
-	$scope.$watch('showSettings', function (newValue) {
-		if (newValue) {
-			$scope.onShowSettings();
-		} else {
-			$scope.saveSettings();
-		}
-	});
 
 	$scope.onRestartProxy = function () {
 		ProxyService.restartProxy().then(function () {
@@ -251,7 +270,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 	$scope.onBodyKeyDown = function(e) {
 		if (e.shiftKey && e.keyCode === 191) {
 			if (document.activeElement.tagName !== 'input' && document.activeElement.tagName !== 'textarea') {
-				$scope.showSettings = true;
+				$scope.showSettings();
 			}
 		} else if ((e.metaKey || e.ctrlKey) && e.keyCode === 70) {
 			focus('focusFilter');
@@ -259,7 +278,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 			e.preventDefault();
 		} else if (e.keyCode === 27) {
 			$scope.requestFilter = null;
-			$scope.showSettings = false;
+			$scope.closeSettings();
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -278,4 +297,20 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 
 	$scope.requests = [];
 
+	var mitmproxyExtensionVersion = localStorage.getItem('mitmproxyExtensionVersion');
+	if (mitmproxyExtensionVersion) {
+		mitmproxyExtensionVersion = mitmproxyExtensionVersion.split('.');
+		var chromeExtensionVersion = chrome.runtime.getManifest().version.split('.');
+
+		if (mitmproxyExtensionVersion[0] !== chromeExtensionVersion[0] || 
+			mitmproxyExtensionVersion[1] !== chromeExtensionVersion[1]) {
+			$scope.updateAvailable = true;
+		}
+	}
+
+	if ($window.navigator.appVersion.match(/OS X/)) {
+		$scope.isOSX = true;
+	} else if ($window.navigator.appVersion.match(/win/i)) {
+		$scope.isWindows = true;
+	}
 }]);

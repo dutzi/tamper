@@ -15,17 +15,20 @@
 		ng-class="{
 			'proxy-connection-error': proxyState !== proxyStates.PROXY_STARTED,
 			'proxy-port-error': proxyState === proxyStates.PROXY_COULD_NOT_START_PORT_ERROR,
-			'proxy-libs-error': proxyState === proxyStates.PROXY_COULD_NOT_START_LIBS_ERROR
+			'proxy-libs-error': proxyState === proxyStates.PROXY_COULD_NOT_START_LIBS_ERROR,
+			'os-osx': isOSX,
+			'os-windows': isWindows,
+			'resizing': isResizing
 		}">
 		<!-- Settings -->
-		<div id="settings" ng-show="showSettings">
-			<div class="close-button" ng-click="showSettings = false"></div>
+		<div id="settings" ng-show="isShowingSettings">
+			<div class="close-button" ng-click="closeSettings()"></div>
 			<div class="header">Tamper Settings</div>
 			<div class="properties">
 				<div class="property property-inline">
 					<div class="label">
 						<div class="label-text">Editor Command Line</div>
-						<div class="tooltip">The command line used to open the editor, $1 will be replaced with the file's name (for example <span class="show-os-osx">`subl`</span><span class="show-os-windows">`C:\Program Files (x86)\Notepad++\notepad++.exe`</span>)</div>
+						<div class="tooltip">The command line used to open the editor, $1 will be replaced with the file's name (for example <span ng-show="isOSX">`subl`</span><span ng-show="isWindows">`C:\Program Files (x86)\Notepad++\notepad++.exe`</span>)</div>
 					</div>
 					<div class="value"><input id="txtEditorCommand" ng-model="settings.editorCommandLine" type="text"></div>
 					<div class="clearfix"></div>
@@ -55,10 +58,12 @@
 		</div>
 
 		<div class="split-view hbox view">
-			<div class="split-view-resizer"></div>
+			<div class="split-view-resizer" 
+				ng-mousedown="onResizeMouseDown($event)" 
+				ng-style="{'left': sidebarWidth + 'px'}"></div>
 
 			<!-- Sidebar -->
-			<div id="sidebar" class="vbox">
+			<div id="sidebar" class="vbox" ng-style="{'width': sidebarWidth + 'px'}">
 				<div class="sidebar-list">
 					<div class="sidebar-list-item sidebar-list-item-big selected">Network</div>
 					<div class="sidebar-list-header">RULES</div>
@@ -78,7 +83,7 @@
 
 					</div>
 				</div>
-				<div class="bottom-bar"><div class="settings-button" ng-click="showSettings = true"></div></div>
+				<div class="bottom-bar"><div class="settings-button" ng-click="showSettings()"></div></div>
 			</div>
 
 			<!-- Network -->
@@ -93,16 +98,16 @@
 						<span ng-show="isProxyEnabled">Enabled</span>
 						<span ng-hide="isProxyEnabled">Disabled</span>
 					</span>
-					<a href="http://dutzi.github.io/tamper/releasenotes.html" target="_blank" class="update-button">Update Available</a>
+					<a href="http://dutzi.github.io/tamper/releasenotes.html" target="_blank" ng-show="updateAvailable" class="update-button">Update Available</a>
 				</div>
 				<div id="requestsContainer" class="vbox">
 					
-					<div ng-repeat="request in requests | filter:requestFilter" class="request-item">
+					<div ng-repeat="request in requests | filter:requestFilter" class="request-item" ng-class="{'request-item-error': request.error}">
 						<span ng-show="request.isModified" class="request-item-modified-badge">Modified</span>
 						<a class="request-item-link" 
 							href="#" 
 							ng-click="onQuickEditClick(request, $event)"
-							title="{{request.url}}">{{request.url | getFilename }}</a>
+							title="{{request.url}}">{{request.url | getFilename }} <span ng-if="request.error"> ({{request.error}})</span></a>
 						<span class="request-item-actions">
 							<span class="request-item-action-button request-item-loading-spinner" 
 								ng-show="request.isLoading">Loading...</span>

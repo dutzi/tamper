@@ -561,7 +561,6 @@ body {
 }
 
 .update-button {
-	display: none;
 	flex: none;
 	border: 1px solid hsl(192, 100%, 41%);
 	border-radius: 3px;
@@ -596,10 +595,6 @@ body {
 	text-shadow: none;
 	color: rgba(204, 213, 0, 0.79);
 	margin-bottom: 3px;
-}
-
-.update-available .update-button {
-	display: inherit;
 }
 
 #settings .close-button:hover {
