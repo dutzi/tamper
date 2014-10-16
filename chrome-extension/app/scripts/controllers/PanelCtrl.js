@@ -58,12 +58,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 	$scope.onQuickEditClick = function(request, e) {
 		if (request.error) { return; }
-		// var target = e.currentTarget.parentNode;
-		// if (!Utils.hasClassName(target, 'request-item')) { 
-		// 	target = target.parentNode;
-		// }
-		// var request = requests[target.id.substr(4)].request;
-		// var url = target.querySelector('.request-item-url').innerText;
+
 		var url = request.url;
 
 		if (e.metaKey) {
@@ -136,8 +131,6 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 	};
 
 	$scope.onDiscardChangesClick = function(request, e) {
-		// Utils.addClassName(target, 'request-item-removed');
-		// var url = target.querySelector('.request-item-url').innerText;
 		var url = request.url;
 
 		for (var i = 0; i < $scope.proxyRules.length; i++) {
@@ -149,7 +142,6 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 		localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
 		ProxyService.updateRules($scope.proxyRules);
-		// updateRulesListView();
 	};
 
 	function onRequestFinished(e) {
