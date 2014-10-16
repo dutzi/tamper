@@ -199,10 +199,9 @@ module.controller('PanelCtrl', ['$scope', '$filter', 'ProxyService', 'MimeTypesS
 	/****************************/
 
 	$scope.onRestoreDefaults = function () {
-		localStorage.setItem('editorCommandLine', localStorage.getItem('default.editorCommandLine'));
-		localStorage.setItem('pacScript', localStorage.getItem('default.pacScript'));
-		localStorage.setItem('proxyPort', localStorage.getItem('default.proxyPort'));
-		$scope.loadSettings();
+		$scope.settings.editorCommandLine = localStorage.getItem('default.editorCommandLine');
+		$scope.settings.pacScript = localStorage.getItem('default.pacScript');
+		$scope.settings.proxyPort = localStorage.getItem('default.proxyPort');
 		$scope.saveSettings();
 	};
 

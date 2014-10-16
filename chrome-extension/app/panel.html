@@ -27,7 +27,7 @@
 						<div class="label-text">Editor Command Line</div>
 						<div class="tooltip">The command line used to open the editor, $1 will be replaced with the file's name (for example <span class="show-os-osx">`subl`</span><span class="show-os-windows">`C:\Program Files (x86)\Notepad++\notepad++.exe`</span>)</div>
 					</div>
-					<div class="value"><input id="txtEditorCommand" type="text"></div>
+					<div class="value"><input id="txtEditorCommand" ng-model="settings.editorCommandLine" type="text"></div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="property property-inline">
@@ -35,7 +35,7 @@
 						<div class="label-text">PAC File</div>
 						<div class="tooltip">This PAC file will be used by Chrome. PAC files are useful when you want some requests to go to other proxies. Read more about PAC file <a href="http://en.wikipedia.org/wiki/Proxy_auto-config" target="_blank">here</a>.</div>
 					</div>
-					<div class="value"><textarea id="txtPACFile"></textarea></div>
+					<div class="value"><textarea id="txtPACFile" ng-model="settings.pacScript"></textarea></div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="property property-inline">
@@ -43,11 +43,11 @@
 						<div class="label-text">Proxy Port</div>
 					</div>
 					<div class="value">
-						<input id="txtProxyPort" type="text">
+						<input id="txtProxyPort" ng-model="settings.proxyPort" type="text">
 						<a id="btnRestartProxy" class="button" href="#" ng-click="onRestartProxy()">Restart Proxy</a>
-						<span ng-show="hasProxyRestarted" class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
+						<span ng-show="settings.hasProxyRestarted" class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
 					</div>
-					<div class="proxy-port-error-message">Proxy server could not start because the port is alreday taken by another service. Choose a different port and restart the server to fix this.</div>
+					<div class="proxy-port-error-message" ng-show="proxyState === proxyStates.PROXY_COULD_NOT_START_PORT_ERROR">Proxy server could not start because the port is alreday taken by another service. Choose a different port and restart the server to fix this.</div>
 					<div class="clearfix"></div>
 				</div>
 				<a id="btnRestoreDefaults" class="button" href="#" ng-click="onRestoreDefaults()">Restore Defaults</a>
@@ -78,7 +78,7 @@
 
 					</div>
 				</div>
-				<div class="bottom-bar"><div class="settings-button"></div></div>
+				<div class="bottom-bar"><div class="settings-button" ng-click="showSettings = true"></div></div>
 			</div>
 
 			<!-- Network -->
