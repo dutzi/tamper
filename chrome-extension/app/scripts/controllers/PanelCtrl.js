@@ -40,17 +40,31 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 	/******** RULES LIST ********/
 	/****************************/
 
-	$scope.onDeleteRuleClick = function(rule) {
+	$scope.onDeleteRuleClick = function (rule) {
 		$scope.proxyRules.splice($scope.proxyRules.indexOf(rule), 1);
-		localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-		ProxyService.updateRules($scope.proxyRules);
+		// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
+		// ProxyService.updateRules($scope.proxyRules);
 	};
 
-	$scope.onToggleRuleEnabled = function(rule) {
-		localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-		ProxyService.updateRules($scope.proxyRules);
+	$scope.onToggleRuleEnabled = function (rule) {
+		// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
+		// ProxyService.updateRules($scope.proxyRules);
 	};
 
+	$scope.onRuleListItemClick = function (index) {
+		$scope.selectedRuleIndex = index;
+	};
+
+	$scope.openFile = function(rule) {
+		ProxyService.openFile(rule.cachedFilename);
+	};
+
+	$scope.$watch('proxyRules', function (value) {
+		localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
+		ProxyService.updateRules($scope.proxyRules);
+	}, true);
+
+	$scope.selectedRuleIndex = -1;
 
 	/****************************/
 	/****** NETWORK PANEL *******/
@@ -122,9 +136,9 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 						cachedFilename: response.cachedFilename,
 						isEnabled: true
 					});
-					localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-					ProxyService.updateRules($scope.proxyRules);
-					// updateRulesListView();
+					// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
+					// ProxyService.updateRules($scope.proxyRules);
+					$scope.$digest();
 				});
 			});
 		}
@@ -140,8 +154,8 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 			}
 		}
 
-		localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-		ProxyService.updateRules($scope.proxyRules);
+		// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
+		// ProxyService.updateRules($scope.proxyRules);
 	};
 
 	function onRequestFinished(e) {
@@ -210,14 +224,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 	/********* SETTINGS *********/
 	/****************************/
 
-	$scope.onRestoreDefaults = function () {
-		$scope.settings.editorCommandLine = localStorage.getItem('default.editorCommandLine');
-		$scope.settings.pacScript = localStorage.getItem('default.pacScript');
-		$scope.settings.proxyPort = localStorage.getItem('default.proxyPort');
-		$scope.saveSettings();
-	};
-
-	$scope.loadSettings = function () {
+	var loadSettings = function () {
 		$scope.settings = {
 			editorCommandLine: localStorage.getItem('editorCommandLine'),
 			pacScript: localStorage.getItem('pacScript'),
@@ -226,34 +233,42 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 		};
 	};
 	
-	$scope.saveSettings = function () {
+	var saveSettings = function () {
 		localStorage.setItem('editorCommandLine', $scope.settings.editorCommandLine);
 		localStorage.setItem('pacScript', $scope.settings.pacScript);
 		localStorage.setItem('proxyPort', $scope.settings.proxyPort);
 	};
 
+	$scope.onRestoreDefaults = function () {
+		$scope.settings.editorCommandLine = localStorage.getItem('default.editorCommandLine');
+		$scope.settings.pacScript = localStorage.getItem('default.pacScript');
+		$scope.settings.proxyPort = localStorage.getItem('default.proxyPort');
+		saveSettings();
+	};
+
 	$scope.showSettings = function () {
 		$scope.isShowingSettings = true;
-
-		$scope.loadSettings();
-		$scope.$watch('settings', function() {
-			$scope.saveSettings();
-			ProxyService.bgPort.postMessage({
-				method: 'update-settings'
-			});
-		}, true);
+		loadSettings();
 	};
 
 	$scope.closeSettings = function () {
 		$scope.isShowingSettings = false;
-		$scope.saveSettings();
+		saveSettings();
 	};
 
-	$scope.onRestartProxy = function () {
+	$scope.restartProxy = function () {
 		ProxyService.restartProxy().then(function () {
 			$scope.settings.hasProxyRestarted = true;
 		});
 	};
+
+	$scope.$watch('settings', function(value) {
+		if (!value) { return; }
+		saveSettings();
+		ProxyService.bgPort.postMessage({
+			method: 'update-settings'
+		});
+	}, true);
 
 	/****************************/
 	/***** KEYBOARD CONTROL *****/

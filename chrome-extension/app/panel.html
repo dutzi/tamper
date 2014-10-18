@@ -47,7 +47,7 @@
 					</div>
 					<div class="value">
 						<input id="txtProxyPort" ng-model="settings.proxyPort" type="text">
-						<a id="btnRestartProxy" class="button" href="#" ng-click="onRestartProxy()">Restart Proxy</a>
+						<a id="btnRestartProxy" class="button" href="#" ng-click="restartProxy()">Restart Proxy</a>
 						<span ng-show="settings.hasProxyRestarted" class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
 					</div>
 					<div class="proxy-port-error-message" ng-show="proxyState === proxyStates.PROXY_COULD_NOT_START_PORT_ERROR">Proxy server could not start because the port is alreday taken by another service. Choose a different port and restart the server to fix this.</div>
@@ -65,23 +65,29 @@
 			<!-- Sidebar -->
 			<div id="sidebar" class="vbox" ng-style="{'width': sidebarWidth + 'px'}">
 				<div class="sidebar-list">
-					<div class="sidebar-list-item sidebar-list-item-big selected">Network</div>
-					<div class="sidebar-list-header">RULES</div>
-					<div id="rulesList">
 
-						<div ng-repeat="rule in proxyRules track by $index" class="rules-list-item sidebar-list-item">
+					<div class="sidebar-list-item sidebar-list-item-big" 
+						ng-class="{selected: selectedRuleIndex == -1}"
+						ng-click="selectedRuleIndex = -1">Network</div>
+
+					<div class="sidebar-list-header">RULES</div>
+
+					<div id="rulesList">
+						<div ng-repeat="rule in proxyRules track by $index"
+							class="rules-list-item sidebar-list-item"
+							ng-class="{selected: selectedRuleIndex == $index}">
 							<div class="sidebar-list-item-checkbox">
 								<input type="checkbox" ng-model="rule.isEnabled" ng-change="onToggleRuleEnabled(rule)">
 							</div>
-							<div class="sidebar-list-item-data">
+							<div class="sidebar-list-item-data" ng-click="onRuleListItemClick($index)">
 								<div class="sidebar-list-item-title">{{ rule.url | getFilename }}</div>
 								<div class="sidebar-list-item-subtitle">{{ rule.url | getPath }}</div>
 							</div>
 							<div class="spacer"></div>
 							<div class="sidebar-list-item-delete" ng-click="onDeleteRuleClick(rule)"></div>
 						</div>
-
 					</div>
+
 				</div>
 				<div class="bottom-bar"><div class="settings-button" ng-click="showSettings()"></div></div>
 			</div>
@@ -89,35 +95,67 @@
 			<!-- Network -->
 			<div class="right-pane vbox">
 				<div class="error-message">Could not connect to proxy (<a target="_blank" href="http://dutzi.github.io/tamper/#proxy-connection-error">help</a>)</div>
-				<div class="toolbar">
-					<span class="label">Filter:</span>
-					<input type="text" ng-model="requestFilter.url" focus-on="focusFilter"/>
-					<span class="spacer"></span>
-					<span class="toggle-proxy" ng-click="onToggleProxy(event)" ng-class="{'proxy-enabled': isProxyEnabled}">
-						<span class="dot">&#8226;</span>
-						<span ng-show="isProxyEnabled">Enabled</span>
-						<span ng-hide="isProxyEnabled">Disabled</span>
-					</span>
-					<a href="http://dutzi.github.io/tamper/releasenotes.html" target="_blank" ng-show="updateAvailable" class="update-button">Update Available</a>
-				</div>
-				<div id="requestsContainer" class="vbox">
-					
-					<div ng-repeat="request in requests | filter:requestFilter" class="request-item" ng-class="{'request-item-error': request.error}">
-						<span ng-show="request.isModified" class="request-item-modified-badge">Modified</span>
-						<a class="request-item-link" 
-							href="#" 
-							ng-click="onQuickEditClick(request, $event)"
-							title="{{request.url}}">{{request.url | getFilename }} <span ng-if="request.error"> ({{request.error}})</span></a>
-						<span class="request-item-actions">
-							<span class="request-item-action-button request-item-loading-spinner" 
-								ng-show="request.isLoading">Loading...</span>
-							<a href="#" 
-								class="request-item-action-button request-item-discard-changes" 
-								ng-show="request.isModified" 
-								ng-click="onDiscardChangesClick(request, event)">Delete</a>
+				<div ng-hide="selectedRuleIndex != -1" class="vbox">
+					<div class="toolbar">
+						<span class="label">Filter:</span>
+						<input type="text" ng-model="requestFilter.url" focus-on="focusFilter"/>
+						<span class="spacer"></span>
+						<span class="toggle-proxy" ng-click="onToggleProxy(event)" ng-class="{'proxy-enabled': isProxyEnabled}">
+							<span class="dot">&#8226;</span>
+							<span ng-show="isProxyEnabled">Enabled</span>
+							<span ng-hide="isProxyEnabled">Disabled</span>
 						</span>
+						<a href="http://dutzi.github.io/tamper/releasenotes.html" target="_blank" ng-show="updateAvailable" class="update-button">Update Available</a>
 					</div>
+					<div id="requestsContainer" class="vbox">
+						
+						<div ng-repeat="request in requests | filter:requestFilter" class="request-item" ng-class="{'request-item-error': request.error}">
+							<span ng-show="request.isModified" class="request-item-modified-badge">Modified</span>
+							<a class="request-item-link" 
+								href="#" 
+								ng-click="onQuickEditClick(request, $event)"
+								title="{{request.url}}">{{request.url | getFilename }} <span ng-if="request.error"> ({{request.error}})</span></a>
+							<span class="request-item-actions">
+								<span class="request-item-action-button request-item-loading-spinner" 
+									ng-show="request.isLoading">Loading...</span>
+								<a href="#" 
+									class="request-item-action-button request-item-discard-changes" 
+									ng-show="request.isModified" 
+									ng-click="onDiscardChangesClick(request, event)">Delete</a>
+							</span>
+						</div>
 
+					</div>
+				</div>
+				<div class="network-request-data" ng-show="selectedRuleIndex != -1">
+					<div class="property property-inline">
+						<label>URL</label> 
+						<div class="value">
+							<input ng-model-options="{updateOn: 'blur'}"
+								ng-model="proxyRules[selectedRuleIndex].url">
+						</div>
+					</div>
+					<div class="property property-inline">
+						<label>Cached File Name</label> 
+						<div class="value"><input ng-model="proxyRules[selectedRuleIndex].cachedFilename" disabled></div>
+					</div>
+					<div class="property property-inline">
+						<label>&nbsp;</label> 
+						<div class="value"><button class="text-button" ng-click="openFile(proxyRules[selectedRuleIndex])">Open File</button></div>
+					</div>
+					<div class="property">
+						<label>Response Headers</label>
+						<div class="value">
+							<table>
+								<tbody>
+									<tr ng-repeat="requestHeader in proxyRules[selectedRuleIndex].responseHeaders track by $index">
+										<td style="min-width:100px">{{requestHeader.name}}</td>
+										<td>{{requestHeader.value}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 			</div>
 

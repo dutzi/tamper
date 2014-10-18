@@ -244,15 +244,17 @@ class InjectingMaster(flow.FlowMaster):
                     with open(sys.prefix + '/tamper-cert' + path, 'rb') as uifile:
                         content = uifile.read()
 
+                responseHeaders['Content-Length'] = [len(content)]
+
                 resp = HTTPResponse([1,1], 200, 'OK', responseHeaders, content)
                 msg.reply(resp)
             except:
                 resp = HTTPResponse([1,1], 404, 'Not Found', ODictCaseless([]), '')
                 msg.reply(resp)
 
-
         for url in urlsToProxy:
-            if (url['url'] == fullURL and url['isEnabled'] == True):
+            regexURL = re.escape(url['url']).replace('\\*', '.*?')
+            if (re.match(regexURL, fullURL) and url['isEnabled'] == True):
                 send_message(json.dumps({'method': 'log', 'message': 'Serving cached file (' + url['cachedFilename'] + ')'}))
                 localFile = open(self._cachedFilesPath + url['cachedFilename'], 'r');
                 content = localFile.read()
@@ -271,10 +273,10 @@ class InjectingMaster(flow.FlowMaster):
 
                 if (not hasViaHeader):
                     responseHeaders.append(['via', 'tamper'])
-                    
-                responseHeaders['Cache-Control'] = ['no-cache, no-store, must-revalidate']
-                responseHeaders['Pragma'] = ['no-cache']
-                responseHeaders['Expires'] = ['0']
+
+                responseHeaders.append(['Cache-Control', 'no-cache, no-store, must-revalidate'])
+                responseHeaders.append(['Pragma', 'no-cache'])
+                responseHeaders.append(['Expires', '0'])
 
                 resp = HTTPResponse([1,1], 200, 'OK', ODictCaseless(responseHeaders), content)
                 msg.reply(resp)
