@@ -1,5 +1,5 @@
-var MimeTypes = {
-	_mimeTypesMap: {
+module.factory('MimeTypesService', function () {
+	var _mimeTypesMap = {
 		'application/vnd.hzn-3d-crossword': 'x3d',
 		'video/3gpp': '3gp',
 		'video/3gpp2': '3g2',
@@ -263,6 +263,7 @@ var MimeTypes = {
 		'application/java-serialized-object': 'ser',
 		'text/x-java-source,java': 'java',
 		'application/javascript': 'js',
+		'application/x-javascript': 'js',
 		'application/json': 'json',
 		'application/vnd.joost.joda-archive': 'joda',
 		'video/jpm': 'jpm',
@@ -685,8 +686,11 @@ var MimeTypes = {
 		'application/zip': 'zip',
 		'application/vnd.handheld-entertainment+xml': 'zmm',
 		'application/vnd.zzazz.deck+xml': 'zaz'
-	},
-	getFileExtension: function (mimeType) {
-		return MimeTypes._mimeTypesMap[mimeType];
-	}
-};
+	};
+
+	return {
+		getFileExtension: function (mimeType) {
+			return _mimeTypesMap[mimeType];
+		}
+	};
+});
