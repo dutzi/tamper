@@ -114,8 +114,15 @@ body {
 	font-weight: normal;
 }
 
-.request-item-modified.request-item-removed .request-item-discard-changes {
+.request-item.request-item-removed .request-item-discard-changes {
 	visibility: hidden;
+}
+
+.request-item.request-item-removed .request-item-modified-badge {
+	background: none;
+	border: 1px solid #ccc;
+	box-shadow: none;
+	color: #aaa;
 }
 
 .log-item {

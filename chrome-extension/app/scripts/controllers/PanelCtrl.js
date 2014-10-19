@@ -148,6 +148,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 	$scope.onDiscardChangesClick = function(request, e) {
 		var url = request.url;
 
+		request.isRemoved = true;
 		for (var i = 0; i < $scope.proxyRules.length; i++) {
 			if ($scope.proxyRules[i].url === url) {
 				$scope.proxyRules.splice(i, 1);

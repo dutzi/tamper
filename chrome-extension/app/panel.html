@@ -114,7 +114,9 @@
 					</div>
 					<div id="requestsContainer" class="vbox">
 						
-						<div ng-repeat="request in requests | filter:requestFilter" class="request-item" ng-class="{'request-item-error': request.error}">
+						<div class="request-item"
+							ng-repeat="request in requests | filter:requestFilter" 
+							ng-class="{'request-item-error': request.error, 'request-item-removed': request.isRemoved}">
 							<span ng-show="request.isModified" class="request-item-modified-badge">Modified</span>
 							<a class="request-item-link" 
 								href="#" 
