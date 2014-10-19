@@ -81,6 +81,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 			} else {
 				window.open('view-source:' + url);
 			}
+			e.preventDefault();
 			return;
 		}
 
@@ -262,6 +263,10 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 		});
 	};
 
+	$scope.testEditorCommandLine = function () {
+		ProxyService.openTestFile();
+	}
+
 	$scope.$watch('settings', function(value) {
 		if (!value) { return; }
 		saveSettings();
@@ -276,7 +281,8 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 	$scope.onBodyKeyDown = function(e) {
 		if (e.shiftKey && e.keyCode === 191) {
-			if (document.activeElement.tagName !== 'input' && document.activeElement.tagName !== 'textarea') {
+			if (document.activeElement.tagName.toLowerCase() !== 'input'
+				&& document.activeElement.tagName.toLowerCase() !== 'textarea') {
 				$scope.showSettings();
 			}
 		} else if ((e.metaKey || e.ctrlKey) && e.keyCode === 70) {

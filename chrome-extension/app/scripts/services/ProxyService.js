@@ -49,6 +49,13 @@ module.factory('ProxyService', ['$q', function ($q) {
 				filename: filename
 			});
 		},
+		openTestFile: function () {
+			return postMessage({
+				method: 'open-file',
+				command: localStorage.getItem('editorCommandLine'),
+				testFile: true
+			});
+		},
 		restartProxy: function () {
 			return postMessage({
 				method: 'start-proxy',

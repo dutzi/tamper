@@ -469,6 +469,10 @@ body {
 	float: left;
 }
 
+.property .value {
+	margin-left: 200px;
+}
+
 .property .value input, .property .value textarea {
 	width: 350px;
 	border: 1px solid #aaa;

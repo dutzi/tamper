@@ -9,7 +9,7 @@
 		<link href="styles/main.css" rel="stylesheet">
 		<!-- endbuild -->
 	</head>
-	<body onready="onBodyReady()" 
+	<body ng-cloak
 		ng-controller="PanelCtrl"
 		ng-keydown="onBodyKeyDown($event)"
 		ng-class="{
@@ -30,7 +30,10 @@
 						<div class="label-text">Editor Command Line</div>
 						<div class="tooltip">The command line used to open the editor, $1 will be replaced with the file's name (for example <span ng-show="isOSX">`subl`</span><span ng-show="isWindows">`C:\Program Files (x86)\Notepad++\notepad++.exe`</span>)</div>
 					</div>
-					<div class="value"><input id="txtEditorCommand" ng-model="settings.editorCommandLine" type="text"></div>
+					<div class="value">
+						<input id="txtEditorCommand" ng-model="settings.editorCommandLine" type="text">
+						<div style="margin-top:8px"><button class="text-button" ng-click="testEditorCommandLine()">Test Command</button></div>
+					</div>
 					<div class="clearfix"></div>
 				</div>
 				<div class="property property-inline">
@@ -47,8 +50,10 @@
 					</div>
 					<div class="value">
 						<input id="txtProxyPort" ng-model="settings.proxyPort" type="text">
-						<a id="btnRestartProxy" class="button" href="#" ng-click="restartProxy()">Restart Proxy</a>
-						<span ng-show="settings.hasProxyRestarted" class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
+						<div style="margin-top: 8px;">
+							<button class="text-button" ng-click="restartProxy()">Restart Proxy</button>
+							<span ng-show="settings.hasProxyRestarted" class="proxy-restarted-notification">&#10003; Proxy Restarted</span>
+						</div>
 					</div>
 					<div class="proxy-port-error-message" ng-show="proxyState === proxyStates.PROXY_COULD_NOT_START_PORT_ERROR">Proxy server could not start because the port is alreday taken by another service. Choose a different port and restart the server to fix this.</div>
 					<div class="clearfix"></div>
@@ -129,19 +134,25 @@
 				</div>
 				<div class="network-request-data" ng-show="selectedRuleIndex != -1">
 					<div class="property property-inline">
-						<label>URL</label> 
+						<label>
+							<div class="label-text">URL</div>
+							<div class="tooltip">You can use asterisks (*) as wildcards.</div>
+						</label> 
 						<div class="value">
 							<input ng-model-options="{updateOn: 'blur'}"
 								ng-model="proxyRules[selectedRuleIndex].url">
 						</div>
+						<div class="clearfix"></div>
 					</div>
 					<div class="property property-inline">
 						<label>Cached File Name</label> 
 						<div class="value"><input ng-model="proxyRules[selectedRuleIndex].cachedFilename" disabled></div>
+						<div class="clearfix"></div>
 					</div>
 					<div class="property property-inline">
 						<label>&nbsp;</label> 
 						<div class="value"><button class="text-button" ng-click="openFile(proxyRules[selectedRuleIndex])">Open File</button></div>
+						<div class="clearfix"></div>
 					</div>
 					<div class="property">
 						<label>Response Headers</label>
@@ -155,6 +166,7 @@
 								</tbody>
 							</table>
 						</div>
+						<div class="clearfix"></div>
 					</div>
 				</div>
 			</div>

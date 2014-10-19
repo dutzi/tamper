@@ -110,7 +110,10 @@ def read_thread_func(queue):
                 send_message(json.dumps(message))
 
             elif (message['method'] == 'open-file'):
-                filename = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename']
+                if ('testFile' in message):
+                    filename = sys.prefix + '/tamper-files/testfile.txt'
+                else:
+                    filename = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename']
 
                 try:
                     if message['command'] != '':
@@ -253,7 +256,7 @@ class InjectingMaster(flow.FlowMaster):
                 msg.reply(resp)
 
         for url in urlsToProxy:
-            regexURL = re.escape(url['url']).replace('\\*', '.*?')
+            regexURL = '^' + re.escape(url['url']).replace('\\*', '.*?') + '$'
             if (re.match(regexURL, fullURL) and url['isEnabled'] == True):
                 send_message(json.dumps({'method': 'log', 'message': 'Serving cached file (' + url['cachedFilename'] + ')'}))
                 localFile = open(self._cachedFilesPath + url['cachedFilename'], 'r');

@@ -63,7 +63,7 @@ setup(
     install_requires = ['gevent-websocket>=0.9.3'],
     scripts = ['tamper/tamper.py'],
     data_files = [
-    	('tamper-cert', ['cert/index.html', 'cert/mitmproxy.css'])
+    	('tamper-files', ['cert/index.html', 'cert/mitmproxy.css', 'testfile.txt'])
 	],
     license = 'MIT License',
     url = 'http://dutzi.github.com/tamper',
