@@ -23,9 +23,10 @@ class PostInstallScript(install):
 
 		if sys.platform == 'win32':
 			nativeMessagingManifest['path'] = 'tamper.bat'
-			subprocess.call(['reg', 'add', 'HKEY_CURRENT_USER\\SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.dutzi.tamper', '/d', 'C:\\Users\\dutzi\\tamper-manifest.json', '/f'])
 			manifestFilename = expanduser('~\\tamper-manifest.json')
 			batchFilename = expanduser('~\\tamper.bat')
+
+			subprocess.call(['reg', 'add', 'HKEY_CURRENT_USER\\SOFTWARE\\Google\\Chrome\\NativeMessagingHosts\\com.dutzi.tamper', '/d', manifestFilename, '/f'])
 
 			manifestFile = open(manifestFilename, 'w')
 			json.dump(nativeMessagingManifest, manifestFile, sort_keys=True, indent=4)
@@ -63,7 +64,7 @@ setup(
     install_requires = ['gevent-websocket>=0.9.3'],
     scripts = ['tamper/tamper.py'],
     data_files = [
-    	('tamper-files', ['cert/index.html', 'cert/mitmproxy.css', 'testfile.txt'])
+    	('tamper-files', ['cert/index.html', 'cert/mitmproxy.css', 'cert/testfile.txt'])
 	],
     license = 'MIT License',
     url = 'http://dutzi.github.com/tamper',

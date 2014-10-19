@@ -82,7 +82,7 @@
 							class="rules-list-item sidebar-list-item"
 							ng-class="{selected: selectedRuleIndex == $index}">
 							<div class="sidebar-list-item-checkbox">
-								<input type="checkbox" ng-model="rule.isEnabled" ng-change="onToggleRuleEnabled(rule)">
+								<input type="checkbox" ng-model="rule.isEnabled">
 							</div>
 							<div class="sidebar-list-item-data" ng-click="onRuleListItemClick($index)">
 								<div class="sidebar-list-item-title">{{ rule.url | getFilename }}</div>

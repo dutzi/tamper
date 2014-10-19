@@ -2,14 +2,7 @@
 module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 'MimeTypesService', 'focus', 
 	function ($scope, $filter, $window, ProxyService, MimeTypesService, focus) {
 
-	$scope.proxyStates = {
-		PROXY_NOT_CONNECTED: 'not connected',
-		PROXY_COULD_NOT_START_PORT_ERROR: 'could not start port error',
-		PROXY_COULD_NOT_START_LIBS_ERROR: 'could not start libs error',
-		PROXY_STARTED: 'proxy started',
-		PROXY_CONNECTED: 'proxy connected',
-		PROXY_DISCONNECTED: 'proxy disconnected'
-	};
+	$scope.proxyStates = ProxyService.proxyStates;
 
 	function onBgMessage(message) {
 		switch (message.method) {
@@ -42,13 +35,6 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 	$scope.onDeleteRuleClick = function (rule) {
 		$scope.proxyRules.splice($scope.proxyRules.indexOf(rule), 1);
-		// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-		// ProxyService.updateRules($scope.proxyRules);
-	};
-
-	$scope.onToggleRuleEnabled = function (rule) {
-		// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-		// ProxyService.updateRules($scope.proxyRules);
 	};
 
 	$scope.onRuleListItemClick = function (index) {
@@ -98,9 +84,9 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 		if (ruleExists) {
 			ProxyService.openFile(rule.cachedFilename);
 		} else {
-			request.status = 'loading';
+			request.isLoading = true;
 			request.requestEvent.getContent(function (content, encoding) {
-				request.status = 'loaded';
+				request.isLoading = false;
 
 				if (content === null) { return; }
 
@@ -137,8 +123,6 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 						cachedFilename: response.cachedFilename,
 						isEnabled: true
 					});
-					// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-					// ProxyService.updateRules($scope.proxyRules);
 					$scope.$digest();
 				});
 			});
@@ -155,9 +139,6 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 				break;
 			}
 		}
-
-		// localStorage.setItem('rules', JSON.stringify($scope.proxyRules));
-		// ProxyService.updateRules($scope.proxyRules);
 	};
 
 	function onRequestFinished(e) {
@@ -266,7 +247,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 	$scope.testEditorCommandLine = function () {
 		ProxyService.openTestFile();
-	}
+	};
 
 	$scope.$watch('settings', function(value) {
 		if (!value) { return; }
@@ -282,8 +263,8 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 	$scope.onBodyKeyDown = function(e) {
 		if (e.shiftKey && e.keyCode === 191) {
-			if (document.activeElement.tagName.toLowerCase() !== 'input'
-				&& document.activeElement.tagName.toLowerCase() !== 'textarea') {
+			if (document.activeElement.tagName.toLowerCase() !== 'input' &&
+				document.activeElement.tagName.toLowerCase() !== 'textarea') {
 				$scope.showSettings();
 			}
 		} else if ((e.metaKey || e.ctrlKey) && e.keyCode === 70) {

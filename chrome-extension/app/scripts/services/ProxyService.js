@@ -29,6 +29,14 @@ module.factory('ProxyService', ['$q', function ($q) {
 
 	return {
 		bgPort: bgPort,
+		proxyStates: {
+			PROXY_NOT_CONNECTED: 'not connected',
+			PROXY_COULD_NOT_START_PORT_ERROR: 'could not start port error',
+			PROXY_COULD_NOT_START_LIBS_ERROR: 'could not start libs error',
+			PROXY_STARTED: 'proxy started',
+			PROXY_CONNECTED: 'proxy connected',
+			PROXY_DISCONNECTED: 'proxy disconnected'
+		},
 		cacheResponse: function (filename, content) {
 			return postMessage({
 				method: 'cache-response',
