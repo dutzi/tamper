@@ -261,7 +261,7 @@ class InjectingMaster(flow.FlowMaster):
                 send_message(json.dumps({'method': 'log', 'message': 'Serving cached file (' + url['cachedFilename'] + ')'}))
                 localFile = open(self._cachedFilesPath + url['cachedFilename'], 'r');
                 content = localFile.read()
-                localFile.close();                
+                localFile.close();
 
                 responseHeaders = []
                 hasViaHeader = False
