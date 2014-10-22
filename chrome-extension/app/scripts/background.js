@@ -198,9 +198,19 @@ chrome.runtime.onMessage.addListener(function (message) {
 	}
 });
 
-chrome.browserAction.onClicked.addListener(function () {
+function toggleProxy() {
 	settings.isProxyEnabled = !settings.isProxyEnabled;
 	onProxyStateChange();
+}
+
+chrome.browserAction.onClicked.addListener(function () {
+	toggleProxy();
+});
+
+chrome.commands.onCommand.addListener(function(command) {
+	if (command === 'toggle-tamper') {
+		toggleProxy();
+	}
 });
 
 function connectToProxy() {
@@ -255,12 +265,12 @@ function connectToProxy() {
 				sendMessageToAllPorts(msg.msg);
 				break;
 		}
-		
+
 		if (oldProxyState !== proxyState) {
 			onProxyStateChange();
 		}
 	});
-	
+
 	nativeMessagingPort.onDisconnect.addListener(function() {
 		console.log('Disconnected');
 		if (proxyState !== PROXY_COULD_NOT_START_LIBS_ERROR) {

@@ -21,6 +21,15 @@
         },
         "default_title": "Tamper is enabled"
     },
+    "commands": {
+        "toggle-tamper": {
+            "suggested_key": {
+                "windows": "Ctrl+Shift+P",
+                "mac": "Command+Shift+P"
+            },
+            "description": "Toggle Tamper"
+        }
+    },
     "permissions": [
         "nativeMessaging",
         "contextMenus",
