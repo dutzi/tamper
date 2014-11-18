@@ -43,7 +43,7 @@ var defaultSettings = {
 };
 
 // if (window.navigator.appVersion.match(/OS X/)) {
-// 	defaultSettings.editorCommandLine = 'subl $1';
+// 	defaultSettings.editorCommandLine = 'subl';
 // } else if (window.navigator.appVersion.match(/win/i)) {
 // 	defaultSettings.editorCommandLine = null;
 // }
