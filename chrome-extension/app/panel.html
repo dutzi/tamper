@@ -28,7 +28,7 @@
 				<div class="property property-inline">
 					<div class="label">
 						<div class="label-text">Editor Command Line</div>
-						<div class="tooltip">The command line used to open the editor (for example <span ng-show="isOSX">`subl`</span><span ng-show="isWindows">`C:\Program Files (x86)\Notepad++\notepad++.exe`</span>)</div>
+						<div class="tooltip">The command line used to open the editor (for example <span ng-show="isOSX">`/usr/local/bin/subl`</span><span ng-show="isWindows">`C:\Program Files (x86)\Notepad++\notepad++.exe`</span>)</div>
 					</div>
 					<div class="value">
 						<input id="txtEditorCommand" ng-model="settings.editorCommandLine" type="text">
@@ -63,15 +63,15 @@
 		</div>
 
 		<div class="split-view hbox view">
-			<div class="split-view-resizer" 
-				ng-mousedown="onResizeMouseDown($event)" 
+			<div class="split-view-resizer"
+				ng-mousedown="onResizeMouseDown($event)"
 				ng-style="{'left': sidebarWidth + 'px'}"></div>
 
 			<!-- Sidebar -->
 			<div id="sidebar" class="vbox" ng-style="{'width': sidebarWidth + 'px'}">
 				<div class="sidebar-list">
 
-					<div class="sidebar-list-item sidebar-list-item-big" 
+					<div class="sidebar-list-item sidebar-list-item-big"
 						ng-class="{selected: selectedRuleIndex == -1}"
 						ng-click="selectedRuleIndex = -1">Network</div>
 
@@ -113,21 +113,21 @@
 						<a href="http://dutzi.github.io/tamper/releasenotes.html" target="_blank" ng-show="updateAvailable" class="update-button">Update Available</a>
 					</div>
 					<div id="requestsContainer" class="vbox">
-						
+
 						<div class="request-item"
-							ng-repeat="request in requests | filter:requestFilter" 
+							ng-repeat="request in requests | filter:requestFilter"
 							ng-class="{'request-item-error': request.error, 'request-item-removed': request.isRemoved}">
 							<span ng-show="request.isModified" class="request-item-modified-badge">Modified</span>
-							<a class="request-item-link" 
-								href="#" 
+							<a class="request-item-link"
+								href="#"
 								ng-click="onQuickEditClick(request, $event)"
 								title="{{request.url}}">{{request.url | getFilename }} <span ng-if="request.error"> ({{request.error}})</span></a>
 							<span class="request-item-actions">
-								<span class="request-item-action-button request-item-loading-spinner" 
+								<span class="request-item-action-button request-item-loading-spinner"
 									ng-show="request.isLoading">Loading...</span>
-								<a href="#" 
-									class="request-item-action-button request-item-discard-changes" 
-									ng-show="request.isModified" 
+								<a href="#"
+									class="request-item-action-button request-item-discard-changes"
+									ng-show="request.isModified"
 									ng-click="onDiscardChangesClick(request, event)">Delete</a>
 							</span>
 						</div>
@@ -139,7 +139,7 @@
 						<label>
 							<div class="label-text">URL</div>
 							<div class="tooltip">You can use asterisks (*) as wildcards.</div>
-						</label> 
+						</label>
 						<div class="value">
 							<input ng-model-options="{updateOn: 'blur'}"
 								ng-model="proxyRules[selectedRuleIndex].url">
@@ -147,12 +147,12 @@
 						<div class="clearfix"></div>
 					</div>
 					<div class="property property-inline">
-						<label>Cached File Name</label> 
+						<label>Cached File Name</label>
 						<div class="value"><input ng-model="proxyRules[selectedRuleIndex].cachedFilename" disabled></div>
 						<div class="clearfix"></div>
 					</div>
 					<div class="property property-inline">
-						<label>&nbsp;</label> 
+						<label>&nbsp;</label>
 						<div class="value"><button class="text-button" ng-click="openFile(proxyRules[selectedRuleIndex])">Open File</button></div>
 						<div class="clearfix"></div>
 					</div>
