@@ -98,7 +98,7 @@ def read_thread_func(queue):
 
             if (message['method'] == 'hello'):
                 send_message(json.dumps({'method': 'hello'}))
-                send_message(json.dumps({'method': 'version', 'version': '0.24.2'}))
+                send_message(json.dumps({'method': 'version', 'version': '0.24.3'}))
 
             elif (message['method'] == 'update-rules'):
                 while len(urlsToProxy):
@@ -244,7 +244,7 @@ class InjectingMaster(flow.FlowMaster):
                     with open(expanduser('~/.mitmproxy' + path), 'rb') as certfile:
                         content = certfile.read()
                 elif path in ['/index.html', '/mitmproxy.css']:
-                    with open(sys.prefix + '/tamper-cert' + path, 'rb') as uifile:
+                    with open(sys.prefix + '/tamper-files' + path, 'rb') as uifile:
                         content = uifile.read()
 
                 responseHeaders['Content-Length'] = [len(content)]
