@@ -14,7 +14,7 @@ Tamper is based on the awesome Mitmproxy (man-in-the-middle proxy), or more prec
 
 * Install Tamper's python script
 ```
-pip install tamper
+sudo pip install tamper
 ```
 * Install [Tamper's devtools extension](https://chrome.google.com/webstore/detail/tamper/mabhojhgigkmnkppkncbkblecnnanfmd)
 
