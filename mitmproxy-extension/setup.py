@@ -1,4 +1,5 @@
 from distutils.core import setup
+from distutils.spawn import find_executable
 import sys
 from setuptools.command.install import install
 import ctypes, os
@@ -37,16 +38,23 @@ class PostInstallScript(install):
 			batchFile.write('@echo off\npython ' + os.path.split(sys.executable)[0] + '\\Scripts\\tamper.py %*')
 			batchFile.close()
 		else:
-			nativeMessagingManifest['path'] = '/usr/local/bin/tamper.py'
+			nativeMessagingManifest['path'] = find_executable('tamper.py')
 
 			try:
 				is_admin = os.getuid() == 0
 			except AttributeError:
 				is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
 
-			manifestFilename = expanduser('~/Library/Application Support/Google/Chrome/NativeMessagingHosts/')
+			if sys.platform == 'darwin':
+				manifestFilename = expanduser('~/Library/Application Support/Google/Chrome/NativeMessagingHosts/')
+			else:
+				if is_admin:
+					manifestFilename = '/etc/opt/chrome/native-messaging-hosts/'
+				else:
+					manifestFilename = expanduser('~/.config/google-chrome/NativeMessagingHosts/')
+
 			if not os.path.isdir(manifestFilename):
-			    os.mkdir(manifestFilename)
+			    os.makedirs(manifestFilename)
 
 			manifestFilename = manifestFilename + 'com.dutzi.tamper.json'
 			print '\nWriting chrome native messaging manifest file (' + manifestFilename + ')'
