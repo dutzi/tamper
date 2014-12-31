@@ -114,7 +114,7 @@ def read_thread_func(queue):
                 if ('testFile' in message):
                     filename = sys.prefix + '/tamper-files/testfile.txt'
                 else:
-                    filename = os.path.dirname(tempfile.gettempdir() + '/temper-replacements/' + message['filename']
+                    filename = os.path.dirname(tempfile.gettempdir()) + '/temper-replacements/' + message['filename']
 
                 try:
                     if message['command'] != '':
@@ -155,7 +155,7 @@ def read_thread_func(queue):
                     urlFilename = message['filename']
                     while True:
                         filename = str(uuid.uuid1()) + '.' + urlFilename
-                        fullFilePath = os.path.dirname(tempfile.gettempdir() + '/tamper-replacements/' + filename
+                        fullFilePath = os.path.dirname(tempfile.gettempdir()) + '/tamper-replacements/' + filename
                         if not os.path.isfile(fullFilePath):
                             break
 
