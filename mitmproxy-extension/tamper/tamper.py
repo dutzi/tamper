@@ -13,6 +13,7 @@ import Queue
 from netlib.odict import ODictCaseless
 import subprocess
 from subprocess import call
+import tempfile
 
 def send_message(message):
     message = '{"msg": %s}' % message
@@ -113,7 +114,7 @@ def read_thread_func(queue):
                 if ('testFile' in message):
                     filename = sys.prefix + '/tamper-files/testfile.txt'
                 else:
-                    filename = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + message['filename']
+                    filename = os.path.dirname(tempfile.gettempdir() + '/temper-replacements/' + message['filename']
 
                 try:
                     if message['command'] != '':
@@ -154,7 +155,7 @@ def read_thread_func(queue):
                     urlFilename = message['filename']
                     while True:
                         filename = str(uuid.uuid1()) + '.' + urlFilename
-                        fullFilePath = os.path.dirname(os.path.realpath(__file__)) + '/replacements/' + filename
+                        fullFilePath = os.path.dirname(tempfile.gettempdir() + '/tamper-replacements/' + filename
                         if not os.path.isfile(fullFilePath):
                             break
 
@@ -183,11 +184,9 @@ class InjectingMaster(flow.FlowMaster):
     def __init__(self, server, state):
         flow.FlowMaster.__init__(self, server, state)
 
-        relPath = os.path.dirname(os.path.realpath(__file__)) + '/'
-
         # _requestMapFile = open(config['requestMapPath'], 'r+')
         # requestMap = json.load(_requestMapFile)['rules']
-        self._cachedFilesPath = relPath + 'replacements/'
+        self._cachedFilesPath = tempfile.gettempdir() + '/tamper-replacements/'
         # while len(urlsToProxy):
         #     urlsToProxy.pop()
 
@@ -321,8 +320,8 @@ def main(argv):
     relPath = os.path.dirname(os.path.realpath(__file__)) + '/'
     config['requestMapPath'] = relPath + 'requestmap.json'
 
-    if not os.path.isdir(relPath + 'replacements/'):
-        os.mkdir(relPath + 'replacements/')
+    if not os.path.isdir(tempfile.gettempdir() + '/tamper-replacements/'):
+        os.mkdir(tempfile.gettempdir() + '/tamper-replacements/')
 
     # if not os.path.exists(config['requestMapPath']):
     #     f = open(config['requestMapPath'],'w')
