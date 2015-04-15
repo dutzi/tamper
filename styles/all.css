@@ -58,6 +58,7 @@ body {
   margin-left: 56px; }
 
 .hero-fade {
+  pointer-events: none;
   height: 45px;
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.16) 100%);
   /* FF3.6+ */
