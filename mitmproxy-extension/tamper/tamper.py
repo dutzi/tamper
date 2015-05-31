@@ -271,7 +271,7 @@ class InjectingMaster(flow.FlowMaster):
                             if (header['value'].find('tamper') == -1):
                                 header['value'] += ', tamper'
 
-                        responseHeaders.append((header['name'], header['value']))
+                        responseHeaders.append((str(header['name']), str(header['value'])))
 
                 if (not hasViaHeader):
                     responseHeaders.append(['via', 'tamper'])
