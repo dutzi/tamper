@@ -4,6 +4,7 @@
 var PROXY_NOT_CONNECTED = 'not connected';
 var PROXY_COULD_NOT_START_PORT_ERROR = 'could not start port error';
 var PROXY_COULD_NOT_START_LIBS_ERROR = 'could not start libs error';
+var PROXY_COULD_NOT_START_OPENSSL_ERROR = 'could not start openssl error';
 var PROXY_STARTED = 'proxy started';
 var PROXY_CONNECTED = 'proxy connected';
 var PROXY_DISCONNECTED = 'proxy disconnected';
@@ -69,6 +70,7 @@ if (!localStorage.getItem('rules')) {
 // });
 
 var proxyState = PROXY_NOT_CONNECTED;
+var errorCode;
 
 /*************************/
 /********* PROXY *********/
@@ -145,7 +147,8 @@ function onProxyStateChange() {
 	sendMessageToAllPorts({
 		method: 'proxy-state-update',
 		isProxyEnabled: settings.isProxyEnabled,
-		proxyState: proxyState
+		proxyState: proxyState,
+		errorCode: errorCode
 	});
 }
 
@@ -180,11 +183,12 @@ chrome.runtime.onConnect.addListener(function (port) {
 			}
 		});
 	}
-	console.log('sending proxy state update',settings.isProxyEnabled,proxyState);
+	console.log('sending proxy state update', settings.isProxyEnabled, proxyState);
 	port.postMessage({
 		method: 'proxy-state-update',
 		isProxyEnabled: settings.isProxyEnabled,
-		proxyState: proxyState
+		proxyState: proxyState,
+		errorCode: errorCode
 	});
 });
 
@@ -256,7 +260,11 @@ function connectToProxy() {
 					case 101:
 						proxyState = PROXY_COULD_NOT_START_LIBS_ERROR;
 						break;
+					case 102:
+						proxyState = PROXY_COULD_NOT_START_OPENSSL_ERROR;
+						break;
 				}
+				errorCode = msg.msg.errorCode;
 				break;
 			case 'proxy-started':
 				proxyState = PROXY_STARTED;
@@ -273,7 +281,8 @@ function connectToProxy() {
 
 	nativeMessagingPort.onDisconnect.addListener(function() {
 		console.log('Disconnected');
-		if (proxyState !== PROXY_COULD_NOT_START_LIBS_ERROR) {
+		if (proxyState !== PROXY_COULD_NOT_START_LIBS_ERROR &&
+			proxyState !== PROXY_COULD_NOT_START_OPENSSL_ERROR) {
 			proxyState = PROXY_DISCONNECTED;
 			nativeMessagingPort = null;
 			onProxyStateChange();

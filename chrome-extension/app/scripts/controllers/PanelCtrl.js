@@ -1,6 +1,13 @@
 /*global module*/
-module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 'MimeTypesService', 'focus', 
-	function ($scope, $filter, $window, ProxyService, MimeTypesService, focus) {
+module.controller('PanelCtrl', [
+	'$scope', '$filter', '$window', 'ProxyService', 'MimeTypesService', 'focus', function (
+	$scope,
+	$filter,
+	$window,
+	ProxyService,
+	MimeTypesService,
+	focus
+) {
 
 	$scope.proxyStates = ProxyService.proxyStates;
 
@@ -9,6 +16,7 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 			case 'proxy-state-update':
 				$scope.isProxyEnabled = message.isProxyEnabled;
 				$scope.proxyState = message.proxyState;
+				$scope.errorCode = message.errorCode;
 				$scope.$digest();
 				break;
 			case 'update-rules':
@@ -26,7 +34,13 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 
 	$scope.onToggleProxy = function(e) {
 		$scope.isProxyEnabled = !$scope.isProxyEnabled;
-		chrome.runtime.sendMessage(chrome.runtime.id, {'method': 'toggle-proxy', 'isEnabled': $scope.isProxyEnabled});
+		chrome.runtime.sendMessage(
+			chrome.runtime.id, 
+			{
+				'method': 'toggle-proxy', 
+				'isEnabled': $scope.isProxyEnabled
+			}
+		);
 	};
 
 	/****************************/
@@ -153,7 +167,8 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 		}
 
 		for (var i = 0; i < e.response.headers.length; i++) {
-			if (e.response.headers[i].name.toLowerCase() === 'via' && e.response.headers[i].value.indexOf('tamper') > -1) {
+			if (e.response.headers[i].name.toLowerCase() === 'via' &&
+				e.response.headers[i].value.indexOf('tamper') > -1) {
 				request.isModified = true;
 				break;
 			}
@@ -178,7 +193,10 @@ module.controller('PanelCtrl', ['$scope', '$filter', '$window', 'ProxyService', 
 	var initX;
 
 	$scope.onResizeMouseMove = function (e) {
-		$scope.sidebarWidth = Math.min(Math.max(e.pageX - initX, 20), $window.innerWidth - 20);
+		$scope.sidebarWidth = Math.min(
+			Math.max(e.pageX - initX, 20), 
+			$window.innerWidth - 20
+		);
 		$scope.$digest();
 	};
 
