@@ -18,6 +18,20 @@ pip install tamper
 ```
 * Install [Tamper's devtools extension](https://chrome.google.com/webstore/detail/tamper/mabhojhgigkmnkppkncbkblecnnanfmd)
 
+### Developing
+
+#### Chrome Extension
+
+```bash
+$ cd chrome-extension
+$ npm install
+$ bower install
+```
+
+Add an unpacked extension to Chrome (by going to about:extensions, checking Developer Mode and click the "Load unpacked extension" button), choose the app folder. A new extension has been added to Chrome, copy the new extension's id.
+
+Open ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.dutzi.tamper.json and add the extension's id to the allowed_origins list. Now restart Chrome.
+
 ### Troubleshooting
 
 Having issues installing Tamper? Check out the [troubleshooting page](https://github.com/dutzi/tamper/wiki/Troubleshooting).
