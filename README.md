@@ -28,7 +28,14 @@ $ npm install
 $ bower install
 ```
 
-Add an unpacked extension to Chrome (by going to about:extensions, checking Developer Mode and click the "Load unpacked extension" button), choose the app folder. A new extension has been added to Chrome, copy the new extension's id.
+Add an unpacked extension to Chrome:
+
+1. Browse to about:extensions
+2. Check the "Developer Mode" checkbox
+3. Click the "Load unpacked extension" button.
+4. Choose the "app" folder. 
+
+A new extension has been added to Chrome, copy the new extension's id.
 
 Open ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.dutzi.tamper.json and add the extension's id to the allowed_origins list. Now restart Chrome.
 
