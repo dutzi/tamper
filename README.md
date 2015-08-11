@@ -31,8 +31,8 @@ $ bower install
 Add an unpacked extension to Chrome:
 
 1. Browse to about:extensions
-2. Check the "Developer Mode" checkbox
-3. Click the "Load unpacked extension" button.
+2. Check the "Developer mode" checkbox
+3. Click the "Load unpacked extension..." button.
 4. Choose the "app" folder. 
 
 A new extension has been added to Chrome, copy the new extension's id.
