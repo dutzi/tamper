@@ -24,7 +24,7 @@
     "commands": {
         "toggle-tamper": {
             "suggested_key": {
-                "windows": "Ctrl+Shift+P",
+                "default": "Ctrl+Shift+P",
                 "mac": "Command+Shift+P"
             },
             "description": "Toggle Tamper"
