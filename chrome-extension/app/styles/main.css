@@ -185,7 +185,7 @@ body {
 }
 
 .sidebar-list-item-data {
-	width: 100%;
+	width: calc(100% - 20px - 13px);
 }
 
 .sidebar-list-item-title {
