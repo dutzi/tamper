@@ -1,5 +1,4 @@
 # Tamper
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/dutzi/tamper?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Tamper is a [Mitmproxy](http://www.mitmproxy.org) based devtools extension that lets you edit remote files locally and serve them directly to Chrome.
 
