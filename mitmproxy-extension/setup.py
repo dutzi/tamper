@@ -57,8 +57,8 @@ class PostInstallScript(install):
 			    os.makedirs(manifestFilename)
 
 			manifestFilename = manifestFilename + 'com.dutzi.tamper.json'
-			print '\nWriting chrome native messaging manifest file (' + manifestFilename + ')'
-			print sys.prefix
+			print('\nWriting chrome native messaging manifest file (%s)' % manifestFilename)
+			print(sys.prefix)
 
 			manifestFile = open(manifestFilename, 'w')
 			json.dump(nativeMessagingManifest, manifestFile, sort_keys=True, indent=4)
