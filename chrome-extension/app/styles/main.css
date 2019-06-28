@@ -185,7 +185,7 @@ body {
 }
 
 .sidebar-list-item-data {
-	width: 100%;
+	width: calc(100% - 20px - 13px);
 }
 
 .sidebar-list-item-title {
@@ -221,11 +221,15 @@ body {
 
 .sidebar-list-item-checkbox {
 	flex: none;
+	width: 20px;
 }
 
 .sidebar-list-item-checkbox input {
 	float: left;
-	margin: 7px 8px 7px 0px;
+	margin: 0;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .sidebar-list-item.selected .sidebar-list-item-subtitle {
