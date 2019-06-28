@@ -213,6 +213,8 @@ body {
 	background-position: -143px -96px;
 	margin-top: 7px;
 	cursor: pointer;
+	position:absolute;
+	right:7px;
 }
 
 .sidebar-list-item-delete:hover {
