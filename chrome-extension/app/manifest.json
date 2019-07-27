@@ -9,10 +9,7 @@
     },
     "default_locale": "en",
     "background": {
-        "scripts": [
-            "scripts/chromereload.js",
-            "scripts/background.js"
-        ]
+        "scripts": ["scripts/background.js"]
     },
     "browser_action": {
         "default_icon": {
@@ -30,11 +27,7 @@
             "description": "Toggle Tamper"
         }
     },
-    "permissions": [
-        "nativeMessaging",
-        "contextMenus",
-        "proxy"
-    ],
+    "permissions": ["nativeMessaging", "contextMenus", "proxy"],
     "devtools_page": "devtools.html",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
