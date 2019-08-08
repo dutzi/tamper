@@ -41,7 +41,7 @@ var defaultSettings = {
         '}',
     sidebarWidth: '250px',
     editorCommandLine: '',
-    proxyPort: 8080,
+    proxyPort: 8888,
 };
 
 // if (window.navigator.appVersion.match(/OS X/)) {
