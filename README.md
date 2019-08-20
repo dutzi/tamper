@@ -1,5 +1,7 @@
 # Tamper
 
+**Important:** This extensions stopped working a while ago 😕 I'm working on a fix, should be available soon!
+
 Tamper is a [Mitmproxy](http://www.mitmproxy.org) based devtools extension that lets you edit remote files locally and serve them directly to Chrome.
 
 ![Demo](https://github.com/dutzi/tamper/blob/master/assets/demo.gif)
