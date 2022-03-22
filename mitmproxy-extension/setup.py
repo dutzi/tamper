@@ -69,7 +69,7 @@ setup(
     version = version.VERSION,
     description = 'Mitmproxy extension, companion for Tamper. Locally edit files served from the web',
     packages = ['tamper'],
-    install_requires = ['gevent-websocket>=0.9.3', 'mitmproxy==0.11.1', ],
+    install_requires = ['gevent-websocket>=0.9.3', 'mitmproxy==8.0.0', ],
     scripts = ['tamper/tamper.py'],
     data_files = [
     	('tamper-files', ['cert/index.html', 'cert/mitmproxy.css', 'cert/testfile.txt'])
